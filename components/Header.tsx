@@ -15,7 +15,7 @@ export function Header() {
                     <Link href="/" className="flex items-center space-x-2">
                         <div className="relative h-10 w-40 md:h-12 md:w-56">
                             <Image
-                                src="/Logo_imoveisdobairro0.png"
+                                src="/Logo_imoveis_daki_do_bairro.png"
                                 alt="Imóveis do Bairro"
                                 fill
                                 className="object-contain object-left"
