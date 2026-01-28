@@ -48,7 +48,7 @@ export default function HomePage() {
           className="absolute inset-0 bg-[url('/bairro-hero.jpeg')] bg-cover bg-center opacity-40"
         />
         <div className="relative z-10 container mx-auto px-4 flex flex-col items-center text-center">
-          <div className="relative w-full max-w-[300px] h-[120px] md:max-w-none md:w-[800px] md:h-[320px] -mb-12 md:-mb-24 drop-shadow-2xl">
+          <div className="relative w-full max-w-[300px] h-[120px] md:max-w-none md:w-[800px] md:h-[320px] -mt-8 mb-4 md:-mb-24 drop-shadow-2xl">
             <Image
               src="/Logo_imoveis_daki_do_bairro.png"
               alt="Imóveis daki do Bairro Logo"
