@@ -7,7 +7,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-4">
-            <span className="text-xl font-bold text-slate-900">Imóveis do Bairro</span>
+            <span className="text-xl font-bold text-slate-900">Imóveis daki do Bairro</span>
             <p className="text-sm text-slate-600">
               A imobiliária especialista no que realmente importa: viver bem no seu bairro.
             </p>
