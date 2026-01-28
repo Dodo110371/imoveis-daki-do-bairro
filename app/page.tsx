@@ -51,7 +51,7 @@ export default function HomePage() {
           <div className="relative w-full max-w-[300px] h-[120px] md:max-w-none md:w-[800px] md:h-[320px] -mb-6 md:-mb-10 drop-shadow-2xl">
             <Image
               src="/Logo_imoveis_daki_do_bairro.png"
-              alt="Imóveis do Bairro Logo"
+              alt="Imóveis daki do Bairro Logo"
               fill
               className="object-contain"
               priority

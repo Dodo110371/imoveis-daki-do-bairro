@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Imóveis do Bairro | Especialistas no seu bem-estar",
+  title: "Imóveis daki do Bairro | Especialistas no seu bem-estar",
   description: "Encontre os melhores imóveis para comprar e alugar no seu bairro favorito. Atendimento personalizado e conhecimento local.",
 };
 

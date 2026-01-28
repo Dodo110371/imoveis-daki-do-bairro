@@ -16,7 +16,7 @@ export function Header() {
                         <div className="relative h-10 w-40 md:h-12 md:w-56">
                             <Image
                                 src="/Logo_imoveis_daki_do_bairro.png"
-                                alt="Imóveis do Bairro"
+                                alt="Imóveis daki do Bairro"
                                 fill
                                 className="object-contain object-left"
                                 priority

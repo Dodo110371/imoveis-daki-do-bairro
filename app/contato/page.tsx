@@ -29,7 +29,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">E-mail</h3>
-                <p className="text-slate-600">contato@imoveisdobairro.com.br</p>
+                <p className="text-slate-600">contato@imoveisdakidobairro.com.br</p>
               </div>
             </div>
 

@@ -12,7 +12,7 @@ export function Footer() {
               A imobiliária especialista no que realmente importa: viver bem no seu bairro.
             </p>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold text-slate-900">Navegação</h3>
             <Link href="/comprar" className="text-sm text-slate-600 hover:text-slate-900">Comprar</Link>
@@ -23,7 +23,7 @@ export function Footer() {
 
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold text-slate-900">Contato</h3>
-            <span className="text-sm text-slate-600">contato@imoveisdobairro.com.br</span>
+            <span className="text-sm text-slate-600">contato@imoveisdakidobairro.com.br</span>
             <span className="text-sm text-slate-600">(11) 99999-9999</span>
             <span className="text-sm text-slate-600">Rua do Bairro, 123 - Sala 4</span>
           </div>
@@ -44,7 +44,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-slate-500">
-          © {new Date().getFullYear()} Imóveis do Bairro. Todos os direitos reservados.
+          © {new Date().getFullYear()} Imóveis daki do Bairro. Todos os direitos reservados.
         </div>
       </div>
     </footer>
