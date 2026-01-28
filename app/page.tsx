@@ -43,12 +43,12 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] md:min-h-[850px] w-full flex flex-col items-center justify-start pt-4 bg-slate-900">
+      <section className="relative min-h-[100dvh] md:min-h-[850px] w-full flex flex-col items-center justify-start pt-1 bg-slate-900">
         <div
           className="absolute inset-0 bg-[url('/bairro-hero.jpeg')] bg-cover bg-center opacity-40"
         />
         <div className="relative z-10 container mx-auto px-4 flex flex-col items-center text-center">
-          <div className="relative w-full max-w-[300px] h-[120px] md:max-w-none md:w-[800px] md:h-[320px] -mb-6 md:-mb-10 drop-shadow-2xl">
+          <div className="relative w-full max-w-[300px] h-[120px] md:max-w-none md:w-[800px] md:h-[320px] -mb-12 md:-mb-24 drop-shadow-2xl">
             <Image
               src="/Logo_imoveis_daki_do_bairro.png"
               alt="Imóveis daki do Bairro Logo"
