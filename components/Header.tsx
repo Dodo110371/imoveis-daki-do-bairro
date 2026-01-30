@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +29,7 @@ export function Header() {
                 <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
                     <Link href="/comprar" className="hover:text-slate-900 transition-colors">Comprar</Link>
                     <Link href="/alugar" className="hover:text-slate-900 transition-colors">Alugar</Link>
+                    <Link href="/imobiliarias" className="hover:text-slate-900 transition-colors">Imobiliárias</Link>
                     <Link href="/bairro" className="hover:text-slate-900 transition-colors">O Bairro</Link>
                     <Link href="/contato" className="hover:text-slate-900 transition-colors">Contato</Link>
                 </nav>
@@ -37,6 +38,10 @@ export function Header() {
                     <button className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors">
                         Anuncie seu Imóvel
                     </button>
+                    <Link href="/minha-conta" className="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                        <User className="h-5 w-5" />
+                        Minha Conta
+                    </Link>
                     <button
                         className="md:hidden p-2 text-slate-600 hover:text-slate-900"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -52,8 +57,13 @@ export function Header() {
                     <nav className="flex flex-col p-4 gap-4 text-sm font-medium text-slate-600">
                         <Link href="/comprar" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Comprar</Link>
                         <Link href="/alugar" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Alugar</Link>
+                        <Link href="/imobiliarias" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Imobiliárias</Link>
                         <Link href="/bairro" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>O Bairro</Link>
                         <Link href="/contato" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Contato</Link>
+                        <Link href="/minha-conta" className="flex items-center gap-2 hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>
+                            <User className="h-5 w-5" />
+                            Minha Conta
+                        </Link>
                         <button className="flex items-center justify-center gap-2 px-4 py-3 mt-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors w-full">
                             Anuncie seu Imóvel
                         </button>

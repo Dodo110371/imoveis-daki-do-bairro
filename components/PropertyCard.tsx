@@ -26,7 +26,7 @@ export function PropertyCard({
   type,
 }: PropertyCardProps) {
   return (
-    <Link href={`/imovel/${id}`} className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg">
+    <Link href={`/imoveis/${id}`} className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <Image
           src={imageUrl}
