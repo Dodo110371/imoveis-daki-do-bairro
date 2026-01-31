@@ -1,5 +1,4 @@
-import { getAgencyById } from "@/lib/agencies";
-import { PROPERTIES } from "@/lib/properties";
+import { createClient } from "@/lib/supabase/server";
 import { PropertyCard } from "@/components/PropertyCard";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -15,19 +14,50 @@ interface AgencyPageProps {
 export default async function AgencyPage({ params }: AgencyPageProps) {
   const { id } = await params;
   const agencyId = parseInt(id, 10);
+  const supabase = await createClient();
 
   if (isNaN(agencyId)) {
     notFound();
   }
 
-  const agency = getAgencyById(agencyId);
+  // Fetch Agency
+  const { data: agencyData } = await supabase
+    .from('agencies')
+    .select('*')
+    .eq('id', agencyId)
+    .single();
 
-  if (!agency) {
+  if (!agencyData) {
     notFound();
   }
 
-  // Filter properties for this agency
-  const agencyProperties = PROPERTIES.filter(p => p.agencyId === agency.id);
+  // Fetch properties for this agency
+  const { data: propertiesData } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('agency_id', agencyId);
+
+  const agency = {
+    ...agencyData,
+    logo: agencyData.logo_url
+  };
+
+  // Helper to map DB to Card Props
+  const mapProperty = (p: any) => ({
+    id: p.id,
+    title: p.title,
+    price: p.type === 'Aluguel' 
+      ? `R$ ${p.price}/mês` 
+      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+    location: p.location,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    area: p.area,
+    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    type: p.type,
+  });
+
+  const agencyProperties = propertiesData?.map(mapProperty) || [];
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">

@@ -1,9 +1,27 @@
 import { MapPin, Phone, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AGENCIES } from '@/lib/agencies';
+import { createClient } from '@/lib/supabase/server';
 
-export default function ImobiliariasPage() {
+export default async function ImobiliariasPage() {
+  const supabase = await createClient();
+
+  // Fetch agencies with property count
+  // Note: 'properties(count)' might return count object depending on setup, 
+  // but let's try standard approach or just fetch agencies first.
+  // To keep it robust, we'll fetch agencies and then maybe count properties if needed,
+  // or just use a placeholder if count is complex.
+  // Actually, Supabase select with count:
+  const { data: agenciesData } = await supabase
+    .from('agencies')
+    .select('*, properties(count)');
+
+  const agencies = agenciesData?.map((agency: any) => ({
+    ...agency,
+    logo: agency.logo_url,
+    propertiesCount: agency.properties?.[0]?.count || 0
+  })) || [];
+
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4">
@@ -17,7 +35,7 @@ export default function ImobiliariasPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {AGENCIES.map((imobiliaria) => (
+          {agencies.map((imobiliaria) => (
             <div key={imobiliaria.id} className="bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col">
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center gap-4 mb-4">
@@ -50,7 +68,7 @@ export default function ImobiliariasPage() {
                   </div>
                 </div>
 
-                <Link 
+                <Link
                   href={`/imobiliarias/${imobiliaria.id}`}
                   className="w-full mt-auto block text-center bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition-colors"
                 >
@@ -68,7 +86,7 @@ export default function ImobiliariasPage() {
           <p className="text-slate-600 mb-8 max-w-2xl mx-auto">
             Junte-se a nós e anuncie seus imóveis para milhares de pessoas interessadas em morar no nosso bairro.
           </p>
-          <Link 
+          <Link
             href="/contato"
             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
           >

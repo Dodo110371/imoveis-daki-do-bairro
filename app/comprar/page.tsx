@@ -1,10 +1,29 @@
 import { PropertyCard } from "@/components/PropertyCard";
-import { PROPERTIES } from "@/lib/properties";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
-export default function ComprarPage() {
-  const properties = PROPERTIES.filter(p => p.type === 'Venda');
+export default async function ComprarPage() {
+  const supabase = await createClient();
+  const { data: propertiesData } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('type', 'Venda');
+
+  // Helper to map DB to Card Props
+  const mapProperty = (p: any) => ({
+    id: p.id,
+    title: p.title,
+    price: `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+    location: p.location,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    area: p.area,
+    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    type: p.type,
+  });
+
+  const properties = propertiesData?.map(mapProperty) || [];
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -27,7 +46,7 @@ export default function ComprarPage() {
         ) : (
           <div className="text-center py-12 bg-white rounded-xl border border-slate-100">
             <p className="text-slate-500 mb-4">Nenhum imóvel disponível para venda no momento.</p>
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
             >

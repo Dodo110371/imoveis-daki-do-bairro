@@ -1,8 +1,8 @@
 import { PropertyCard } from "@/components/PropertyCard";
-import { PROPERTIES } from "@/lib/properties";
 import { Search, FilterX } from "lucide-react";
 import Link from "next/link";
 import { SearchForm } from "@/components/SearchForm";
+import { createClient } from "@/lib/supabase/server";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -16,56 +16,56 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const { city, neighborhood, street, type } = params;
+  const supabase = await createClient();
 
-  // Filter properties logic
-  const filteredProperties = PROPERTIES.filter((property) => {
-    // Note: Since mock data doesn't have city/neighborhood structure yet, 
-    // we'll do basic string matching on location for now.
-    // In a real app, you'd match against specific fields.
+  let query = supabase.from('properties').select('*');
 
-    if (city && !property.location.toLowerCase().includes(city.toLowerCase())) {
-       // Ideally we would map "paco-do-lumiar" to "Paço do Lumiar" for better matching
-       // For now, let's skip strict city check on mock data as it's limited
-    }
+  // Apply filters
+  if (neighborhood) {
+    // Search in location or description
+    query = query.or(`location.ilike.%${neighborhood}%,description.ilike.%${neighborhood}%`);
+  }
 
-    if (neighborhood && !property.location.toLowerCase().includes(neighborhood.toLowerCase())) {
-       // Simple substring match for mock data
-    }
+  if (street) {
+    query = query.ilike('location', `%${street}%`);
+  }
+
+  if (type && type !== 'todos') {
+    const typeMap: Record<string, string> = {
+      'apto': 'Apartamento',
+      'casa': 'Casa',
+      'comercial': 'Comercial'
+    };
     
-    // For this mock implementation, we'll try to match terms against the location string
-    // or description if available
-    let matches = true;
-
-    if (neighborhood) {
-       matches = matches && (
-         property.location.toLowerCase().includes(neighborhood.toLowerCase()) || 
-         property.description.toLowerCase().includes(neighborhood.toLowerCase())
-       );
+    const mappedType = typeMap[type] || type;
+    
+    // Check if it's Venda/Aluguel or a property characteristic
+    if (['Venda', 'Aluguel'].includes(mappedType)) {
+       query = query.eq('type', mappedType);
+    } else {
+       // Search in title, type column, or description
+       query = query.or(`title.ilike.%${mappedType}%,type.ilike.%${mappedType}%,description.ilike.%${mappedType}%`);
     }
+  }
 
-    if (street) {
-      matches = matches && property.location.toLowerCase().includes(street.toLowerCase());
-    }
+  const { data: propertiesData } = await query;
 
-    if (type && type !== 'todos') {
-      // Basic type mapping
-      const typeMap: Record<string, string> = {
-        'apto': 'Apartamento',
-        'casa': 'Casa',
-        'comercial': 'Comercial'
-      };
-      
-      const mappedType = typeMap[type];
-      if (mappedType) {
-        matches = matches && (
-            property.title.toLowerCase().includes(mappedType.toLowerCase()) ||
-            (property.type && property.type.toLowerCase().includes(mappedType.toLowerCase()))
-        );
-      }
-    }
-
-    return matches;
+  // Helper to map DB to Card Props (same as HomePage)
+  const mapProperty = (p: any) => ({
+    id: p.id,
+    title: p.title,
+    price: p.type === 'Aluguel' 
+      ? `R$ ${p.price}/mês` 
+      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+    location: p.location,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    area: p.area,
+    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    type: p.type,
   });
+
+  const filteredProperties = propertiesData?.map(mapProperty) || [];
 
   const hasFilters = city || neighborhood || street || type;
 

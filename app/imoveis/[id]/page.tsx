@@ -1,5 +1,4 @@
-import { getPropertyById } from "@/lib/properties";
-import { getAgencyById } from "@/lib/agencies";
+import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2 } from "lucide-react";
@@ -13,13 +12,39 @@ interface PropertyPageProps {
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { id } = await params;
-  const property = getPropertyById(id);
+  const supabase = await createClient();
 
-  if (!property) {
+  // Fetch property
+  const { data: propertyData, error: propError } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (propError || !propertyData) {
     notFound();
   }
 
-  const agency = getAgencyById(property.agencyId);
+  // Fetch agency
+  const { data: agencyData } = await supabase
+    .from('agencies')
+    .select('*')
+    .eq('id', propertyData.agency_id)
+    .single();
+
+  const property = {
+    ...propertyData,
+    imageUrl: propertyData.images?.[0] || '/placeholder.jpg',
+    price: propertyData.type === 'Aluguel'
+      ? `R$ ${propertyData.price}/mês`
+      : `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}`,
+    features: propertyData.features || [],
+  };
+
+  const agency = agencyData ? {
+    ...agencyData,
+    logo: agencyData.logo_url
+  } : null;
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
@@ -35,8 +60,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12">
           <div className="container mx-auto">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="mb-4 inline-flex items-center text-sm font-medium text-white/80 hover:text-white"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -93,7 +118,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
               <h2 className="mb-4 text-xl font-bold text-slate-900">Características</h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {property.features.map((feature, index) => (
+                {property.features.map((feature: string, index: number) => (
                   <div key={index} className="flex items-center text-slate-600">
                     <Check className="mr-2 h-5 w-5 text-green-500" />
                     {feature}
@@ -127,16 +152,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               )}
 
               <h3 className="mb-6 text-lg font-bold text-slate-900">Interessou? Entre em contato</h3>
-              
+
               <div className="space-y-4">
-                <a 
+                <a
                   href={agency ? `tel:${agency.phone.replace(/\D/g, '')}` : '#'}
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
                 >
                   <Phone className="h-5 w-5" />
                   Ligar Agora
                 </a>
-                <a 
+                <a
                   href={agency ? `mailto:${agency.email}` : '#'}
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                 >

@@ -3,13 +3,43 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { MapPin, Home, Key, Sparkles, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { PROPERTIES } from "@/lib/properties";
+import { createClient } from "@/lib/supabase/server";
 
 // HomePage Component
-export default function HomePage() {
-  // Simulate fetching filtered data
-  const featuredProperties = PROPERTIES.slice(0, 3);
-  const newProperties = PROPERTIES.slice(3, 6);
+export default async function HomePage() {
+  const supabase = await createClient();
+
+  // Fetch featured properties
+  const { data: featuredData } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('featured', true)
+    .limit(3);
+
+  // Fetch new properties
+  const { data: newData } = await supabase
+    .from('properties')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  // Helper to map DB to Card Props
+  const mapProperty = (p: any) => ({
+    id: p.id,
+    title: p.title,
+    price: p.type === 'Aluguel'
+      ? `R$ ${p.price}/mês`
+      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+    location: p.location,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    area: p.area,
+    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    type: p.type,
+  });
+
+  const featuredProperties = featuredData?.map(mapProperty) || [];
+  const newProperties = newData?.map(mapProperty) || [];
 
   return (
     <div className="flex flex-col gap-16 pb-16">
