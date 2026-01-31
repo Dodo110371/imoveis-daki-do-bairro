@@ -2,20 +2,39 @@
 
 import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string,
+      subject: formData.get('subject') as string,
+      message: formData.get('message') as string,
+    };
+
+    const supabase = createClient();
+    
+    const { error } = await supabase
+      .from('messages')
+      .insert([data]);
+
+    if (error) {
+      console.error('Error sending message:', error);
+      alert('Erro ao enviar mensagem. Por favor, tente novamente.');
+    } else {
+      setIsSuccess(true);
+    }
 
     setIsSubmitting(false);
-    setIsSuccess(true);
   };
 
   return (
@@ -113,6 +132,7 @@ export default function ContactPage() {
                       <label className="block text-sm font-medium text-slate-700 mb-2">Nome Completo</label>
                       <input 
                         required 
+                        name="name"
                         type="text" 
                         className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                         placeholder="Seu nome"
@@ -122,6 +142,7 @@ export default function ContactPage() {
                       <label className="block text-sm font-medium text-slate-700 mb-2">Telefone</label>
                       <input 
                         required 
+                        name="phone"
                         type="tel" 
                         className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                         placeholder="(00) 00000-0000"
@@ -133,6 +154,7 @@ export default function ContactPage() {
                     <label className="block text-sm font-medium text-slate-700 mb-2">E-mail</label>
                     <input 
                       required 
+                      name="email"
                       type="email" 
                       className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                       placeholder="seu@email.com"
@@ -141,11 +163,11 @@ export default function ContactPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Assunto</label>
-                    <select className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-white">
-                      <option>Quero comprar um imóvel</option>
-                      <option>Quero alugar um imóvel</option>
-                      <option>Quero vender meu imóvel</option>
-                      <option>Outro assunto</option>
+                    <select name="subject" className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-white">
+                      <option value="Quero comprar um imóvel">Quero comprar um imóvel</option>
+                      <option value="Quero alugar um imóvel">Quero alugar um imóvel</option>
+                      <option value="Quero vender meu imóvel">Quero vender meu imóvel</option>
+                      <option value="Outro assunto">Outro assunto</option>
                     </select>
                   </div>
 
@@ -153,6 +175,7 @@ export default function ContactPage() {
                     <label className="block text-sm font-medium text-slate-700 mb-2">Mensagem</label>
                     <textarea 
                       required 
+                      name="message"
                       rows={4} 
                       className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all resize-none"
                       placeholder="Como podemos ajudar?"
