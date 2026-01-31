@@ -93,13 +93,18 @@ export default function ContactPage() {
               </div>
 
               {/* Map Placeholder */}
-              <div className="mt-12 h-48 bg-slate-800 rounded-xl relative overflow-hidden group cursor-pointer">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Rua+do+Bairro,+123+-+Sala+4,+Bairro+Exemplo,+Cidade+-+SP"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-12 h-48 bg-slate-800 rounded-xl relative overflow-hidden group cursor-pointer block"
+              >
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span className="text-slate-400 font-medium group-hover:text-white transition-colors">Ver no Mapa</span>
                 </div>
                 {/* Simulated Map Grid */}
                 <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-              </div>
+              </a>
             </div>
 
             {/* Contact Form */}
