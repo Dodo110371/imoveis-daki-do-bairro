@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS messages (
 -- Enable Row Level Security (RLS)
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 
+-- Drop policy if it exists to avoid errors on re-run
+DROP POLICY IF EXISTS "Enable insert for everyone" ON messages;
+
 -- Create policy to allow anyone to insert messages (public form)
 CREATE POLICY "Enable insert for everyone" ON messages
   FOR INSERT

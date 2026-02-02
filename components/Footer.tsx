@@ -1,5 +1,6 @@
+import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail, Smartphone } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -7,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-4">
-            <span className="text-xl font-bold text-slate-900">Imóveis daki do Bairro</span>
+            <span className="text-xl font-bold text-slate-900">{siteConfig.name}</span>
             <p className="text-sm text-slate-600">
               A imobiliária especialista no que realmente importa: viver bem no seu bairro.
             </p>
@@ -22,11 +23,16 @@ export function Footer() {
             <Link href="/contato" className="text-sm text-slate-600 hover:text-slate-900">Contato</Link>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-slate-900">Contato</h3>
-            <span className="text-sm text-slate-600">contato@imoveisdakidobairro.com.br</span>
-            <span className="text-sm text-slate-600">(11) 99999-9999</span>
-            <span className="text-sm text-slate-600">Rua do Bairro, 123 - Sala 4</span>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <Mail className="h-4 w-4" />
+              <span>{siteConfig.contact.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <Smartphone className="h-4 w-4" />
+              <span>{siteConfig.contact.phone}</span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2">

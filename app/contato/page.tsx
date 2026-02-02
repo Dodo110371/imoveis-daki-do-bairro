@@ -1,8 +1,9 @@
 'use client';
 
+import { siteConfig } from '@/lib/site-config';
 import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { submitContactForm } from '@/app/actions/contact';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,28 +14,22 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name') as string,
-      phone: formData.get('phone') as string,
-      email: formData.get('email') as string,
-      subject: formData.get('subject') as string,
-      message: formData.get('message') as string,
-    };
 
-    const supabase = createClient();
-    
-    const { error } = await supabase
-      .from('messages')
-      .insert([data]);
+    try {
+      const result = await submitContactForm({ success: false, message: '' }, formData);
 
-    if (error) {
-      console.error('Error sending message:', error);
-      alert('Erro ao enviar mensagem. Por favor, tente novamente.');
-    } else {
-      setIsSuccess(true);
+      if (result.success) {
+        setIsSuccess(true);
+        // Optional: reset form if needed, though we are hiding it
+        e.currentTarget.reset();
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      alert('Ocorreu um erro ao enviar. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -52,7 +47,7 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 py-16 -mt-10">
         <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2">
-            
+
             {/* Contact Info Sidebar */}
             <div className="bg-slate-900 p-8 md:p-12 text-white flex flex-col justify-between">
               <div>
@@ -60,11 +55,11 @@ export default function ContactPage() {
                 <div className="space-y-8">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-white/10 rounded-lg">
-                      <Phone className="h-6 w-6 text-blue-400" />
+                      <Smartphone className="h-6 w-6 text-blue-400" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-lg">Telefone</h4>
-                      <p className="text-slate-300 mt-1">(11) 99999-9999</p>
+                      <p className="text-slate-300 mt-1">{siteConfig.contact.phone}</p>
                       <p className="text-sm text-slate-400 mt-1">Seg a Sex, das 9h às 18h</p>
                     </div>
                   </div>
@@ -75,36 +70,19 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-lg">E-mail</h4>
-                      <p className="text-slate-300 mt-1">contato@imoveisdakidobairro.com.br</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-white/10 rounded-lg">
-                      <MapPin className="h-6 w-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-lg">Escritório</h4>
-                      <p className="text-slate-300 mt-1">Rua do Bairro, 123 - Sala 4</p>
-                      <p className="text-slate-300">Bairro Exemplo, Cidade - SP</p>
+                      <p className="text-slate-300 mt-1">{siteConfig.contact.email}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <a 
-                href="https://www.google.com/maps/search/?api=1&query=Rua+do+Bairro,+123+-+Sala+4,+Bairro+Exemplo,+Cidade+-+SP"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-12 h-48 bg-slate-800 rounded-xl relative overflow-hidden group cursor-pointer block"
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-slate-400 font-medium group-hover:text-white transition-colors">Ver no Mapa</span>
+              {/* Decorative element to replace map */}
+              <div className="mt-12 h-48 bg-slate-800/50 rounded-xl relative overflow-hidden flex items-center justify-center">
+                <div className="text-slate-500 text-sm">
+                  Estamos à disposição para atendê-lo.
                 </div>
-                {/* Simulated Map Grid */}
-                <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-              </a>
+                <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+              </div>
             </div>
 
             {/* Contact Form */}
@@ -118,7 +96,7 @@ export default function ContactPage() {
                   <p className="text-slate-600 mb-8">
                     Obrigado pelo contato. Nossa equipe retornará sua mensagem o mais breve possível.
                   </p>
-                  <button 
+                  <button
                     onClick={() => setIsSuccess(false)}
                     className="text-blue-600 font-semibold hover:underline"
                   >
@@ -135,20 +113,20 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">Nome Completo</label>
-                      <input 
-                        required 
+                      <input
+                        required
                         name="name"
-                        type="text" 
+                        type="text"
                         className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                         placeholder="Seu nome"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">Telefone</label>
-                      <input 
-                        required 
+                      <input
+                        required
                         name="phone"
-                        type="tel" 
+                        type="tel"
                         className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                         placeholder="(00) 00000-0000"
                       />
@@ -157,10 +135,10 @@ export default function ContactPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">E-mail</label>
-                    <input 
-                      required 
+                    <input
+                      required
                       name="email"
-                      type="email" 
+                      type="email"
                       className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                       placeholder="seu@email.com"
                     />
@@ -178,17 +156,17 @@ export default function ContactPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Mensagem</label>
-                    <textarea 
-                      required 
+                    <textarea
+                      required
                       name="message"
-                      rows={4} 
+                      rows={4}
                       className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all resize-none"
                       placeholder="Como podemos ajudar?"
                     ></textarea>
                   </div>
 
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
                   >
