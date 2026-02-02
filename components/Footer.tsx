@@ -25,14 +25,14 @@ export function Footer() {
 
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-slate-900">Contato</h3>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Link href="/contato" className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
               <Mail className="h-4 w-4" />
               <span>{siteConfig.contact.email}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
+            </Link>
+            <Link href="/contato" className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
               <Smartphone className="h-4 w-4" />
               <span>{siteConfig.contact.phone}</span>
-            </div>
+            </Link>
           </div>
 
           <div className="flex flex-col gap-2">
