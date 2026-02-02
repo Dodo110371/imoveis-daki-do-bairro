@@ -1,7 +1,7 @@
 'use client';
 
 import { siteConfig } from '@/lib/site-config';
-import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { Mail, Smartphone, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { submitContactForm } from '@/app/actions/contact';
 
