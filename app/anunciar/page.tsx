@@ -35,6 +35,7 @@ export default function AdvertisePage() {
   const [hasIdentified, setHasIdentified] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Form State
@@ -44,6 +45,7 @@ export default function AdvertisePage() {
     type: 'casa', // casa | apto | comercial | terreno
 
     // Step 2: Location
+    cep: '',
     city: '',
     neighborhood: '',
     street: '',
@@ -74,6 +76,39 @@ export default function AdvertisePage() {
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    setIsLoadingCep(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        let cityKey = '';
+        const cityName = data.localidade.toLowerCase();
+
+        // Map API city to our keys
+        if (cityName.includes('luís') || cityName.includes('luis')) cityKey = 'sao-luis';
+        else if (cityName.includes('paço') || cityName.includes('paco')) cityKey = 'paco-do-lumiar';
+        else if (cityName.includes('ribamar')) cityKey = 'sao-jose-de-ribamar';
+
+        setFormData(prev => ({
+          ...prev,
+          street: data.logradouro || prev.street,
+          city: cityKey || prev.city,
+          neighborhood: data.bairro || prev.neighborhood, // Might need manual adjustment if not in list
+          complement: data.complemento || prev.complement,
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+    } finally {
+      setIsLoadingCep(false);
+    }
   };
 
   const nextStep = () => {
