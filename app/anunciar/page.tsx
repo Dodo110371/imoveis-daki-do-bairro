@@ -53,6 +53,15 @@ interface AdvertiseFormData {
   name: string;
   email: string;
   phone: string;
+  cpfCnpj: string;
+  whatsapp: string;
+  advertiserAddressOption: 'same' | 'different';
+  advertiserCep: string;
+  advertiserCity: string;
+  advertiserNeighborhood: string;
+  advertiserStreet: string;
+  advertiserNumber: string;
+  advertiserComplement: string;
 }
 
 export default function AdvertisePage() {
@@ -61,6 +70,7 @@ export default function AdvertisePage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCep, setIsLoadingCep] = useState(false);
+  const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Form State
@@ -97,17 +107,22 @@ export default function AdvertisePage() {
     name: '',
     email: '',
     phone: '',
+    cpfCnpj: '',
+    whatsapp: '',
+    advertiserAddressOption: 'same',
+    advertiserCep: '',
+    advertiserCity: '',
+    advertiserNeighborhood: '',
+    advertiserStreet: '',
+    advertiserNumber: '',
+    advertiserComplement: '',
   });
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    const cep = e.target.value.replace(/\D/g, '');
-    if (cep.length !== 8) return;
-
-    setIsLoadingCep(true);
+  const fetchAddressByCep = async (cep: string) => {
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
@@ -121,18 +136,54 @@ export default function AdvertisePage() {
         else if (cityName.includes('paço') || cityName.includes('paco')) cityKey = 'paco-do-lumiar';
         else if (cityName.includes('ribamar')) cityKey = 'sao-jose-de-ribamar';
 
-        setFormData(prev => ({
-          ...prev,
-          street: data.logradouro || prev.street,
-          city: cityKey || prev.city,
-          neighborhood: data.bairro || prev.neighborhood, // Might need manual adjustment if not in list
-          complement: data.complemento || prev.complement,
-        }));
+        return {
+          street: data.logradouro,
+          city: cityKey,
+          neighborhood: data.bairro,
+          complement: data.complemento,
+        };
       }
     } catch (error) {
       console.error('Erro ao buscar CEP:', error);
-    } finally {
-      setIsLoadingCep(false);
+    }
+    return null;
+  };
+
+  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    setIsLoadingCep(true);
+    const address = await fetchAddressByCep(cep);
+    setIsLoadingCep(false);
+
+    if (address) {
+      setFormData(prev => ({
+        ...prev,
+        street: address.street || prev.street,
+        city: address.city || prev.city,
+        neighborhood: address.neighborhood || prev.neighborhood, // Might need manual adjustment if not in list
+        complement: address.complement || prev.complement,
+      }));
+    }
+  };
+
+  const handleAdvertiserCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    setIsLoadingAdvertiserCep(true);
+    const address = await fetchAddressByCep(cep);
+    setIsLoadingAdvertiserCep(false);
+
+    if (address) {
+      setFormData(prev => ({
+        ...prev,
+        advertiserStreet: address.street || prev.advertiserStreet,
+        advertiserCity: address.city || prev.advertiserCity,
+        advertiserNeighborhood: address.neighborhood || prev.advertiserNeighborhood,
+        advertiserComplement: address.complement || prev.advertiserComplement,
+      }));
     }
   };
 
@@ -204,6 +255,15 @@ export default function AdvertisePage() {
                 name: '',
                 email: '',
                 phone: '',
+                cpfCnpj: '',
+                whatsapp: '',
+                advertiserAddressOption: 'same',
+                advertiserCep: '',
+                advertiserCity: '',
+                advertiserNeighborhood: '',
+                advertiserStreet: '',
+                advertiserNumber: '',
+                advertiserComplement: '',
               });
             }}
             className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
@@ -276,6 +336,7 @@ export default function AdvertisePage() {
   }
 
   const neighborhoods = formData.city ? CITY_NEIGHBORHOODS[formData.city as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
+  const advertiserNeighborhoods = formData.advertiserCity ? CITY_NEIGHBORHOODS[formData.advertiserCity as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -668,14 +729,43 @@ export default function AdvertisePage() {
               </div>
 
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">Nome Completo</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Nome Completo</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">CPF / CNPJ</label>
+                    <input
+                      type="text"
+                      placeholder="000.000.000-00"
+                      value={formData.cpfCnpj}
+                      onChange={(e) => {
+                        let v = e.target.value.replace(/\D/g, '');
+                        if (v.length > 14) v = v.slice(0, 14);
+                        if (v.length > 11) {
+                          // CNPJ mask
+                          v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+                          v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                          v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                          v = v.replace(/(\d{4})(\d)/, '$1-$2');
+                        } else {
+                          // CPF mask
+                          v = v.replace(/(\d{3})(\d)/, '$1.$2');
+                          v = v.replace(/(\d{3})(\d)/, '$1.$2');
+                          v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                        }
+                        handleInputChange('cpfCnpj', v);
+                      }}
+                      className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -688,14 +778,159 @@ export default function AdvertisePage() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">Telefone / WhatsApp</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Telefone</label>
+                    <input
+                      type="tel"
+                      placeholder="(00) 00000-0000"
+                      value={formData.phone}
+                      onChange={(e) => {
+                        let v = e.target.value.replace(/\D/g, '');
+                        if (v.length > 11) v = v.slice(0, 11);
+                        v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+                        v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+                        handleInputChange('phone', v);
+                      }}
+                      className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">WhatsApp</label>
+                    <input
+                      type="tel"
+                      placeholder="(00) 00000-0000"
+                      value={formData.whatsapp}
+                      onChange={(e) => {
+                        let v = e.target.value.replace(/\D/g, '');
+                        if (v.length > 11) v = v.slice(0, 11);
+                        v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+                        v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+                        handleInputChange('whatsapp', v);
+                      }}
+                      className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-4">Endereço do Anunciante</h3>
+
+                  <div className="flex gap-6 mb-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="addressOption"
+                        checked={formData.advertiserAddressOption === 'same'}
+                        onChange={() => handleInputChange('advertiserAddressOption', 'same')}
+                        className="w-4 h-4 text-blue-600"
+                      />
+                      <span className="text-slate-700">Usar mesmo endereço do imóvel</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="addressOption"
+                        checked={formData.advertiserAddressOption === 'different'}
+                        onChange={() => handleInputChange('advertiserAddressOption', 'different')}
+                        className="w-4 h-4 text-blue-600"
+                      />
+                      <span className="text-slate-700">Usar outro endereço</span>
+                    </label>
+                  </div>
+
+                  {formData.advertiserAddressOption === 'different' && (
+                    <div className="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">CEP</label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="00000-000"
+                            maxLength={9}
+                            value={formData.advertiserCep}
+                            onChange={(e) => {
+                              let v = e.target.value.replace(/\D/g, '');
+                              if (v.length > 5) v = v.replace(/^(\d{5})(\d)/, '$1-$2');
+                              handleInputChange('advertiserCep', v);
+                            }}
+                            onBlur={handleAdvertiserCepBlur}
+                            className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                          />
+                          {isLoadingAdvertiserCep && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Cidade</label>
+                          <select
+                            value={formData.advertiserCity}
+                            onChange={(e) => handleInputChange('advertiserCity', e.target.value)}
+                            className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                          >
+                            <option value="">Selecione...</option>
+                            <option value="sao-luis">São Luís</option>
+                            <option value="paco-do-lumiar">Paço do Lumiar</option>
+                            <option value="sao-jose-de-ribamar">São José de Ribamar</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Bairro</label>
+                          <select
+                            value={formData.advertiserNeighborhood}
+                            onChange={(e) => handleInputChange('advertiserNeighborhood', e.target.value)}
+                            disabled={!formData.advertiserCity}
+                            className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-slate-100 disabled:text-slate-400"
+                          >
+                            <option value="">Selecione...</option>
+                            {advertiserNeighborhoods.map((n) => (
+                              <option key={n} value={n}>{n}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">Endereço</label>
+                        <input
+                          type="text"
+                          placeholder="Ex: Rua das Flores"
+                          value={formData.advertiserStreet}
+                          onChange={(e) => handleInputChange('advertiserStreet', e.target.value)}
+                          className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Número</label>
+                          <input
+                            type="text"
+                            placeholder="Ex: 123"
+                            value={formData.advertiserNumber}
+                            onChange={(e) => handleInputChange('advertiserNumber', e.target.value)}
+                            className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Complemento</label>
+                          <input
+                            type="text"
+                            placeholder="Ex: Apt 101"
+                            value={formData.advertiserComplement}
+                            onChange={(e) => handleInputChange('advertiserComplement', e.target.value)}
+                            className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
