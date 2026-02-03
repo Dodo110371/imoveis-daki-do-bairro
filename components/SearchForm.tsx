@@ -3,59 +3,7 @@
 import { useState } from 'react';
 import { Search, MapPin, Home, Navigation, Map, Building2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-const CITY_NEIGHBORHOODS = {
-  "paco-do-lumiar": [
-    "Alto da Esperança", "Boa Vista", "Caranguejo", "Centro", "Conjunto Tambaú",
-    "Cumbique", "Eugênio Pereira", "Iguaíba", "Itapera", "Jardim das Mercês",
-    "Lima Verde", "Loteamento Jardim Paranã", "Loteamento Todos os Santos",
-    "Maioba", "Maiobão", "Mocajituba", "Nova Luz", "Nova Vida", "Novo Horizonte",
-    "Paranã I", "Paranã II", "Paranã III", "Parque Bob Kennedy", "Parque Copacabana",
-    "Parque Horizonte", "Parque Jaguarema", "Pau Deitado", "Pindoba", "Pirâmide",
-    "Porto de Mocajituba", "Recanto Maiobão", "Residencial Abdalla I", "Residencial Abdalla II",
-    "Residencial Araguaia", "Residencial Cidade Verde", "Residencial Orquídeas", "Residencial Safira",
-    "Roseana Sarney", "Sítio Grande", "Tendal Mirim", "Vila Cafeteira", "Vila do Povo",
-    "Vila Mercês", "Vila Nazaré", "Vila Nossa Senhora da Luz", "Vila São José I", "Vila São José II"
-  ],
-  "sao-jose-de-ribamar": [
-    "Alto do Itapiracó", "Alto Turu", "Araçagy", "Área Rural", "Boa Viagem", "Boa Vista", "Campina",
-    "Canavieira", "Caúra", "Centro", "Cidade Alta", "Cohatrac", "Cruzeiro", "Gambarrinha",
-    "Itapary", "J. Câmara", "J. Lima", "Jaguarema", "Jararaí", "Jardim Tropical",
-    "Jeniparana", "Maracajá", "Mata", "Matinha", "Miritíua", "Mojó", "Moropóia",
-    "Mutirão", "Nova Terra", "Olho D'Água", "Outeiro", "Panaquatira", "Parque das Palmeiras",
-    "Parque Jair", "Parque Vitória", "Pindaí", "Quinta", "Recanto da Paz",
-    "Santana", "Santuário", "São Benedito", "São Brás e Macacos", "São José dos Índios",
-    "São Raimundo", "Saramanta", "Sítio do Apicum", "Tijupá Queimado", "Ubatuba", "Vieira Barbosa",
-    "Vila Alonso Costa", "Vila Cafeteira", "Vila Dr. Julinho", "Vila Flamengo", "Vila Kiola",
-    "Vila Mestre Antônio", "Vila Operária", "Vila Roseana Sarney", "Vila Santa Teresinha",
-    "Vila São José", "Vila São Luís", "Vila Sarnambi", "Vila Sarney Filho I", "Vila Sarney Filho II"
-  ],
-  "sao-luis": [
-    "Alemanha", "Anil", "Anjo da Guarda", "Apeadouro", "Apicum", "Areinha", "Bairro de Fátima",
-    "Barreto", "Bequimão", "Bom Jesus", "Bom Milagre", "Cajueiro", "Cajupe", "Calhau", "Camboa",
-    "Caratatiua", "Chácara Brasil", "Cidade Olímpica", "Cidade Operária", "Cohab Anil I", "Cohab Anil II",
-    "Cohab Anil III", "Cohab Anil IV", "Cohama", "Cohafuma", "Cohajap", "Cohatrac I", "Cohatrac II",
-    "Cohatrac III", "Cohatrac IV", "Coheb", "Coroado", "Coroadinho", "Cruzeiro do Anil", "Cutim",
-    "Diamante", "Distrito Industrial", "Divineia", "Estiva", "Fabril", "Fé em Deus", "Filipinho",
-    "Floresta", "Forquilha", "Fumacê", "Gancharia", "Goiabal", "Ipase", "Itapera", "Itaqui",
-    "Jaracaty", "Jardim América", "Jardim das Margaridas", "Jardim de Fátima", "Jardim Eldorado",
-    "Jardim Renascença", "Jardim São Cristóvão", "Jardim São Raimundo", "João de Deus", "João Paulo",
-    "Jordoa", "Liberdade", "Lira", "Macaúba", "Madre Deus", "Maracanã", "Maranhão Novo",
-    "Mato Grosso", "Monte Castelo", "Olho d'Água", "Outeiro da Cruz", "Pão de Açúcar", "Parque Amazonas",
-    "Parque Atenas", "Parque Atlântico", "Parque Aurora", "Parque dos Nobres", "Parque Pindorama",
-    "Parque Shalom", "Parque Timbira", "Parque Universitário", "Pedrinhas", "Piancó", "Pirapora",
-    "Planalto Turu", "Planalto Vinhais", "Ponta d'Areia", "Ponta do Farol", "Praia Grande",
-    "Quebra Pote", "Quintas do Calhau", "Recanto dos Vinhais", "Redenção", "Renascença",
-    "Residencial Pinheiros", "Retiro Natal", "Rio Grande", "Sá Viana", "Sacavém", "Santa Bárbara",
-    "Santa Clara", "Santa Cruz", "Santa Efigênia", "Santa Helena", "Santa Rosa", "Santo Antônio",
-    "São Bernardo", "São Cristóvão", "São Francisco", "São Joaquim", "São Marcos", "São Raimundo",
-    "Sítio Leal", "Solar dos Lusitanos", "Tajaçuaba", "Tibiri", "Tirirical", "Turu", "Vera Cruz",
-    "Vila Bacanga", "Vila Brasil", "Vila Cascavel", "Vila Collier", "Vila Conceição", "Vila Embratel",
-    "Vila Esperança", "Vila Industrial", "Vila Isabel", "Vila Itamar", "Vila Janaína", "Vila Luizão",
-    "Vila Maranhão", "Vila Mauro Fecury", "Vila Nova", "Vila Palmeira", "Vila Passos", "Vila Riod",
-    "Vinhais", "Vinhais Velho", "Zona Rural"
-  ]
-};
+import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 
 export function SearchForm() {
   const router = useRouter();

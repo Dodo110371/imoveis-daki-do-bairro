@@ -38,9 +38,9 @@ export function Header() {
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <button className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors">
+                    <Link href="/anunciar" className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors">
                         Anuncie seu Imóvel
-                    </button>
+                    </Link>
                     <Link href="/minha-conta" className="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
                         <User className="h-5 w-5" />
                         Minha Conta
@@ -68,9 +68,9 @@ export function Header() {
                             <User className="h-5 w-5" />
                             Minha Conta
                         </Link>
-                        <button className="flex items-center justify-center gap-2 px-4 py-3 mt-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors w-full">
+                        <Link href="/anunciar" className="flex items-center justify-center gap-2 px-4 py-3 mt-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors w-full" onClick={() => setIsMenuOpen(false)}>
                             Anuncie seu Imóvel
-                        </button>
+                        </Link>
                     </nav>
                 </div>
             )}
