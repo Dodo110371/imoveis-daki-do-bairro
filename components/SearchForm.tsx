@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation';
 
 const CITY_NEIGHBORHOODS = {
   "paco-do-lumiar": [
-    "Alto da Esperança", "Boa Vista", "Caranguejo", "Centro", "Conjunto Tambaú", 
-    "Cumbique", "Eugênio Pereira", "Iguaíba", "Itapera", "Jardim das Mercês", 
-    "Lima Verde", "Loteamento Jardim Paranã", "Loteamento Todos os Santos", 
-    "Maioba", "Maiobão", "Mocajituba", "Nova Luz", "Nova Vida", "Novo Horizonte", 
-    "Paranã I", "Paranã II", "Paranã III", "Parque Bob Kennedy", "Parque Copacabana", 
-    "Parque Horizonte", "Parque Jaguarema", "Pau Deitado", "Pindoba", "Pirâmide", 
-    "Porto de Mocajituba", "Recanto Maiobão", "Residencial Abdalla I", "Residencial Abdalla II", 
-    "Residencial Araguaia", "Residencial Cidade Verde", "Residencial Orquídeas", "Residencial Safira", 
-    "Roseana Sarney", "Sítio Grande", "Tendal Mirim", "Vila Cafeteira", "Vila do Povo", 
+    "Alto da Esperança", "Boa Vista", "Caranguejo", "Centro", "Conjunto Tambaú",
+    "Cumbique", "Eugênio Pereira", "Iguaíba", "Itapera", "Jardim das Mercês",
+    "Lima Verde", "Loteamento Jardim Paranã", "Loteamento Todos os Santos",
+    "Maioba", "Maiobão", "Mocajituba", "Nova Luz", "Nova Vida", "Novo Horizonte",
+    "Paranã I", "Paranã II", "Paranã III", "Parque Bob Kennedy", "Parque Copacabana",
+    "Parque Horizonte", "Parque Jaguarema", "Pau Deitado", "Pindoba", "Pirâmide",
+    "Porto de Mocajituba", "Recanto Maiobão", "Residencial Abdalla I", "Residencial Abdalla II",
+    "Residencial Araguaia", "Residencial Cidade Verde", "Residencial Orquídeas", "Residencial Safira",
+    "Roseana Sarney", "Sítio Grande", "Tendal Mirim", "Vila Cafeteira", "Vila do Povo",
     "Vila Mercês", "Vila Nazaré", "Vila Nossa Senhora da Luz", "Vila São José I", "Vila São José II"
   ],
   "sao-jose-de-ribamar": [
@@ -29,6 +29,7 @@ const CITY_NEIGHBORHOODS = {
     "Vila Alonso Costa", "Vila Cafeteira", "Vila Dr. Julinho", "Vila Flamengo", "Vila Kiola",
     "Vila Mestre Antônio", "Vila Operária", "Vila Roseana Sarney", "Vila Santa Teresinha",
     "Vila São José", "Vila São Luís", "Vila Sarnambi", "Vila Sarney Filho I", "Vila Sarney Filho II"
+  ],
   "sao-luis": [
     "Alemanha", "Anil", "Anjo da Guarda", "Apeadouro", "Apicum", "Areinha", "Bairro de Fátima",
     "Barreto", "Bequimão", "Bom Jesus", "Bom Milagre", "Cajueiro", "Cajupe", "Calhau", "Camboa",
@@ -53,7 +54,7 @@ const CITY_NEIGHBORHOODS = {
     "Vila Esperança", "Vila Industrial", "Vila Isabel", "Vila Itamar", "Vila Janaína", "Vila Luizão",
     "Vila Maranhão", "Vila Mauro Fecury", "Vila Nova", "Vila Palmeira", "Vila Passos", "Vila Riod",
     "Vinhais", "Vinhais Velho", "Zona Rural"
-  ],]
+  ]
 };
 
 export function SearchForm() {
