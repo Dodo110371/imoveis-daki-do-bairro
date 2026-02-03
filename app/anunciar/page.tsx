@@ -30,6 +30,30 @@ const STEPS = [
   { id: 6, title: 'Contato', icon: User },
 ];
 
+interface AdvertiseFormData {
+  purpose: string;
+  type: string;
+  cep: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  complement: string;
+  bedrooms: number;
+  bathrooms: number;
+  parking: number;
+  area: string;
+  price: string;
+  condoPrice: string;
+  iptuPrice: string;
+  title: string;
+  description: string;
+  photos: string[];
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export default function AdvertisePage() {
   const router = useRouter();
   const [hasIdentified, setHasIdentified] = useState(false);
@@ -39,7 +63,7 @@ export default function AdvertisePage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Form State
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AdvertiseFormData>({
     // Step 1: Type
     purpose: 'venda', // venda | aluguel
     type: 'casa', // casa | apto | comercial | terreno
