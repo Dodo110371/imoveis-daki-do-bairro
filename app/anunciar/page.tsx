@@ -30,6 +30,7 @@ const STEPS = [
   { id: 4, title: 'Valores', icon: DollarSign },
   { id: 5, title: 'Fotos', icon: Camera },
   { id: 6, title: 'Contato', icon: User },
+  { id: 7, title: 'Planos', icon: CreditCard },
 ];
 
 interface AdvertiseFormData {
@@ -267,6 +268,8 @@ export default function AdvertisePage() {
                 advertiserStreet: '',
                 advertiserNumber: '',
                 advertiserComplement: '',
+                paymentPlan: '',
+                paymentMethod: 'pix',
               });
             }}
             className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
@@ -959,8 +962,8 @@ export default function AdvertisePage() {
                 {/* Até Vender */}
                 <div
                   className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'ate_vender'
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 hover:border-slate-300'
                     }`}
                   onClick={() => handleInputChange('paymentPlan', 'ate_vender')}
                 >
@@ -1005,8 +1008,8 @@ export default function AdvertisePage() {
                 {/* Mensal */}
                 <div
                   className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'mensal'
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 hover:border-slate-300'
                     }`}
                   onClick={() => {
                     handleInputChange('paymentPlan', 'mensal');
@@ -1028,8 +1031,8 @@ export default function AdvertisePage() {
                 {/* Trimestral */}
                 <div
                   className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'trimestral'
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 hover:border-slate-300'
                     }`}
                   onClick={() => handleInputChange('paymentPlan', 'trimestral')}
                 >
@@ -1074,8 +1077,8 @@ export default function AdvertisePage() {
                 {/* Semestral */}
                 <div
                   className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'semestral'
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 hover:border-slate-300'
                     }`}
                   onClick={() => handleInputChange('paymentPlan', 'semestral')}
                 >
