@@ -17,7 +17,8 @@ import {
   Loader2,
   LogIn,
   UserPlus,
-  Info
+  Info,
+  CreditCard
 } from 'lucide-react';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 
@@ -116,6 +117,8 @@ export default function AdvertisePage() {
     advertiserStreet: '',
     advertiserNumber: '',
     advertiserComplement: '',
+    paymentPlan: '',
+    paymentMethod: 'pix',
   });
 
   const handleInputChange = (field: string, value: any) => {
@@ -940,6 +943,180 @@ export default function AdvertisePage() {
                   Ao publicar, você concorda com nossos Termos de Uso e Política de Privacidade.
                   Seus dados de contato ficarão visíveis para interessados.
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 7: PAYMENT PLANS */}
+          {currentStep === 7 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-slate-900">Escolha o plano ideal</h2>
+                <p className="text-slate-500 mt-2">Selecione como deseja pagar pelo seu anúncio</p>
+              </div>
+
+              <div className="grid gap-4">
+                {/* Até Vender */}
+                <div
+                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'ate_vender'
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  onClick={() => handleInputChange('paymentPlan', 'ate_vender')}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-lg text-slate-900">Até Vender</h3>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-blue-600' : 'border-slate-300'
+                      }`}>
+                      {formData.paymentPlan === 'ate_vender' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+                    </div>
+                  </div>
+
+                  {formData.paymentPlan === 'ate_vender' && (
+                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'pix'}
+                            onChange={() => handleInputChange('paymentMethod', 'pix')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>R$ 1.000,00 (À vista no Pix)</span>
+                        </div>
+                      </label>
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'installments'}
+                            onChange={() => handleInputChange('paymentMethod', 'installments')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>10x de R$ 110,00</span>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mensal */}
+                <div
+                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'mensal'
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  onClick={() => {
+                    handleInputChange('paymentPlan', 'mensal');
+                    handleInputChange('paymentMethod', 'pix');
+                  }}
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-bold text-lg text-slate-900">Mensal</h3>
+                      <p className="text-slate-600">R$ 200,00 / mês</p>
+                    </div>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'mensal' ? 'border-blue-600' : 'border-slate-300'
+                      }`}>
+                      {formData.paymentPlan === 'mensal' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Trimestral */}
+                <div
+                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'trimestral'
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  onClick={() => handleInputChange('paymentPlan', 'trimestral')}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-lg text-slate-900">Trimestral</h3>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-blue-600' : 'border-slate-300'
+                      }`}>
+                      {formData.paymentPlan === 'trimestral' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+                    </div>
+                  </div>
+
+                  {formData.paymentPlan === 'trimestral' && (
+                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'pix'}
+                            onChange={() => handleInputChange('paymentMethod', 'pix')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>R$ 300,00 (À vista no Pix)</span>
+                        </div>
+                      </label>
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'installments'}
+                            onChange={() => handleInputChange('paymentMethod', 'installments')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>3x de R$ 120,00</span>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Semestral */}
+                <div
+                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'semestral'
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  onClick={() => handleInputChange('paymentPlan', 'semestral')}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-lg text-slate-900">Semestral</h3>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-blue-600' : 'border-slate-300'
+                      }`}>
+                      {formData.paymentPlan === 'semestral' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+                    </div>
+                  </div>
+
+                  {formData.paymentPlan === 'semestral' && (
+                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'pix'}
+                            onChange={() => handleInputChange('paymentMethod', 'pix')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>R$ 600,00 (À vista no Pix)</span>
+                        </div>
+                      </label>
+                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'installments'}
+                            onChange={() => handleInputChange('paymentMethod', 'installments')}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <span>6x de R$ 110,00</span>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
               </div>
             </div>
           )}
