@@ -64,6 +64,8 @@ interface AdvertiseFormData {
   advertiserStreet: string;
   advertiserNumber: string;
   advertiserComplement: string;
+  paymentPlan: string;
+  paymentMethod: string;
 }
 
 export default function AdvertisePage() {
