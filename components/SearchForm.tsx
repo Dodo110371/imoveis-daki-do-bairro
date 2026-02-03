@@ -14,16 +14,16 @@ const CITY_NEIGHBORHOODS = {
     "Loteamento Jardim Paranã", "Residencial Orquídeas", "Centro"
   ],
   "sao-jose-de-ribamar": [
-    "Alto do Itapiracó", "Alto Turu", "Araçagy", "Área Rural", "Boa Viagem", "Boa Vista", "Campina", 
-    "Canavieira", "Caúra", "Centro", "Cidade Alta", "Cohatrac", "Cruzeiro", "Gambarrinha", 
-    "Itapary", "J. Câmara", "J. Lima", "Jaguarema", "Jararaí", "Jardim Tropical", "Jardim Turu", 
-    "Jeniparana", "Maiobinha", "Maracajá", "Mata", "Matinha", "Miritíua", "Mojó", "Moropóia", 
-    "Mutirão", "Nova Terra", "Olho D'Água", "Outeiro", "Panaquatira", "Parque das Palmeiras", 
-    "Parque Jair", "Parque Vitória", "Pindaí", "Quinta", "Recanto da Paz", "Santa Maria", 
-    "Santana", "Santuário", "São Benedito", "São Brás e Macacos", "São José dos Índios", 
-    "São Raimundo", "Saramanta", "Sítio do Apicum", "Tijupá Queimado", "Ubatuba", "Vieira Barbosa", 
-    "Vila Alonso Costa", "Vila Cafeteira", "Vila Dr. Julinho", "Vila Flamengo", "Vila Kiola", 
-    "Vila Mestre Antônio", "Vila Operária", "Vila Roseana Sarney", "Vila Santa Teresinha", 
+    "Alto do Itapiracó", "Alto Turu", "Araçagy", "Área Rural", "Boa Viagem", "Boa Vista", "Campina",
+    "Canavieira", "Caúra", "Centro", "Cidade Alta", "Cohatrac", "Cruzeiro", "Gambarrinha",
+    "Itapary", "J. Câmara", "J. Lima", "Jaguarema", "Jararaí", "Jardim Tropical",
+    "Jeniparana", "Maracajá", "Mata", "Matinha", "Miritíua", "Mojó", "Moropóia",
+    "Mutirão", "Nova Terra", "Olho D'Água", "Outeiro", "Panaquatira", "Parque das Palmeiras",
+    "Parque Jair", "Parque Vitória", "Pindaí", "Quinta", "Recanto da Paz",
+    "Santana", "Santuário", "São Benedito", "São Brás e Macacos", "São José dos Índios",
+    "São Raimundo", "Saramanta", "Sítio do Apicum", "Tijupá Queimado", "Ubatuba", "Vieira Barbosa",
+    "Vila Alonso Costa", "Vila Cafeteira", "Vila Dr. Julinho", "Vila Flamengo", "Vila Kiola",
+    "Vila Mestre Antônio", "Vila Operária", "Vila Roseana Sarney", "Vila Santa Teresinha",
     "Vila São José", "Vila São Luís", "Vila Sarnambi", "Vila Sarney Filho I", "Vila Sarney Filho II"
   ],
   "sao-luis": [
@@ -59,7 +59,7 @@ export function SearchForm() {
             <Building2 className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
             <div className="flex-1">
               <label className="block text-xs text-slate-500 font-semibold mb-0.5">Cidade</label>
-              <select 
+              <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 value={selectedCity}
                 onChange={(e) => {
@@ -80,7 +80,7 @@ export function SearchForm() {
             <Map className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
             <div className="flex-1">
               <label className="block text-xs text-slate-500 font-semibold mb-0.5">Bairro</label>
-              <select 
+              <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 disabled={!selectedCity}
                 value={selectedNeighborhood}
@@ -118,7 +118,7 @@ export function SearchForm() {
             <Home className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
             <div className="flex-1">
               <label className="block text-xs text-slate-500 font-semibold mb-0.5">Tipo</label>
-              <select 
+              <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
@@ -134,7 +134,7 @@ export function SearchForm() {
 
         {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-3 mt-2">
-          <button 
+          <button
             onClick={handleSearch}
             className="flex-1 bg-slate-900 text-white px-8 py-3.5 rounded-lg font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
