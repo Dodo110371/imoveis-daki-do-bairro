@@ -30,6 +30,7 @@ export function Header() {
                     <Link href="/comprar" className="hover:text-slate-900 transition-colors">Comprar</Link>
                     <Link href="/alugar" className="hover:text-slate-900 transition-colors">Alugar</Link>
                     <Link href="/imobiliarias" className="hover:text-slate-900 transition-colors">Imobiliárias</Link>
+                    <Link href="/quem-somos" className="hover:text-slate-900 transition-colors">Quem Somos</Link>
                     <Link href="/bairro" className="hover:text-slate-900 transition-colors">O Bairro</Link>
                     <Link href="/contato" className="hover:text-slate-900 transition-colors">Contato</Link>
                 </nav>
@@ -58,6 +59,7 @@ export function Header() {
                         <Link href="/comprar" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Comprar</Link>
                         <Link href="/alugar" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Alugar</Link>
                         <Link href="/imobiliarias" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Imobiliárias</Link>
+                        <Link href="/quem-somos" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Quem Somos</Link>
                         <Link href="/bairro" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>O Bairro</Link>
                         <Link href="/contato" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Contato</Link>
                         <Link href="/minha-conta" className="flex items-center gap-2 hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>

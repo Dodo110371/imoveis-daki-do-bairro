@@ -39,7 +39,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Fale Conosco</h1>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Quer comprar, vender ou apenas conhecer melhor o bairro? Nossa equipe de especialistas está pronta para te atender.
+            Quer anunciar ou tem dúvidas sobre a plataforma? Entre em contato conosco.
           </p>
         </div>
       </section>

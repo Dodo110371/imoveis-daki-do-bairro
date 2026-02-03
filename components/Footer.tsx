@@ -10,12 +10,13 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <span className="text-xl font-bold text-slate-900">{siteConfig.name}</span>
             <p className="text-sm text-slate-600">
-              A imobiliária especialista no que realmente importa: viver bem no seu bairro.
+              A plataforma especialista no que realmente importa: viver bem no seu bairro.
             </p>
           </div>
 
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold text-slate-900">Navegação</h3>
+            <Link href="/quem-somos" className="text-sm text-slate-600 hover:text-slate-900">Quem Somos</Link>
             <Link href="/comprar" className="text-sm text-slate-600 hover:text-slate-900">Comprar</Link>
             <Link href="/alugar" className="text-sm text-slate-600 hover:text-slate-900">Alugar</Link>
             <Link href="/imobiliarias" className="text-sm text-slate-600 hover:text-slate-900">Imobiliárias</Link>

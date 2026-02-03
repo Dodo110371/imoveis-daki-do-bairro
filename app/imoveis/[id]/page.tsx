@@ -166,11 +166,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                 >
                   <Mail className="h-5 w-5" />
-                  Enviar Mensagem
+                  Entrar em Contato
                 </a>
-                <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300">
-                  Agendar Visita
-                </button>
               </div>
 
               <div className="mt-6 text-center text-xs text-slate-500">

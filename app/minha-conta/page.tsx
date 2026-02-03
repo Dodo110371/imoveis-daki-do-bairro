@@ -40,7 +40,7 @@ export default function MinhaContaPage() {
           </h2>
           <p className="text-lg text-slate-300 mb-8 leading-relaxed">
             {isLogin 
-              ? "Acesse sua conta para gerenciar seus imóveis favoritos, agendar visitas e acompanhar suas propostas."
+              ? "Acesse sua conta para gerenciar seus imóveis favoritos e histórico de contatos."
               : "Crie sua conta gratuitamente e tenha acesso a recursos exclusivos para encontrar o imóvel dos seus sonhos."
             }
           </p>
