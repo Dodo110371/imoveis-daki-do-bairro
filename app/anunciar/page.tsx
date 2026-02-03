@@ -537,7 +537,7 @@ export default function AdvertisePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">Vagas</label>
+                  <label className="text-sm font-medium text-slate-700">Vagas na Garagem</label>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleInputChange('parking', Math.max(0, formData.parking - 1))}
