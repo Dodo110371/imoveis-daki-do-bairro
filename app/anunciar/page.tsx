@@ -322,6 +322,30 @@ export default function AdvertisePage() {
                 <p className="text-slate-500 mt-2">A localização é fundamental para os interessados</p>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700">CEP</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="00000-000"
+                    maxLength={9}
+                    value={formData.cep}
+                    onChange={(e) => {
+                      let v = e.target.value.replace(/\D/g, '');
+                      if (v.length > 5) v = v.replace(/^(\d{5})(\d)/, '$1-$2');
+                      handleInputChange('cep', v);
+                    }}
+                    onBlur={handleCepBlur}
+                    className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                  {isLoadingCep && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Cidade</label>
