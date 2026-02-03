@@ -6,12 +6,16 @@ import { useRouter } from 'next/navigation';
 
 const CITY_NEIGHBORHOODS = {
   "paco-do-lumiar": [
-    "Maiobão", "Maioba", "Iguaíba", "Mocajituba", "Vila Cafeteira", "Vila Nazaré", "Pindoba",
-    "Paranã I", "Paranã II", "Paranã III", "Vila Mercês", "Residencial Abdalla I", "Residencial Abdalla II",
-    "Tendal Mirim", "Loteamento Todos os Santos", "Vila São José I", "Vila São José II",
-    "Porto de Mocajituba", "Caranguejo", "Pau Deitado", "Novo Horizonte", "Nova Luz", "Nova Vida",
-    "Jardim das Mercês", "Residencial Araguaia", "Roseana Sarney", "Conjunto Tambaú",
-    "Loteamento Jardim Paranã", "Residencial Orquídeas", "Centro"
+    "Alto da Esperança", "Boa Vista", "Caranguejo", "Centro", "Conjunto Tambaú", 
+    "Cumbique", "Eugênio Pereira", "Iguaíba", "Itapera", "Jardim das Mercês", 
+    "Lima Verde", "Loteamento Jardim Paranã", "Loteamento Todos os Santos", 
+    "Maioba", "Maiobão", "Mocajituba", "Nova Luz", "Nova Vida", "Novo Horizonte", 
+    "Paranã I", "Paranã II", "Paranã III", "Parque Bob Kennedy", "Parque Copacabana", 
+    "Parque Horizonte", "Parque Jaguarema", "Pau Deitado", "Pindoba", "Pirâmide", 
+    "Porto de Mocajituba", "Recanto Maiobão", "Residencial Abdalla I", "Residencial Abdalla II", 
+    "Residencial Araguaia", "Residencial Cidade Verde", "Residencial Orquídeas", "Residencial Safira", 
+    "Roseana Sarney", "Sítio Grande", "Tendal Mirim", "Vila Cafeteira", "Vila do Povo", 
+    "Vila Mercês", "Vila Nazaré", "Vila Nossa Senhora da Luz", "Vila São José I", "Vila São José II"
   ],
   "sao-jose-de-ribamar": [
     "Alto do Itapiracó", "Alto Turu", "Araçagy", "Área Rural", "Boa Viagem", "Boa Vista", "Campina",
