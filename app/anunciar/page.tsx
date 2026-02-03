@@ -2,18 +2,21 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Building2, 
-  MapPin, 
-  Home, 
-  ArrowRight, 
-  ArrowLeft, 
-  Camera, 
+import Link from 'next/link';
+import {
+  Building2,
+  MapPin,
+  Home,
+  ArrowRight,
+  ArrowLeft,
+  Camera,
   CheckCircle2,
   DollarSign,
   FileText,
   User,
-  Loader2
+  Loader2,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 
@@ -29,6 +32,7 @@ const STEPS = [
 
 export default function AdvertisePage() {
   const router = useRouter();
+  const [hasIdentified, setHasIdentified] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -51,7 +55,7 @@ export default function AdvertisePage() {
     bathrooms: 1,
     parking: 1,
     area: '',
-    
+
     // Step 4: Values & Description
     price: '',
     condoPrice: '',
@@ -99,29 +103,112 @@ export default function AdvertisePage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-lg w-full text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Anúncio Recebido!</h2>
-          <p className="text-slate-600 mb-8">
-            Seu imóvel foi cadastrado com sucesso. Nossa equipe irá revisar as informações e em breve ele estará disponível na plataforma.
+      <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center text-center max-w-lg">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+          <CheckCircle2 className="w-10 h-10 text-green-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Anúncio Criado com Sucesso!</h2>
+        <p className="text-slate-600 mb-8">
+          Seu imóvel foi enviado para análise e em breve estará disponível em nossa plataforma.
+        </p>
+        <div className="flex gap-4">
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-2 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+          >
+            Voltar ao Início
+          </button>
+          <button
+            onClick={() => {
+              setIsSuccess(false);
+              setCurrentStep(1);
+              setFormData({
+                purpose: 'venda',
+                type: 'casa',
+                city: '',
+                neighborhood: '',
+                street: '',
+                number: '',
+                complement: '',
+                bedrooms: 2,
+                bathrooms: 1,
+                parking: 1,
+                area: '',
+                price: '',
+                condoPrice: '',
+                iptuPrice: '',
+                title: '',
+                description: '',
+                photos: [],
+                name: '',
+                email: '',
+                phone: '',
+              });
+            }}
+            className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
+          >
+            Criar Novo Anúncio
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasIdentified) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">
+            Anuncie seu Imóvel
+          </h1>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Para garantir a segurança e qualidade dos anúncios, precisamos que você se identifique.
+            Escolha uma das opções abaixo para continuar.
           </p>
-          <div className="flex flex-col gap-3">
-            <button 
-              onClick={() => router.push('/')}
-              className="w-full py-3 px-6 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-colors"
-            >
-              Voltar para o Início
-            </button>
-            <button 
-              onClick={() => window.location.reload()}
-              className="w-full py-3 px-6 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-colors"
-            >
-              Anunciar Outro Imóvel
-            </button>
-          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Login Card */}
+          <Link href="/minha-conta" className="group">
+            <div className="bg-white p-8 rounded-xl border-2 border-slate-100 hover:border-blue-500 transition-all h-full shadow-sm hover:shadow-md">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                <LogIn className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Já tenho conta</h3>
+              <p className="text-slate-600 mb-6">
+                Acesse sua conta para gerenciar seus anúncios e visualizar contatos.
+              </p>
+              <span className="text-blue-600 font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                Fazer Login <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Register Card */}
+          <Link href="/cadastro" className="group">
+            <div className="bg-white p-8 rounded-xl border-2 border-slate-100 hover:border-green-500 transition-all h-full shadow-sm hover:shadow-md">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-600 transition-colors">
+                <UserPlus className="w-6 h-6 text-green-600 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Quero criar conta</h3>
+              <p className="text-slate-600 mb-6">
+                Cadastre-se gratuitamente para anunciar seus imóveis para milhares de pessoas.
+              </p>
+              <span className="text-green-600 font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                Cadastre-se agora <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Bypass for demo purposes */}
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => setHasIdentified(true)}
+            className="text-sm text-slate-500 hover:text-slate-900 underline"
+          >
+            Continuar sem login (Modo de Teste)
+          </button>
         </div>
       </div>
     );
@@ -141,7 +228,7 @@ export default function AdvertisePage() {
         </div>
         {/* Progress Bar */}
         <div className="w-full h-1 bg-slate-100">
-          <div 
+          <div
             className="h-full bg-blue-600 transition-all duration-300"
             style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
           />
@@ -159,11 +246,10 @@ export default function AdvertisePage() {
 
             return (
               <div key={step.id} className="flex flex-col items-center gap-2 bg-slate-50 px-2">
-                <div 
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    isActive ? 'bg-blue-600 text-white' : 
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isActive ? 'bg-blue-600 text-white' :
                     isCompleted ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-500'
-                  }`}
+                    }`}
                 >
                   {isCompleted ? <CheckCircle2 className="h-6 w-6" /> : <Icon className="h-5 w-5" />}
                 </div>
@@ -176,7 +262,7 @@ export default function AdvertisePage() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-10">
-          
+
           {/* STEP 1: TYPE */}
           {currentStep === 1 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -188,22 +274,20 @@ export default function AdvertisePage() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => handleInputChange('purpose', 'venda')}
-                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-3 ${
-                    formData.purpose === 'venda' 
-                      ? 'border-blue-600 bg-blue-50 text-blue-700' 
-                      : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                  }`}
+                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-3 ${formData.purpose === 'venda'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                    }`}
                 >
                   <DollarSign className="h-8 w-8" />
                   <span className="font-bold text-lg">Venda</span>
                 </button>
                 <button
                   onClick={() => handleInputChange('purpose', 'aluguel')}
-                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-3 ${
-                    formData.purpose === 'aluguel' 
-                      ? 'border-blue-600 bg-blue-50 text-blue-700' 
-                      : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                  }`}
+                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-3 ${formData.purpose === 'aluguel'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                    }`}
                 >
                   <FileText className="h-8 w-8" />
                   <span className="font-bold text-lg">Aluguel</span>
@@ -217,11 +301,10 @@ export default function AdvertisePage() {
                     <button
                       key={type}
                       onClick={() => handleInputChange('type', type)}
-                      className={`py-3 px-4 rounded-lg border text-sm font-semibold capitalize transition-all ${
-                        formData.type === type
-                          ? 'bg-slate-900 text-white border-slate-900'
-                          : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                      }`}
+                      className={`py-3 px-4 rounded-lg border text-sm font-semibold capitalize transition-all ${formData.type === type
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                        }`}
                     >
                       {type === 'apto' ? 'Apartamento' : type}
                     </button>
@@ -318,14 +401,14 @@ export default function AdvertisePage() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Quartos</label>
                   <div className="flex items-center gap-2">
-                    <button 
+                    <button
                       onClick={() => handleInputChange('bedrooms', Math.max(0, formData.bedrooms - 1))}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
                       -
                     </button>
                     <span className="flex-1 text-center font-bold text-lg">{formData.bedrooms}</span>
-                    <button 
+                    <button
                       onClick={() => handleInputChange('bedrooms', formData.bedrooms + 1)}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
@@ -337,14 +420,14 @@ export default function AdvertisePage() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Banheiros</label>
                   <div className="flex items-center gap-2">
-                    <button 
+                    <button
                       onClick={() => handleInputChange('bathrooms', Math.max(0, formData.bathrooms - 1))}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
                       -
                     </button>
                     <span className="flex-1 text-center font-bold text-lg">{formData.bathrooms}</span>
-                    <button 
+                    <button
                       onClick={() => handleInputChange('bathrooms', formData.bathrooms + 1)}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
@@ -356,14 +439,14 @@ export default function AdvertisePage() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Vagas</label>
                   <div className="flex items-center gap-2">
-                    <button 
+                    <button
                       onClick={() => handleInputChange('parking', Math.max(0, formData.parking - 1))}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
                       -
                     </button>
                     <span className="flex-1 text-center font-bold text-lg">{formData.parking}</span>
-                    <button 
+                    <button
                       onClick={() => handleInputChange('parking', formData.parking + 1)}
                       className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center hover:bg-slate-50"
                     >
@@ -531,11 +614,10 @@ export default function AdvertisePage() {
             <button
               onClick={prevStep}
               disabled={currentStep === 1 || isSubmitting}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
-                currentStep === 1 
-                  ? 'text-slate-300 cursor-not-allowed' 
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${currentStep === 1
+                ? 'text-slate-300 cursor-not-allowed'
+                : 'text-slate-600 hover:bg-slate-100'
+                }`}
             >
               <ArrowLeft className="h-4 w-4" />
               Voltar
