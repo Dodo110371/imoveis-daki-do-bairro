@@ -6,7 +6,12 @@ import { useRouter } from 'next/navigation';
 
 const CITY_NEIGHBORHOODS = {
   "paco-do-lumiar": [
-    "Maiobão", "Maioba", "Iguaíba", "Mocajituba", "Vila Cafeteira", "Vila Nazaré", "Pindoba"
+    "Maiobão", "Maioba", "Iguaíba", "Mocajituba", "Vila Cafeteira", "Vila Nazaré", "Pindoba",
+    "Paranã I", "Paranã II", "Paranã III", "Vila Mercês", "Residencial Abdalla I", "Residencial Abdalla II",
+    "Tendal Mirim", "Loteamento Todos os Santos", "Vila São José I", "Vila São José II",
+    "Porto de Mocajituba", "Caranguejo", "Pau Deitado", "Novo Horizonte", "Nova Luz", "Nova Vida",
+    "Jardim das Mercês", "Residencial Araguaia", "Roseana Sarney", "Conjunto Tambaú",
+    "Loteamento Jardim Paranã", "Residencial Orquídeas", "Centro"
   ],
   "sao-jose-de-ribamar": [
     "Alto do Itapiracó", "Alto Turu", "Araçagy", "Área Rural", "Boa Viagem", "Boa Vista", "Campina", 
