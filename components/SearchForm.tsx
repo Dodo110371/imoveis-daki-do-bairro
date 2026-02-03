@@ -29,10 +29,31 @@ const CITY_NEIGHBORHOODS = {
     "Vila Alonso Costa", "Vila Cafeteira", "Vila Dr. Julinho", "Vila Flamengo", "Vila Kiola",
     "Vila Mestre Antônio", "Vila Operária", "Vila Roseana Sarney", "Vila Santa Teresinha",
     "Vila São José", "Vila São Luís", "Vila Sarnambi", "Vila Sarney Filho I", "Vila Sarney Filho II"
-  ],
   "sao-luis": [
-    "Centro", "Renascença", "Calhau", "Ponta d'Areia", "Cohama", "Cohafuma", "Vinhais", "Turu", "Anjo da Guarda", "Cidade Operária"
-  ]
+    "Alemanha", "Anil", "Anjo da Guarda", "Apeadouro", "Apicum", "Areinha", "Bairro de Fátima",
+    "Barreto", "Bequimão", "Bom Jesus", "Bom Milagre", "Cajueiro", "Cajupe", "Calhau", "Camboa",
+    "Caratatiua", "Chácara Brasil", "Cidade Olímpica", "Cidade Operária", "Cohab Anil I", "Cohab Anil II",
+    "Cohab Anil III", "Cohab Anil IV", "Cohama", "Cohafuma", "Cohajap", "Cohatrac I", "Cohatrac II",
+    "Cohatrac III", "Cohatrac IV", "Coheb", "Coroado", "Coroadinho", "Cruzeiro do Anil", "Cutim",
+    "Diamante", "Distrito Industrial", "Divineia", "Estiva", "Fabril", "Fé em Deus", "Filipinho",
+    "Floresta", "Forquilha", "Fumacê", "Gancharia", "Goiabal", "Ipase", "Itapera", "Itaqui",
+    "Jaracaty", "Jardim América", "Jardim das Margaridas", "Jardim de Fátima", "Jardim Eldorado",
+    "Jardim Renascença", "Jardim São Cristóvão", "Jardim São Raimundo", "João de Deus", "João Paulo",
+    "Jordoa", "Liberdade", "Lira", "Macaúba", "Madre Deus", "Maracanã", "Maranhão Novo",
+    "Mato Grosso", "Monte Castelo", "Olho d'Água", "Outeiro da Cruz", "Pão de Açúcar", "Parque Amazonas",
+    "Parque Atenas", "Parque Atlântico", "Parque Aurora", "Parque dos Nobres", "Parque Pindorama",
+    "Parque Shalom", "Parque Timbira", "Parque Universitário", "Pedrinhas", "Piancó", "Pirapora",
+    "Planalto Turu", "Planalto Vinhais", "Ponta d'Areia", "Ponta do Farol", "Praia Grande",
+    "Quebra Pote", "Quintas do Calhau", "Recanto dos Vinhais", "Redenção", "Renascença",
+    "Residencial Pinheiros", "Retiro Natal", "Rio Grande", "Sá Viana", "Sacavém", "Santa Bárbara",
+    "Santa Clara", "Santa Cruz", "Santa Efigênia", "Santa Helena", "Santa Rosa", "Santo Antônio",
+    "São Bernardo", "São Cristóvão", "São Francisco", "São Joaquim", "São Marcos", "São Raimundo",
+    "Sítio Leal", "Solar dos Lusitanos", "Tajaçuaba", "Tibiri", "Tirirical", "Turu", "Vera Cruz",
+    "Vila Bacanga", "Vila Brasil", "Vila Cascavel", "Vila Collier", "Vila Conceição", "Vila Embratel",
+    "Vila Esperança", "Vila Industrial", "Vila Isabel", "Vila Itamar", "Vila Janaína", "Vila Luizão",
+    "Vila Maranhão", "Vila Mauro Fecury", "Vila Nova", "Vila Palmeira", "Vila Passos", "Vila Riod",
+    "Vinhais", "Vinhais Velho", "Zona Rural"
+  ],]
 };
 
 export function SearchForm() {
