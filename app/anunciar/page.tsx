@@ -160,6 +160,7 @@ export default function AdvertisePage() {
               setFormData({
                 purpose: 'venda',
                 type: 'casa',
+                cep: '',
                 city: '',
                 neighborhood: '',
                 street: '',
