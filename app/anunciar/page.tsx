@@ -16,7 +16,8 @@ import {
   User,
   Loader2,
   LogIn,
-  UserPlus
+  UserPlus,
+  Info
 } from 'lucide-react';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 
@@ -384,25 +385,40 @@ export default function AdvertisePage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">CEP</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="00000-000"
-                    maxLength={9}
-                    value={formData.cep}
-                    onChange={(e) => {
-                      let v = e.target.value.replace(/\D/g, '');
-                      if (v.length > 5) v = v.replace(/^(\d{5})(\d)/, '$1-$2');
-                      handleInputChange('cep', v);
-                    }}
-                    onBlur={handleCepBlur}
-                    className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                  {isLoadingCep && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-                    </div>
-                  )}
+                <div className="grid md:grid-cols-[1fr_auto] gap-4 items-start">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      placeholder="00000-000"
+                      maxLength={9}
+                      value={formData.cep}
+                      onChange={(e) => {
+                        let v = e.target.value.replace(/\D/g, '');
+                        if (v.length > 5) v = v.replace(/^(\d{5})(\d)/, '$1-$2');
+                        handleInputChange('cep', v);
+                      }}
+                      onBlur={handleCepBlur}
+                      className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    {isLoadingCep && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="hidden md:block bg-blue-50 border border-blue-100 p-3 rounded-lg text-sm text-blue-700 max-w-xs">
+                    <p className="flex items-start gap-2">
+                      <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                      <span>Digite o CEP correto para preencher o endereço automaticamente.</span>
+                    </p>
+                  </div>
+                </div>
+                {/* Mobile only info box */}
+                <div className="md:hidden bg-blue-50 border border-blue-100 p-3 rounded-lg text-sm text-blue-700">
+                  <p className="flex items-start gap-2">
+                    <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span>Digite o CEP correto para preencher o endereço automaticamente.</span>
+                  </p>
                 </div>
               </div>
 
