@@ -34,11 +34,8 @@ export function Footer() {
               <Smartphone className="h-4 w-4" />
               <span>{siteConfig.contact.phone}</span>
             </Link>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-slate-900">Social</h3>
-            <div className="flex gap-4">
+            
+            <div className="flex gap-4 mt-2">
               <Link href="#" className="text-slate-600 hover:text-slate-900">
                 <Instagram className="h-5 w-5" />
               </Link>
@@ -49,6 +46,14 @@ export function Footer() {
                 <Twitter className="h-5 w-5" />
               </Link>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="font-semibold text-slate-900">Políticas</h3>
+            <Link href="/termos-de-uso" className="text-sm text-slate-600 hover:text-slate-900">Termos de Uso</Link>
+            <Link href="/politica-de-privacidade" className="text-sm text-slate-600 hover:text-slate-900">Política de Privacidade</Link>
+            <Link href="/politica-de-cookies" className="text-sm text-slate-600 hover:text-slate-900">Política de Cookies</Link>
+            <Link href="/politica-de-qualidade" className="text-sm text-slate-600 hover:text-slate-900">Política de Qualidade</Link>
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-slate-500">
