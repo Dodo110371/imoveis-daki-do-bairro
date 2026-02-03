@@ -976,7 +976,7 @@ export default function AdvertisePage() {
                     <h3 className="font-bold text-lg">Mensal</h3>
                     <div className="mt-1 text-2xl font-bold">R$ 200<span className="text-sm font-normal opacity-80">/mês</span></div>
                   </div>
-                  
+
                   <div className="p-6 flex-1 flex flex-col items-center">
                     <ul className="space-y-3 text-sm text-slate-600 mb-6 text-center">
                       <li className="flex items-center gap-2 justify-center">
@@ -1009,12 +1009,13 @@ export default function AdvertisePage() {
                   </div>
                   <div className={`p-4 text-center ${formData.paymentPlan === 'trimestral' ? 'bg-teal-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
                     <h3 className="font-bold text-lg">Trimestral</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 300<span className="text-sm font-normal opacity-80">/total</span></div>
+                    <div className="mt-1 text-2xl font-bold">R$ 300,00</div>
+                    <div className="text-sm font-medium opacity-90">ou 3x R$ 120,00</div>
                   </div>
 
                   <div className="p-6 flex-1 flex flex-col">
-                    <p className="text-xs text-center text-slate-500 mb-4">Equivalente a R$ 100/mês</p>
-                    
+                    <p className="text-xs text-center text-slate-500 mb-4">Plano econômico</p>
+
                     {formData.paymentPlan === 'trimestral' ? (
                       <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
                         <label className="flex items-center gap-2 p-2 rounded bg-teal-50 border border-teal-100 cursor-pointer">
@@ -1025,7 +1026,7 @@ export default function AdvertisePage() {
                             onChange={() => handleInputChange('paymentMethod', 'pix')}
                             className="w-3 h-3 text-teal-600"
                           />
-                          <span className="text-teal-900">À vista (Pix)</span>
+                          <span className="text-teal-900">R$ 300,00 (à vista)</span>
                         </label>
                         <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-teal-200">
                           <input
@@ -1040,7 +1041,7 @@ export default function AdvertisePage() {
                       </div>
                     ) : (
                       <div className="flex-1 flex flex-col items-center justify-end">
-                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-teal-600' : 'border-slate-300'
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-teal-600' : 'border-slate-300'
                           }`}>
                           {formData.paymentPlan === 'trimestral' && <div className="w-3 h-3 bg-teal-600 rounded-full" />}
                         </div>
@@ -1062,11 +1063,12 @@ export default function AdvertisePage() {
                   </div>
                   <div className={`p-4 text-center ${formData.paymentPlan === 'semestral' ? 'bg-orange-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
                     <h3 className="font-bold text-lg">Semestral</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 600<span className="text-sm font-normal opacity-80">/total</span></div>
+                    <div className="mt-1 text-2xl font-bold">R$ 600,00</div>
+                    <div className="text-sm font-medium opacity-90">ou 6x R$ 110,00</div>
                   </div>
 
                   <div className="p-6 flex-1 flex flex-col">
-                    <p className="text-xs text-center text-slate-500 mb-4">Equivalente a R$ 100/mês</p>
+                    <p className="text-xs text-center text-slate-500 mb-4">Melhor custo-benefício</p>
 
                     {formData.paymentPlan === 'semestral' ? (
                       <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
@@ -1078,7 +1080,7 @@ export default function AdvertisePage() {
                             onChange={() => handleInputChange('paymentMethod', 'pix')}
                             className="w-3 h-3 text-orange-600"
                           />
-                          <span className="text-orange-900">À vista (Pix)</span>
+                          <span className="text-orange-900">R$ 600,00 (à vista)</span>
                         </label>
                         <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-orange-200">
                           <input
@@ -1093,7 +1095,7 @@ export default function AdvertisePage() {
                       </div>
                     ) : (
                       <div className="flex-1 flex flex-col items-center justify-end">
-                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-orange-600' : 'border-slate-300'
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-orange-600' : 'border-slate-300'
                           }`}>
                           {formData.paymentPlan === 'semestral' && <div className="w-3 h-3 bg-orange-600 rounded-full" />}
                         </div>
@@ -1115,7 +1117,8 @@ export default function AdvertisePage() {
                   </div>
                   <div className={`p-4 pt-8 text-center ${formData.paymentPlan === 'ate_vender' ? 'bg-purple-50 text-purple-900' : 'bg-slate-50 text-slate-900'}`}>
                     <h3 className="font-bold text-lg">Até Vender</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 1.000<span className="text-sm font-normal opacity-80">/único</span></div>
+                    <div className="mt-1 text-2xl font-bold">R$ 1.000,00</div>
+                    <div className="text-sm font-medium opacity-90">ou 10x R$ 110,00</div>
                   </div>
 
                   <div className="p-6 flex-1 flex flex-col">
@@ -1131,7 +1134,7 @@ export default function AdvertisePage() {
                             onChange={() => handleInputChange('paymentMethod', 'pix')}
                             className="w-3 h-3 text-purple-600"
                           />
-                          <span className="text-purple-900">À vista (Pix)</span>
+                          <span className="text-purple-900">R$ 1.000,00 (à vista)</span>
                         </label>
                         <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-purple-200">
                           <input
@@ -1146,7 +1149,7 @@ export default function AdvertisePage() {
                       </div>
                     ) : (
                       <div className="flex-1 flex flex-col items-center justify-end">
-                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-purple-600' : 'border-slate-300'
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-purple-600' : 'border-slate-300'
                           }`}>
                           {formData.paymentPlan === 'ate_vender' && <div className="w-3 h-3 bg-purple-600 rounded-full" />}
                         </div>
