@@ -954,76 +954,42 @@ export default function AdvertisePage() {
 
           {/* STEP 7: PAYMENT PLANS */}
           {currentStep === 7 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Escolha o plano ideal</h2>
-                <p className="text-slate-500 mt-2">Selecione como deseja pagar pelo seu anúncio</p>
+                <p className="text-slate-500 mt-2">Selecione a melhor opção para anunciar seu imóvel</p>
               </div>
 
-              <div className="grid gap-4">
-                {/* Até Vender */}
-                <div
-                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'ate_vender'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-slate-200 hover:border-slate-300'
-                    }`}
-                  onClick={() => handleInputChange('paymentPlan', 'ate_vender')}
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-lg text-slate-900">Até Vender</h3>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-blue-600' : 'border-slate-300'
-                      }`}>
-                      {formData.paymentPlan === 'ate_vender' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
-                    </div>
-                  </div>
-
-                  {formData.paymentPlan === 'ate_vender' && (
-                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'pix'}
-                            onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-4 h-4 text-blue-600"
-                          />
-                          <span>R$ 1.000,00 (À vista no Pix)</span>
-                        </div>
-                      </label>
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'installments'}
-                            onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-4 h-4 text-blue-600"
-                          />
-                          <span>10x de R$ 110,00</span>
-                        </div>
-                      </label>
-                    </div>
-                  )}
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
                 {/* Mensal */}
                 <div
-                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'mensal'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-slate-200 hover:border-slate-300'
+                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'mensal'
+                    ? 'border-blue-500 shadow-lg ring-1 ring-blue-500'
+                    : 'border-slate-200 hover:border-blue-300 hover:shadow-md'
                     }`}
                   onClick={() => {
                     handleInputChange('paymentPlan', 'mensal');
                     handleInputChange('paymentMethod', 'pix');
                   }}
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-bold text-lg text-slate-900">Mensal</h3>
-                      <p className="text-slate-600">R$ 200,00 / mês</p>
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'mensal' ? 'border-blue-600' : 'border-slate-300'
+                  <div className={`p-4 text-center ${formData.paymentPlan === 'mensal' ? 'bg-blue-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
+                    <h3 className="font-bold text-lg">Mensal</h3>
+                    <div className="mt-1 text-2xl font-bold">R$ 200<span className="text-sm font-normal opacity-80">/mês</span></div>
+                  </div>
+                  
+                  <div className="p-6 flex-1 flex flex-col items-center">
+                    <ul className="space-y-3 text-sm text-slate-600 mb-6 text-center">
+                      <li className="flex items-center gap-2 justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                        Renovação mensal
+                      </li>
+                      <li className="flex items-center gap-2 justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                        Sem fidelidade
+                      </li>
+                    </ul>
+
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-auto ${formData.paymentPlan === 'mensal' ? 'border-blue-600' : 'border-slate-300'
                       }`}>
                       {formData.paymentPlan === 'mensal' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
                     </div>
@@ -1032,94 +998,161 @@ export default function AdvertisePage() {
 
                 {/* Trimestral */}
                 <div
-                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'trimestral'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-slate-200 hover:border-slate-300'
+                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'trimestral'
+                    ? 'border-teal-500 shadow-lg ring-1 ring-teal-500'
+                    : 'border-slate-200 hover:border-teal-300 hover:shadow-md'
                     }`}
                   onClick={() => handleInputChange('paymentPlan', 'trimestral')}
                 >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-lg text-slate-900">Trimestral</h3>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-blue-600' : 'border-slate-300'
-                      }`}>
-                      {formData.paymentPlan === 'trimestral' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
-                    </div>
+                  <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
+                    ECONOMIA
+                  </div>
+                  <div className={`p-4 text-center ${formData.paymentPlan === 'trimestral' ? 'bg-teal-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
+                    <h3 className="font-bold text-lg">Trimestral</h3>
+                    <div className="mt-1 text-2xl font-bold">R$ 300<span className="text-sm font-normal opacity-80">/total</span></div>
                   </div>
 
-                  {formData.paymentPlan === 'trimestral' && (
-                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
+                  <div className="p-6 flex-1 flex flex-col">
+                    <p className="text-xs text-center text-slate-500 mb-4">Equivalente a R$ 100/mês</p>
+                    
+                    {formData.paymentPlan === 'trimestral' ? (
+                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
+                        <label className="flex items-center gap-2 p-2 rounded bg-teal-50 border border-teal-100 cursor-pointer">
                           <input
                             type="radio"
                             name="paymentMethod"
                             checked={formData.paymentMethod === 'pix'}
                             onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-4 h-4 text-blue-600"
+                            className="w-3 h-3 text-teal-600"
                           />
-                          <span>R$ 300,00 (À vista no Pix)</span>
-                        </div>
-                      </label>
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
+                          <span className="text-teal-900">À vista (Pix)</span>
+                        </label>
+                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-teal-200">
                           <input
                             type="radio"
                             name="paymentMethod"
                             checked={formData.paymentMethod === 'installments'}
                             onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-4 h-4 text-blue-600"
+                            className="w-3 h-3 text-teal-600"
                           />
-                          <span>3x de R$ 120,00</span>
+                          <span className="text-slate-700">3x R$ 120,00</span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="flex-1 flex flex-col items-center justify-end">
+                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-teal-600' : 'border-slate-300'
+                          }`}>
+                          {formData.paymentPlan === 'trimestral' && <div className="w-3 h-3 bg-teal-600 rounded-full" />}
                         </div>
-                      </label>
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Semestral */}
                 <div
-                  className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentPlan === 'semestral'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-slate-200 hover:border-slate-300'
+                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'semestral'
+                    ? 'border-orange-500 shadow-lg ring-1 ring-orange-500'
+                    : 'border-slate-200 hover:border-orange-300 hover:shadow-md'
                     }`}
                   onClick={() => handleInputChange('paymentPlan', 'semestral')}
                 >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-lg text-slate-900">Semestral</h3>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-blue-600' : 'border-slate-300'
-                      }`}>
-                      {formData.paymentPlan === 'semestral' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
-                    </div>
+                  <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
+                    MELHOR VALOR
+                  </div>
+                  <div className={`p-4 text-center ${formData.paymentPlan === 'semestral' ? 'bg-orange-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
+                    <h3 className="font-bold text-lg">Semestral</h3>
+                    <div className="mt-1 text-2xl font-bold">R$ 600<span className="text-sm font-normal opacity-80">/total</span></div>
                   </div>
 
-                  {formData.paymentPlan === 'semestral' && (
-                    <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
+                  <div className="p-6 flex-1 flex flex-col">
+                    <p className="text-xs text-center text-slate-500 mb-4">Equivalente a R$ 100/mês</p>
+
+                    {formData.paymentPlan === 'semestral' ? (
+                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
+                        <label className="flex items-center gap-2 p-2 rounded bg-orange-50 border border-orange-100 cursor-pointer">
                           <input
                             type="radio"
                             name="paymentMethod"
                             checked={formData.paymentMethod === 'pix'}
                             onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-4 h-4 text-blue-600"
+                            className="w-3 h-3 text-orange-600"
                           />
-                          <span>R$ 600,00 (À vista no Pix)</span>
-                        </div>
-                      </label>
-                      <label className="flex items-center justify-between p-3 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400">
-                        <div className="flex items-center gap-3">
+                          <span className="text-orange-900">À vista (Pix)</span>
+                        </label>
+                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-orange-200">
                           <input
                             type="radio"
                             name="paymentMethod"
                             checked={formData.paymentMethod === 'installments'}
                             onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-4 h-4 text-blue-600"
+                            className="w-3 h-3 text-orange-600"
                           />
-                          <span>6x de R$ 110,00</span>
+                          <span className="text-slate-700">6x R$ 110,00</span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="flex-1 flex flex-col items-center justify-end">
+                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-orange-600' : 'border-slate-300'
+                          }`}>
+                          {formData.paymentPlan === 'semestral' && <div className="w-3 h-3 bg-orange-600 rounded-full" />}
                         </div>
-                      </label>
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Até Vender */}
+                <div
+                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'ate_vender'
+                    ? 'border-purple-600 shadow-xl ring-1 ring-purple-600 scale-105 z-10'
+                    : 'border-slate-200 hover:border-purple-300 hover:shadow-md'
+                    }`}
+                  onClick={() => handleInputChange('paymentPlan', 'ate_vender')}
+                >
+                  <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold py-1 text-center z-10">
+                    MAIS VENDIDO
+                  </div>
+                  <div className={`p-4 pt-8 text-center ${formData.paymentPlan === 'ate_vender' ? 'bg-purple-50 text-purple-900' : 'bg-slate-50 text-slate-900'}`}>
+                    <h3 className="font-bold text-lg">Até Vender</h3>
+                    <div className="mt-1 text-2xl font-bold">R$ 1.000<span className="text-sm font-normal opacity-80">/único</span></div>
+                  </div>
+
+                  <div className="p-6 flex-1 flex flex-col">
+                    <p className="text-xs text-center text-slate-500 mb-4">Pagamento único, sem renovações</p>
+
+                    {formData.paymentPlan === 'ate_vender' ? (
+                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
+                        <label className="flex items-center gap-2 p-2 rounded bg-purple-50 border border-purple-100 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'pix'}
+                            onChange={() => handleInputChange('paymentMethod', 'pix')}
+                            className="w-3 h-3 text-purple-600"
+                          />
+                          <span className="text-purple-900">À vista (Pix)</span>
+                        </label>
+                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-purple-200">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            checked={formData.paymentMethod === 'installments'}
+                            onChange={() => handleInputChange('paymentMethod', 'installments')}
+                            className="w-3 h-3 text-purple-600"
+                          />
+                          <span className="text-slate-700">10x R$ 110,00</span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="flex-1 flex flex-col items-center justify-end">
+                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-purple-600' : 'border-slate-300'
+                          }`}>
+                          {formData.paymentPlan === 'ate_vender' && <div className="w-3 h-3 bg-purple-600 rounded-full" />}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
               </div>
