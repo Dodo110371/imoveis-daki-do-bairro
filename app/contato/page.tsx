@@ -35,8 +35,14 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="bg-slate-900 py-20 text-center">
-        <div className="container mx-auto px-4">
+      <section className="bg-slate-900 py-20 text-center relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-slate-900 to-slate-900 z-0 animate-gradient" />
+        <div className="absolute top-0 left-0 w-full h-full bg-grid-slate-900 opacity-20 z-0" />
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float delay-75" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-float delay-500" />
+        
+        <div className="container mx-auto px-4 relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Fale Conosco</h1>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
             Quer anunciar ou tem dúvidas sobre a plataforma? Entre em contato conosco.

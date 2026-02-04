@@ -347,25 +347,37 @@ export default function AdvertisePage() {
   const advertiserNeighborhoods = formData.advertiserCity ? CITY_NEIGHBORHOODS[formData.advertiserCity as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
+    <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden relative">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -z-10 animate-float" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-3xl -z-10 animate-float delay-700" />
+
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-10">
+      <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-20">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <h1 className="font-bold text-xl text-slate-900">Anunciar Imóvel</h1>
-          <div className="text-sm text-slate-500 font-medium">
+          <h1 className="font-bold text-xl text-slate-900 flex items-center gap-2">
+            <span className="p-1.5 bg-blue-600 rounded-lg text-white">
+              <Building2 className="w-5 h-5" />
+            </span>
+            Anunciar Imóvel
+          </h1>
+          <div className="text-sm text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-full">
             Passo {currentStep} de {STEPS.length}
           </div>
         </div>
         {/* Progress Bar */}
         <div className="w-full h-1 bg-slate-100">
           <div
-            className="h-full bg-blue-600 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 relative"
             style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
-          />
+          >
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-600 rounded-full shadow-[0_0_10px_rgba(147,51,234,0.5)]" />
+          </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="container mx-auto px-4 py-8 max-w-3xl relative z-10">
         {/* Steps Indicator */}
         <div className="hidden md:flex justify-between mb-12 relative">
           <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 -z-10 -translate-y-1/2" />

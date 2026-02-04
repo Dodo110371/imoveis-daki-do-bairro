@@ -3,11 +3,19 @@ import Link from 'next/link';
 
 export default function QuemSomosPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-12 md:py-20">
-      <div className="container mx-auto px-4">
-        
+    <div className="min-h-screen bg-slate-50 py-12 md:py-20 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl -z-10 animate-float" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-3xl -z-10 animate-float delay-700" />
+
+      <div className="container mx-auto px-4 relative">
+
         {/* Header */}
         <div className="text-center mb-16">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm mb-4">
+            Sobre Nós
+          </span>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Quem Somos</h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
             Uma plataforma de divulgação local que conecta moradores, proprietários e imobiliárias do bairro.
@@ -86,17 +94,17 @@ export default function QuemSomosPage() {
             <div className="p-10 md:p-14 bg-white flex flex-col justify-center">
               <h2 className="text-3xl font-bold text-slate-900 mb-6">Importante Saber</h2>
               <p className="text-slate-600 mb-8 leading-relaxed">
-                O site <strong>Imóveis daki do Bairro</strong> atua exclusivamente como uma vitrine virtual (marketplace). 
+                O site <strong>Imóveis daki do Bairro</strong> atua exclusivamente como uma vitrine virtual (marketplace).
                 Não exigimos CRECI para o cadastro no site pois não realizamos a atividade de corretagem.
               </p>
-              
+
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
                 <div className="flex gap-3 mb-3">
                   <AlertCircle className="h-6 w-6 text-amber-600" />
                   <h4 className="font-bold text-amber-800">Atenção</h4>
                 </div>
                 <p className="text-sm text-amber-800/80">
-                  Qualquer negociação é de inteira responsabilidade das partes envolvidas (anunciante e interessado). 
+                  Qualquer negociação é de inteira responsabilidade das partes envolvidas (anunciante e interessado).
                   Recomendamos sempre verificar a documentação do imóvel e do proprietário antes de qualquer pagamento.
                 </p>
               </div>
@@ -107,8 +115,8 @@ export default function QuemSomosPage() {
         {/* Call to Action */}
         <div className="text-center">
           <p className="text-slate-600 mb-6">Tem alguma dúvida sobre como funciona?</p>
-          <Link 
-            href="/contato" 
+          <Link
+            href="/contato"
             className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
           >
             Fale Conosco

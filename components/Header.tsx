@@ -35,6 +35,12 @@ export function Header() {
                     <Link href="/imobiliarias" className="hover:text-slate-900 transition-colors">Imobiliárias</Link>
                     <Link href="/bairro" className="hover:text-slate-900 transition-colors">O Bairro</Link>
                     <Link href="/contato" className="hover:text-slate-900 transition-colors">Contato</Link>
+                    <Link
+                        href="/planos"
+                        className="px-3 py-1.5 text-blue-600 font-bold border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all text-xs uppercase tracking-wide"
+                    >
+                        Nossos Planos
+                    </Link>
                 </nav>
 
                 <div className="flex items-center gap-4">
@@ -64,6 +70,7 @@ export function Header() {
                         <Link href="/quem-somos" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Quem Somos</Link>
                         <Link href="/bairro" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>O Bairro</Link>
                         <Link href="/contato" className="hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Contato</Link>
+                        <Link href="/planos" className="text-blue-600 font-bold hover:text-blue-700 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>Nossos Planos</Link>
                         <Link href="/minha-conta" className="flex items-center gap-2 hover:text-slate-900 transition-colors py-2 border-b border-slate-100" onClick={() => setIsMenuOpen(false)}>
                             <User className="h-5 w-5" />
                             Minha Conta

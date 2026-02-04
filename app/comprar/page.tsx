@@ -26,8 +26,13 @@ export default async function ComprarPage() {
   const properties = propertiesData?.map(mapProperty) || [];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-slate-50 py-12 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
+      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -z-10 animate-float" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl -z-10 animate-float delay-700" />
+
+      <div className="container mx-auto px-4 relative">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             Comprar Imóveis
