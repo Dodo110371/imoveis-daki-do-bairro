@@ -29,10 +29,10 @@ export function SearchForm() {
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* City Selection */}
-          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-slate-50 hover:bg-white transition-colors group focus-within:ring-2 ring-slate-200">
-            <Building2 className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
+          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-blue-50/50 border-blue-100 hover:bg-blue-50 transition-colors group focus-within:ring-2 ring-blue-200">
+            <Building2 className="text-blue-400 group-focus-within:text-blue-600 h-5 w-5" />
             <div className="flex-1">
-              <label className="block text-xs text-slate-500 font-semibold mb-0.5">Cidade</label>
+              <label className="block text-xs text-blue-600 font-semibold mb-0.5">Cidade</label>
               <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 value={selectedCity}
@@ -50,10 +50,10 @@ export function SearchForm() {
           </div>
 
           {/* Neighborhood Selection */}
-          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-slate-50 hover:bg-white transition-colors group focus-within:ring-2 ring-slate-200">
-            <Map className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
+          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-emerald-50/50 border-emerald-100 hover:bg-emerald-50 transition-colors group focus-within:ring-2 ring-emerald-200">
+            <Map className="text-emerald-400 group-focus-within:text-emerald-600 h-5 w-5" />
             <div className="flex-1">
-              <label className="block text-xs text-slate-500 font-semibold mb-0.5">Bairro</label>
+              <label className="block text-xs text-emerald-600 font-semibold mb-0.5">Bairro</label>
               <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 disabled={!selectedCity}
@@ -73,14 +73,14 @@ export function SearchForm() {
 
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
           {/* Street Input */}
-          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-slate-50 hover:bg-white transition-colors group focus-within:ring-2 ring-slate-200">
-            <Navigation className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
+          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-violet-50/50 border-violet-100 hover:bg-violet-50 transition-colors group focus-within:ring-2 ring-violet-200">
+            <Navigation className="text-violet-400 group-focus-within:text-violet-600 h-5 w-5" />
             <div className="flex-1">
-              <label className="block text-xs text-slate-500 font-semibold mb-0.5">Rua (Opcional)</label>
+              <label className="block text-xs text-violet-600 font-semibold mb-0.5">Rua (Opcional)</label>
               <input
                 type="text"
                 placeholder="Ex: Rua das Flores"
-                className="w-full outline-none text-slate-700 bg-transparent text-sm placeholder-slate-400"
+                className="w-full outline-none text-slate-700 bg-transparent text-sm placeholder-violet-300"
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
               />
@@ -88,10 +88,10 @@ export function SearchForm() {
           </div>
 
           {/* Property Type */}
-          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-slate-50 hover:bg-white transition-colors group focus-within:ring-2 ring-slate-200">
-            <Home className="text-slate-400 group-focus-within:text-blue-600 h-5 w-5" />
+          <div className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-amber-50/50 border-amber-100 hover:bg-amber-50 transition-colors group focus-within:ring-2 ring-amber-200">
+            <Home className="text-amber-400 group-focus-within:text-amber-600 h-5 w-5" />
             <div className="flex-1">
-              <label className="block text-xs text-slate-500 font-semibold mb-0.5">Tipo</label>
+              <label className="block text-xs text-amber-600 font-semibold mb-0.5">Tipo</label>
               <select
                 className="w-full outline-none text-slate-700 bg-transparent text-sm font-medium"
                 value={propertyType}
@@ -115,8 +115,8 @@ export function SearchForm() {
             <Search className="h-5 w-5" />
             Buscar Imóveis
           </button>
-          <button className="md:w-auto px-6 py-3.5 rounded-lg border-2 border-slate-200 font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
-            <MapPin className="h-5 w-5 text-blue-600" />
+          <button className="md:w-auto px-6 py-3.5 rounded-lg border-2 border-cyan-100 bg-cyan-50/50 font-semibold text-cyan-700 hover:bg-cyan-100 hover:border-cyan-200 transition-colors flex items-center justify-center gap-2">
+            <MapPin className="h-5 w-5 text-cyan-600" />
             Ver no Mapa
           </button>
         </div>
