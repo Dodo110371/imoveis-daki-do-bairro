@@ -22,9 +22,7 @@ export const CITIES: City[] = [
     entertainment: "Para o entretenimento, a cidade oferece desde passeios históricos no Reviver até a vida noturna agitada na Lagoa da Jansen e na Avenida Litorânea. As praias do Calhau e Olho d'Água são pontos de encontro populares. Há também teatros, como o Arthur Azevedo, museus e shoppings modernos.",
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127504.60965359738!2d-44.302844549999995!3d-2.5387426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f685d0549c4fb9%3A0x7e59754329244093!2zU8OjbyBMdcOtcyAtIE1B!5e0!3m2!1spt-BR!2sbr!4v1707000000000!5m2!1spt-BR!2sbr",
     images: [
-      "/S_Luis.jpg",
-      "https://images.unsplash.com/photo-1596482806223-b67f4007908b?q=80&w=1920&auto=format&fit=crop", // Centro Histórico
-      "https://images.unsplash.com/photo-1598977161835-64972d54e471?q=80&w=1920&auto=format&fit=crop"  // Litorânea
+      "/S_Luis.jpg"
     ],
     neighborhoods: CITY_NEIGHBORHOODS["sao-luis"]
   },
