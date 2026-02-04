@@ -11,30 +11,32 @@ export function Header() {
     return (
         <>
             <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 shadow-lg text-white">
-                <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                    <div className="flex items-center gap-8">
+                <div className="container mx-auto flex h-20 items-center justify-between px-4">
+                    {/* Logo Section - Left */}
+                    <div className="flex-1 flex justify-start">
                         <Link href="/" className="flex items-center space-x-2">
-                            <div className="relative h-10 w-40 md:h-12 md:w-56 bg-white/10 rounded-lg p-1 backdrop-blur-sm">
+                            <div className="relative h-12 w-48 md:h-14 md:w-64 bg-white/10 rounded-lg p-1 backdrop-blur-sm flex items-center justify-center">
                                 <Image
                                     src="/Logo_imoveis_daki_do_bairro.png"
                                     alt="Imóveis daki do Bairro"
                                     fill
-                                    className="object-contain object-left"
+                                    className="object-contain object-center"
                                     priority
                                 />
                             </div>
                         </Link>
-                        
-                        {/* Desktop Navigation - Only Most Relevant */}
-                        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-blue-100">
-                            <Link href="/comprar" className="hover:text-white transition-colors">Comprar</Link>
-                            <Link href="/alugar" className="hover:text-white transition-colors">Alugar</Link>
-                            <Link href="/municipios" className="hover:text-white transition-colors">Municípios</Link>
-                        </nav>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <Link href="/anunciar" className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-900 bg-white rounded-full hover:bg-blue-50 transition-colors shadow-sm">
+                    {/* Desktop Navigation - Center */}
+                    <nav className="hidden md:flex flex-1 items-center justify-center gap-8 text-base font-medium text-blue-100">
+                        <Link href="/comprar" className="hover:text-white hover:scale-105 transition-all">Comprar</Link>
+                        <Link href="/alugar" className="hover:text-white hover:scale-105 transition-all">Alugar</Link>
+                        <Link href="/municipios" className="hover:text-white hover:scale-105 transition-all">Municípios</Link>
+                    </nav>
+
+                    {/* Actions - Right */}
+                    <div className="flex-1 flex items-center justify-end gap-4">
+                        <Link href="/anunciar" className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-blue-900 bg-white rounded-full hover:bg-blue-50 hover:shadow-md transition-all shadow-sm">
                             Anuncie seu Imóvel
                         </Link>
                         
@@ -43,7 +45,7 @@ export function Header() {
                             onClick={() => setIsMenuOpen(true)}
                             aria-label="Abrir menu"
                         >
-                            <Menu className="h-6 w-6" />
+                            <Menu className="h-7 w-7" />
                         </button>
                     </div>
                 </div>
@@ -59,7 +61,7 @@ export function Header() {
                     />
                     
                     {/* Drawer */}
-                    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col">
+                    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col">
                         <div className="flex items-center justify-between p-4 border-b">
                             <span className="text-lg font-bold text-slate-800">Menu</span>
                             <button 
