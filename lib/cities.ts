@@ -22,7 +22,9 @@ export const CITIES: City[] = [
     entertainment: "Para o entretenimento, a cidade oferece desde passeios históricos no Reviver até a vida noturna agitada na Lagoa da Jansen e na Avenida Litorânea. As praias do Calhau e Olho d'Água são pontos de encontro populares. Há também teatros, como o Arthur Azevedo, museus e shoppings modernos.",
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127504.60965359738!2d-44.302844549999995!3d-2.5387426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f685d0549c4fb9%3A0x7e59754329244093!2zU8OjbyBMdcOtcyAtIE1B!5e0!3m2!1spt-BR!2sbr!4v1707000000000!5m2!1spt-BR!2sbr",
     images: [
-      "/S_Luis.jpg"
+      "/S_Luis1.jpg",
+      "/S_Luis2.jpg",
+      "/S_Luis3.jpg"
     ],
     neighborhoods: CITY_NEIGHBORHOODS["sao-luis"]
   },
@@ -36,8 +38,9 @@ export const CITIES: City[] = [
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63753.86873105776!2d-44.0991666!3d-2.5513889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f69a6e60058925%3A0x8633333333333333!2zU8OjbyBKb3PDqSBkZSBSaWJhbWFyIC0gTUE!5e0!3m2!1spt-BR!2sbr!4v1707000000000!5m2!1spt-BR!2sbr",
     images: [
       "/S_J_Ribamar.jpg",
-      "https://images.unsplash.com/photo-1628124971775-685c4a5d8986?q=80&w=1920&auto=format&fit=crop", // Praia
-      "https://images.unsplash.com/photo-1563294698-c6f966023363?q=80&w=1920&auto=format&fit=crop"  // Igreja (Generic)
+      "/S_J_Ribamar1.jpg",
+      "/S_J_Ribamar2.jpg",
+      "/S_J_Ribamar3.jpg"
     ],
     neighborhoods: CITY_NEIGHBORHOODS["sao-jose-de-ribamar"]
   },
@@ -51,8 +54,9 @@ export const CITIES: City[] = [
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63758.123456789!2d-44.1500000!3d-2.5166667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f6900000000000%3A0x0!2zUGHDp28gZG8gTHVtaWFyIC0gTUE!5e0!3m2!1spt-BR!2sbr!4v1707000000000!5m2!1spt-BR!2sbr",
     images: [
       "/P_Lumiar.jpg",
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&auto=format&fit=crop", // Natureza/Campo
-      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&auto=format&fit=crop"  // Verde
+      "/P_Lumiar2.png",
+      "/P_Lumiar3.jpeg",
+      "/P_Lumiar4.jpg"
     ],
     neighborhoods: CITY_NEIGHBORHOODS["paco-do-lumiar"]
   }
