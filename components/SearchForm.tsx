@@ -24,6 +24,17 @@ export function SearchForm() {
     router.push(`/imoveis?${params.toString()}`);
   };
 
+  const handleMapSearch = () => {
+    const params = new URLSearchParams();
+    if (selectedCity) params.set('city', selectedCity);
+    if (selectedNeighborhood) params.set('neighborhood', selectedNeighborhood);
+    if (street) params.set('street', street);
+    if (propertyType && propertyType !== 'todos') params.set('type', propertyType);
+    params.set('view', 'map');
+
+    router.push(`/imoveis?${params.toString()}`);
+  };
+
   return (
     <div className="w-full max-w-4xl bg-white p-4 md:p-6 rounded-xl shadow-2xl backdrop-blur-sm bg-white/95 mx-4">
       <div className="flex flex-col gap-4">
