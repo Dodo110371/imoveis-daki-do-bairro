@@ -126,12 +126,16 @@ export function SearchForm() {
             <Search className="h-5 w-5" />
             Buscar Imóveis
           </button>
-          <button className="md:w-auto px-6 py-3.5 rounded-lg border-2 border-cyan-100 bg-cyan-50/50 font-semibold text-cyan-700 hover:bg-cyan-100 hover:border-cyan-200 transition-colors flex items-center justify-center gap-2">
+          <button
+            onClick={handleMapSearch}
+            type="button"
+            className="md:w-auto px-6 py-3.5 rounded-lg border-2 border-cyan-100 bg-cyan-50/50 font-semibold text-cyan-700 hover:bg-cyan-100 hover:border-cyan-200 transition-colors flex items-center justify-center gap-2"
+          >
             <MapPin className="h-5 w-5 text-cyan-600" />
             Ver no Mapa
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
