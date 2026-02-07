@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  Printer, 
-  Share2, 
-  MapPin, 
-  Home, 
-  Search, 
-  Smartphone, 
-  CheckCircle2, 
+import {
+  Building2,
+  Printer,
+  Share2,
+  MapPin,
+  Home,
+  Search,
+  Smartphone,
+  CheckCircle2,
   ArrowRight,
   MousePointerClick,
   QrCode
@@ -59,8 +61,8 @@ export default function FlyerPage() {
 
       {/* Toolbar - Hidden on Print */}
       <div className="max-w-4xl mx-auto mb-6 flex justify-between items-center no-print animate-in slide-in-from-top-4">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="flex items-center text-slate-600 hover:text-blue-600 font-medium transition-colors"
         >
           <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
@@ -86,26 +88,39 @@ export default function FlyerPage() {
 
       {/* Flyer Content - A4 Ratio Aspect */}
       <div className="max-w-[21cm] mx-auto bg-white shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-none">
-        
+
         {/* Header Section */}
         <div className="bg-slate-900 text-white p-12 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-grid-white/[0.05] z-0" />
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/30 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl" />
-          
+
+          <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none overflow-hidden">
+            <Building2 className="w-[500px] h-[500px] text-white -rotate-12 transform" strokeWidth={0.5} />
+          </div>
+
           <div className="relative z-10">
-            <div className="flex flex-col items-center justify-center mb-6">
-              <h1 className="flex flex-col items-center">
-                <span className="font-sans font-extrabold text-4xl tracking-tight mb-1">Imóveis</span>
-                <span className="font-sans font-medium text-xl text-blue-300 tracking-wide">daki do Bairro</span>
+            <div className="flex items-center justify-center gap-5 mb-8">
+              <div className="relative w-24 h-24 bg-white/10 rounded-2xl p-2 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
+                <Image
+                  src="/Logo_imoveis_daki_do_bairro.png"
+                  alt="Logo Imóveis daki do Bairro"
+                  fill
+                  className="object-contain p-2"
+                  priority
+                />
+              </div>
+              <h1 className="flex flex-col items-start text-left">
+                <span className="font-sans font-extrabold text-5xl tracking-tight mb-0 leading-none drop-shadow-md">Imóveis</span>
+                <span className="font-sans font-medium text-2xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
               </h1>
             </div>
-            
+
             <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
-              Conectando você ao seu <br/>
+              Conectando você ao seu <br />
               próximo imóvel ideal
             </h2>
-            
+
             <p className="text-blue-100 text-lg max-w-lg mx-auto">
               A plataforma imobiliária mais completa, rápida e segura da região.
             </p>
@@ -114,7 +129,7 @@ export default function FlyerPage() {
 
         {/* Main Body */}
         <div className="p-12 space-y-12">
-          
+
           {/* Value Proposition Grid */}
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-6">
@@ -192,7 +207,7 @@ export default function FlyerPage() {
           <div className="bg-slate-50 rounded-2xl p-8 border border-slate-200 text-center">
             <h3 className="text-xl font-bold text-slate-900 mb-2">Por que escolher o Imóveis daki do Bairro?</h3>
             <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
-              Somos especialistas na região. Conhecemos cada rua e cada oportunidade. 
+              Somos especialistas na região. Conhecemos cada rua e cada oportunidade.
               Nossa missão é facilitar o encontro entre quem quer vender e quem sonha em comprar.
             </p>
             <div className="flex justify-center gap-8 text-center">
@@ -222,19 +237,19 @@ export default function FlyerPage() {
               www.imoveisdakidobairro.com.br
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-lg">
             <div className="w-24 h-24 bg-slate-100 flex items-center justify-center rounded-lg border-2 border-slate-200">
-               {/* QR Code Placeholder Simulation */}
-               <QrCode className="w-16 h-16 text-slate-900" />
+              {/* QR Code Placeholder Simulation */}
+              <QrCode className="w-16 h-16 text-slate-900" />
             </div>
             <div className="text-left text-slate-900">
               <div className="font-bold text-sm uppercase tracking-wider text-slate-500 mb-1">Escaneie</div>
-              <div className="font-bold text-lg leading-tight">Para acessar<br/>o site agora</div>
+              <div className="font-bold text-lg leading-tight">Para acessar<br />o site agora</div>
             </div>
           </div>
         </div>
-        
+
         {/* Bottom Strip */}
         <div className="bg-blue-600 text-white text-center py-2 text-xs font-medium print:bg-blue-600">
           Imóveis daki do Bairro © 2026 - Todos os direitos reservados
