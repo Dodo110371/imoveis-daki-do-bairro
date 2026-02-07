@@ -100,8 +100,8 @@ export default function FlyerPage() {
           </div>
 
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-5 mb-8">
-              <div className="relative w-24 h-24 bg-white/10 rounded-2xl p-2 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
+            <div className="flex items-center justify-center gap-8 mb-10">
+              <div className="relative w-48 h-48 bg-white/10 rounded-3xl p-4 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
                 <Image
                   src="/Logo_imoveis_daki_do_bairro.png"
                   alt="Logo Imóveis daki do Bairro"
@@ -111,8 +111,8 @@ export default function FlyerPage() {
                 />
               </div>
               <h1 className="flex flex-col items-start text-left">
-                <span className="font-sans font-extrabold text-5xl tracking-tight mb-0 leading-none drop-shadow-md">Imóveis</span>
-                <span className="font-sans font-medium text-2xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
+                <span className="font-sans font-extrabold text-6xl tracking-tight mb-2 leading-none drop-shadow-md">Imóveis</span>
+                <span className="font-sans font-medium text-3xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
               </h1>
             </div>
 
@@ -210,16 +210,16 @@ export default function FlyerPage() {
               Somos especialistas na região. Conhecemos cada rua e cada oportunidade.
               Nossa missão é facilitar o encontro entre quem quer vender e quem sonha em comprar.
             </p>
-            <div className="flex justify-center gap-8 text-center">
-              <div>
-                <div className="text-3xl font-extrabold text-blue-600">+1.000</div>
-                <div className="text-sm text-slate-500 font-medium">Imóveis Cadastrados</div>
+            <div className="flex justify-center gap-8 text-center flex-wrap">
+              <div className="flex-1 min-w-[150px]">
+                <div className="text-xl font-extrabold text-blue-600 mb-1">Foco Local</div>
+                <div className="text-sm text-slate-500 font-medium">Especialistas na região e no que o bairro precisa</div>
               </div>
-              <div>
-                <div className="text-3xl font-extrabold text-blue-600">+500</div>
-                <div className="text-sm text-slate-500 font-medium">Negócios Fechados</div>
+              <div className="flex-1 min-w-[150px]">
+                <div className="text-xl font-extrabold text-blue-600 mb-1">Tecnologia</div>
+                <div className="text-sm text-slate-500 font-medium">Plataforma rápida, moderna e fácil de usar</div>
               </div>
-              <div>
+              <div className="flex-1 min-w-[150px]">
                 <div className="text-3xl font-extrabold text-blue-600">24h</div>
                 <div className="text-sm text-slate-500 font-medium">Suporte Online</div>
               </div>
