@@ -10,7 +10,7 @@ export function ComparisonBar() {
   if (comparisonIds.length === 0) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out animate-in slide-in-from-bottom-full">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out animate-in slide-in-from-bottom-full print:hidden">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-slate-700 font-semibold">

@@ -4,7 +4,7 @@ import { Facebook, Instagram, Twitter, Mail, Smartphone } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-slate-50">
+    <footer className="print:hidden w-full border-t bg-slate-50">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-4">
@@ -21,6 +21,7 @@ export function Footer() {
             <Link href="/alugar" className="text-sm text-slate-600 hover:text-slate-900">Alugar</Link>
             <Link href="/imobiliarias" className="text-sm text-slate-600 hover:text-slate-900">Imobiliárias</Link>
             <Link href="/bairro" className="text-sm text-slate-600 hover:text-slate-900">O Bairro</Link>
+            <Link href="/divulgacao" className="text-sm text-slate-600 hover:text-slate-900">Divulgação</Link>
             <Link href="/contato" className="text-sm text-slate-600 hover:text-slate-900">Contato</Link>
           </div>
 
@@ -34,7 +35,7 @@ export function Footer() {
               <Smartphone className="h-4 w-4" />
               <span>{siteConfig.contact.phone}</span>
             </Link>
-            
+
             <div className="flex gap-4 mt-2">
               <Link href="#" className="text-slate-600 hover:text-slate-900">
                 <Instagram className="h-5 w-5" />

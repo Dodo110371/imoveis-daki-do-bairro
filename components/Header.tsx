@@ -12,7 +12,7 @@ export function Header() {
 
     return (
         <>
-            <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 shadow-lg text-white">
+            <header className="print:hidden sticky top-0 z-40 w-full border-b border-white/10 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 shadow-lg text-white">
                 <div className="container mx-auto flex h-20 items-center justify-between px-4">
                     {/* Logo Section - Left */}
                     <div className="flex-1 flex justify-start">
