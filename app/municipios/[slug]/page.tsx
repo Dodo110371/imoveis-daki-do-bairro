@@ -1,6 +1,7 @@
 import { CITIES } from "@/lib/cities";
 import { CityCarousel } from "@/components/CityCarousel";
-import { MapPin, Music, PartyPopper, Building2, ArrowLeft } from "lucide-react";
+import { CityMapViewer } from "@/components/CityMapViewer";
+import { MapPin, Music, PartyPopper, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -20,13 +21,6 @@ export async function generateMetadata({ params }: PageProps) {
     title: `${city.name} | Imóveis daki do Bairro`,
     description: city.shortDescription,
   };
-}
-
-// Helper to generate a consistent mock CEP based on string
-function generateMockCEP(str: string, index: number) {
-  // This is just for visual demonstration as requested
-  const base = 65000 + index;
-  return `${base}-000`;
 }
 
 export default async function CityPage({ params }: PageProps) {
@@ -97,57 +91,12 @@ export default async function CityPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Map Section */}
-        <section className="mb-16">
-          <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-100">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6 px-4 flex items-center gap-2">
-              <MapPin className="w-6 h-6 text-blue-600" />
-              Localização
-            </h2>
-            <div className="w-full h-[400px] rounded-2xl overflow-hidden bg-slate-200 relative">
-              <iframe
-                src={city.mapEmbedUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full"
-              ></iframe>
-            </div>
-          </div>
-        </section>
-
-        {/* Neighborhoods Section */}
-        <section>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <Building2 className="w-6 h-6 text-blue-600" />
-              Bairros de {city.name}
-            </h2>
-            <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-medium">
-              {city.neighborhoods.length} bairros cadastrados
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {city.neighborhoods.map((neighborhood, index) => (
-              <Link
-                href="#" // Placeholder link as requested "futuramente acrescentar informações"
-                key={index}
-                className="group bg-white p-4 rounded-xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition-all flex flex-col"
-              >
-                <span className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors mb-1">
-                  {neighborhood}
-                </span>
-                <span className="text-xs text-slate-400">
-                  CEP: {generateMockCEP(neighborhood, index)}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {/* Map and Neighborhoods Section - Managed by Client Component */}
+        <CityMapViewer 
+          initialMapUrl={city.mapEmbedUrl}
+          neighborhoods={city.neighborhoods}
+          cityName={city.name}
+        />
 
       </main>
     </div>
