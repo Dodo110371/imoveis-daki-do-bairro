@@ -14,7 +14,10 @@ import {
   CheckCircle2,
   ArrowRight,
   MousePointerClick,
-  QrCode
+  QrCode,
+  Facebook,
+  Instagram,
+  MessageCircle
 } from 'lucide-react';
 
 export default function FlyerPage() {
@@ -87,7 +90,7 @@ export default function FlyerPage() {
       </div>
 
       {/* Flyer Content - A4 Ratio Aspect */}
-      <div className="max-w-[21cm] mx-auto bg-white shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-none">
+      <div className="w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:w-[210mm] print:h-[297mm] print:min-h-[297mm] print:max-h-[297mm] print:m-0 print:rounded-none relative">
 
         {/* Header Section */}
         <div className="bg-slate-900 text-white p-12 text-center relative overflow-hidden">
@@ -204,24 +207,47 @@ export default function FlyerPage() {
           </div>
 
           {/* Highlight Section */}
-          <div className="bg-slate-50 rounded-2xl p-8 border border-slate-200 text-center">
+          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center">
             <h3 className="text-xl font-bold text-slate-900 mb-2">Por que escolher o Imóveis daki do Bairro?</h3>
-            <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
+            <p className="text-slate-600 mb-4 max-w-2xl mx-auto text-sm">
               Somos especialistas na região. Conhecemos cada rua e cada oportunidade.
               Nossa missão é facilitar o encontro entre quem quer vender e quem sonha em comprar.
             </p>
-            <div className="flex justify-center gap-8 text-center flex-wrap">
-              <div className="flex-1 min-w-[150px]">
-                <div className="text-xl font-extrabold text-blue-600 mb-1">Foco Local</div>
-                <div className="text-sm text-slate-500 font-medium">Especialistas na região e no que o bairro precisa</div>
+            <div className="flex justify-center gap-4 text-center flex-wrap mb-4">
+              <div className="flex-1 min-w-[120px]">
+                <div className="text-lg font-extrabold text-blue-600 mb-0.5">Foco Local</div>
+                <div className="text-xs text-slate-500 font-medium leading-tight">Especialistas na região e no que o bairro precisa</div>
               </div>
-              <div className="flex-1 min-w-[150px]">
-                <div className="text-xl font-extrabold text-blue-600 mb-1">Tecnologia</div>
-                <div className="text-sm text-slate-500 font-medium">Plataforma rápida, moderna e fácil de usar</div>
+              <div className="flex-1 min-w-[120px]">
+                <div className="text-lg font-extrabold text-blue-600 mb-0.5">Tecnologia</div>
+                <div className="text-xs text-slate-500 font-medium leading-tight">Plataforma rápida, moderna e fácil de usar</div>
               </div>
-              <div className="flex-1 min-w-[150px]">
-                <div className="text-3xl font-extrabold text-blue-600">24h</div>
-                <div className="text-sm text-slate-500 font-medium">Suporte Online</div>
+              <div className="flex-1 min-w-[120px]">
+                <div className="text-2xl font-extrabold text-blue-600">24h</div>
+                <div className="text-xs text-slate-500 font-medium leading-tight">Suporte Online</div>
+              </div>
+            </div>
+
+            {/* Social Media & WhatsApp */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-4 pt-4 border-t border-slate-200">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <Facebook className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium text-sm">/imoveisdakidobairro</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
+                    <Instagram className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium text-sm">@imoveisdakidobairro</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow-md">
+                <MessageCircle className="w-5 h-5" />
+                <span>(11) 99999-9999</span>
               </div>
             </div>
           </div>
@@ -229,7 +255,7 @@ export default function FlyerPage() {
         </div>
 
         {/* Footer / CTA Section */}
-        <div className="bg-slate-900 text-white p-10 flex flex-col md:flex-row items-center justify-between gap-8 print:bg-slate-900 print:text-white">
+        <div className="mt-auto bg-slate-900 text-white p-8 flex flex-col md:flex-row items-center justify-between gap-6 print:bg-slate-900 print:text-white print:p-6">
           <div className="text-center md:text-left">
             <h3 className="text-2xl font-bold mb-2">Comece agora mesmo!</h3>
             <p className="text-blue-200 mb-4">Acesse nosso site ou aponte a câmera para o QR Code.</p>
