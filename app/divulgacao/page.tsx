@@ -94,12 +94,17 @@ export default function FlyerPage() {
 
         {/* Header Section */}
         <div className="bg-slate-900 text-white p-12 text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-grid-white/[0.05] z-0" />
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/30 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl" />
-
-          <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none overflow-hidden">
-            <Building2 className="w-[500px] h-[500px] text-white -rotate-12 transform" strokeWidth={0.5} />
+          {/* Background Image with Overlay */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/chaveiro.jpg"
+              alt="Background Chaveiro"
+              fill
+              className="object-cover"
+              priority
+            />
+            {/* Dark overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-slate-900/85" />
           </div>
 
           <div className="relative z-10">
