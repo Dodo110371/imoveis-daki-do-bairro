@@ -11,7 +11,7 @@ export default function PlanosPage() {
         <div className="absolute top-0 left-0 w-full h-full bg-grid-slate-900 opacity-20 z-0" />
         <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float delay-75" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-float delay-500" />
-        
+
         <div className="relative z-10 max-w-6xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-4 backdrop-blur-sm">
             <Megaphone className="w-4 h-4" />
@@ -24,18 +24,18 @@ export default function PlanosPage() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-            Milhares de compradores e inquilinos visitam o Imóveis do Bairro todos os dias. 
+            Milhares de compradores e inquilinos visitam o Imóveis do Bairro todos os dias.
             Escolha o plano ideal e destaque sua propriedade agora mesmo.
           </p>
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/anunciar" 
+            <Link
+              href="/anunciar"
               className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-blue-600 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95"
             >
               Criar meu anúncio agora
             </Link>
-            <a 
-              href="#planos" 
+            <a
+              href="#planos"
               className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-slate-800 border border-slate-700 rounded-xl hover:bg-slate-700 active:scale-95"
             >
               Ver planos disponíveis
@@ -97,7 +97,7 @@ export default function PlanosPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
-            
+
             {/* Mensal */}
             <div className="flex flex-col rounded-2xl border-2 border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all h-full bg-slate-50">
               <div className="p-6 text-center bg-white border-b border-slate-100">
@@ -159,7 +159,7 @@ export default function PlanosPage() {
                     <span>Suporte prioritário via chat</span>
                   </li>
                 </ul>
-                <Link href="/anunciar" className="w-full py-3 px-4 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors text-center shadow-lg shadow-teal-200">
+                <Link href="/pagamento?plano=trimestral" className="w-full py-3 px-4 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors text-center shadow-lg shadow-teal-200">
                   Escolher Trimestral
                 </Link>
               </div>
@@ -233,7 +233,7 @@ export default function PlanosPage() {
                     <span>Consultoria de preço de mercado</span>
                   </li>
                 </ul>
-                <Link href="/anunciar" className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all text-center shadow-lg shadow-purple-300 transform hover:-translate-y-1">
+                <Link href="/pagamento?plano=ate_vender" className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all text-center shadow-lg shadow-purple-300 transform hover:-translate-y-1">
                   Quero Vender Rápido
                 </Link>
               </div>
@@ -258,7 +258,7 @@ export default function PlanosPage() {
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
-              
+
               {/* Step 1 */}
               <div className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-full bg-white border-4 border-blue-500 text-blue-600 flex items-center justify-center text-2xl font-bold shadow-sm mb-6">
@@ -307,8 +307,8 @@ export default function PlanosPage() {
           </div>
 
           <div className="mt-16 text-center">
-            <Link 
-              href="/anunciar" 
+            <Link
+              href="/anunciar"
               className="inline-flex items-center gap-2 px-8 py-4 text-lg font-bold text-white transition-all bg-green-600 rounded-full hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/25 active:scale-95"
             >
               Começar agora

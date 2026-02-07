@@ -213,9 +213,10 @@ export default function AdvertisePage() {
     setIsSubmitting(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    window.scrollTo(0, 0);
+    
+    // Redirect to payment page with selected plan
+    const plan = formData.paymentPlan || 'mensal';
+    router.push(`/pagamento?plano=${plan}`);
   };
 
   if (isSuccess) {
