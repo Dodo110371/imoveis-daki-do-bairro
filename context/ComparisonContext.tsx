@@ -3,71 +3,85 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface ComparisonContextType {
-  compareList: string[];
-  addToCompare: (id: string) => void;
-  removeFromCompare: (id: string) => void;
-  isInCompare: (id: string) => boolean;
-  toggleCompare: (id: string) => void;
-  clearCompare: () => void;
+  comparisonIds: string[];
+  addToComparison: (id: string) => void;
+  removeFromComparison: (id: string) => void;
+  isInComparison: (id: string) => boolean;
+  toggleComparison: (id: string) => void;
+  clearComparison: () => void;
+  isLoading: boolean;
 }
 
 const ComparisonContext = createContext<ComparisonContextType | undefined>(undefined);
 
 export function ComparisonProvider({ children }: { children: ReactNode }) {
-  const [compareList, setCompareList] = useState<string[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [comparisonIds, setComparisonIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('compareList');
+    const saved = localStorage.getItem('comparison_ids');
     if (saved) {
       try {
-        setCompareList(JSON.parse(saved));
+        setComparisonIds(JSON.parse(saved));
       } catch (e) {
-        setCompareList([]);
+        console.error('Failed to parse comparison list:', e);
+        setComparisonIds([]);
       }
     }
-    setIsLoaded(true);
+    setIsLoading(false);
   }, []);
 
+  // Save to localStorage whenever list changes
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem('compareList', JSON.stringify(compareList));
+    if (!isLoading) {
+      localStorage.setItem('comparison_ids', JSON.stringify(comparisonIds));
     }
-  }, [compareList, isLoaded]);
+  }, [comparisonIds, isLoading]);
 
-  const addToCompare = (id: string) => {
-    if (compareList.length >= 3) {
-      // In a real app, we might use a toast here. For now, we'll rely on the UI to disable/show status.
-      // But we can also just alert or ignore.
-      // Let's allow the caller to handle the "full" state check usually, but as a safeguard:
-      if (!compareList.includes(id)) {
-         alert("Você só pode comparar até 3 imóveis.");
+  const addToComparison = (id: string) => {
+    setComparisonIds((prev) => {
+      if (prev.includes(id)) return prev;
+      if (prev.length >= 3) {
+        alert("Você só pode comparar até 3 imóveis por vez.");
+        return prev;
       }
-      return;
-    }
-    if (!compareList.includes(id)) {
-      setCompareList([...compareList, id]);
-    }
+      return [...prev, id];
+    });
   };
 
-  const removeFromCompare = (id: string) => {
-    setCompareList(prev => prev.filter(itemId => itemId !== id));
+  const removeFromComparison = (id: string) => {
+    setComparisonIds((prev) => prev.filter((itemId) => itemId !== id));
   };
 
-  const isInCompare = (id: string) => compareList.includes(id);
+  const isInComparison = (id: string) => {
+    return comparisonIds.includes(id);
+  };
 
-  const toggleCompare = (id: string) => {
-    if (isInCompare(id)) {
-      removeFromCompare(id);
+  const toggleComparison = (id: string) => {
+    if (isInComparison(id)) {
+      removeFromComparison(id);
     } else {
-      addToCompare(id);
+      addToComparison(id);
     }
   };
 
-  const clearCompare = () => setCompareList([]);
+  const clearComparison = () => {
+    setComparisonIds([]);
+  };
 
   return (
-    <ComparisonContext.Provider value={{ compareList, addToCompare, removeFromCompare, isInCompare, toggleCompare, clearCompare }}>
+    <ComparisonContext.Provider
+      value={{
+        comparisonIds,
+        addToComparison,
+        removeFromComparison,
+        isInComparison,
+        toggleComparison,
+        clearComparison,
+        isLoading,
+      }}
+    >
       {children}
     </ComparisonContext.Provider>
   );
@@ -75,6 +89,8 @@ export function ComparisonProvider({ children }: { children: ReactNode }) {
 
 export function useComparison() {
   const context = useContext(ComparisonContext);
-  if (!context) throw new Error('useComparison must be used within ComparisonProvider');
+  if (context === undefined) {
+    throw new Error('useComparison must be used within a ComparisonProvider');
+  }
   return context;
 }

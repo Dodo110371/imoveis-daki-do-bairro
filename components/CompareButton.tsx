@@ -13,19 +13,19 @@ interface CompareButtonProps {
 }
 
 export function CompareButton({ propertyId, className, iconSize = 20, showLabel = false }: CompareButtonProps) {
-  const { isInCompare, toggleCompare, compareList } = useComparison();
-  const isCompared = isInCompare(propertyId);
-  const isFull = compareList.length >= 3;
+  const { isInComparison, toggleComparison, comparisonIds } = useComparison();
+  const isCompared = isInComparison(propertyId);
+  const isFull = comparisonIds.length >= 3;
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!isCompared && isFull) {
       alert("Limite de 3 imóveis para comparação atingido.");
       return;
     }
-    toggleCompare(propertyId);
+    toggleComparison(propertyId);
   };
 
   return (
@@ -33,20 +33,20 @@ export function CompareButton({ propertyId, className, iconSize = 20, showLabel 
       onClick={handleClick}
       className={cn(
         "flex items-center gap-2 rounded-full p-2 transition-all duration-300 focus:outline-none",
-        isCompared 
-          ? "bg-blue-100 text-blue-600" 
+        isCompared
+          ? "bg-blue-100 text-blue-600"
           : "bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm",
         showLabel && "px-4",
         className
       )}
       title={isCompared ? "Remover da comparação" : "Adicionar à comparação"}
     >
-      <ArrowRightLeft 
-        size={iconSize} 
+      <ArrowRightLeft
+        size={iconSize}
         className={cn(
           "transition-transform",
           isCompared ? "scale-110" : "scale-100"
-        )} 
+        )}
       />
       {showLabel && (
         <span className="text-sm font-medium">
