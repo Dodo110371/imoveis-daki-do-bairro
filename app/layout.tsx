@@ -3,6 +3,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { FavoritesProvider } from "@/context/FavoritesContext";
+import { ComparisonProvider } from "@/context/ComparisonContext";
+import { ComparisonBar } from "@/components/ComparisonBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +23,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <FavoritesProvider>
+          <ComparisonProvider>
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <WhatsAppFloat />
+            <ComparisonBar />
+            <Footer />
+          </ComparisonProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );

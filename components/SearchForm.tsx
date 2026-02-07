@@ -12,26 +12,41 @@ export function SearchForm() {
   const [street, setStreet] = useState("");
   const [propertyType, setPropertyType] = useState("todos");
 
+  // Advanced Filters State
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [bedrooms, setBedrooms] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
+  const [minArea, setMinArea] = useState("");
+
   const neighborhoods = selectedCity ? CITY_NEIGHBORHOODS[selectedCity as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
 
-  const handleSearch = () => {
+  const getSearchParams = () => {
     const params = new URLSearchParams();
     if (selectedCity) params.set('city', selectedCity);
     if (selectedNeighborhood) params.set('neighborhood', selectedNeighborhood);
     if (street) params.set('street', street);
     if (propertyType && propertyType !== 'todos') params.set('type', propertyType);
 
+    // Advanced Filters
+    if (minPrice) params.set('minPrice', minPrice);
+    if (maxPrice) params.set('maxPrice', maxPrice);
+    if (bedrooms) params.set('bedrooms', bedrooms);
+    if (bathrooms) params.set('bathrooms', bathrooms);
+    if (minArea) params.set('minArea', minArea);
+
+    return params;
+  };
+
+  const handleSearch = () => {
+    const params = getSearchParams();
     router.push(`/imoveis?${params.toString()}`);
   };
 
   const handleMapSearch = () => {
-    const params = new URLSearchParams();
-    if (selectedCity) params.set('city', selectedCity);
-    if (selectedNeighborhood) params.set('neighborhood', selectedNeighborhood);
-    if (street) params.set('street', street);
-    if (propertyType && propertyType !== 'todos') params.set('type', propertyType);
+    const params = getSearchParams();
     params.set('view', 'map');
-
     router.push(`/imoveis?${params.toString()}`);
   };
 
@@ -116,6 +131,84 @@ export function SearchForm() {
             </div>
           </div>
         </div>
+
+        {/* Advanced Filters Toggle */}
+        <div className="flex justify-end">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+          >
+            {showAdvanced ? "Ocultar Filtros Avançados" : "Mostrar Filtros Avançados"}
+          </button>
+        </div>
+
+        {/* Advanced Filters Section */}
+        {showAdvanced && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            {/* Min Price */}
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500 font-medium">Preço Mínimo (R$)</label>
+              <input
+                type="number"
+                placeholder="0"
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+            </div>
+            {/* Max Price */}
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500 font-medium">Preço Máximo (R$)</label>
+              <input
+                type="number"
+                placeholder="Sem limite"
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
+            {/* Bedrooms */}
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500 font-medium">Quartos</label>
+              <select
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none bg-white"
+                value={bedrooms}
+                onChange={(e) => setBedrooms(e.target.value)}
+              >
+                <option value="">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
+            </div>
+            {/* Bathrooms */}
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500 font-medium">Banheiros</label>
+              <select
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none bg-white"
+                value={bathrooms}
+                onChange={(e) => setBathrooms(e.target.value)}
+              >
+                <option value="">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+            {/* Area */}
+            <div className="space-y-1 md:col-span-4">
+              <label className="text-xs text-slate-500 font-medium">Área Mínima (m²)</label>
+              <input
+                type="number"
+                placeholder="0"
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                value={minArea}
+                onChange={(e) => setMinArea(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-3 mt-2">

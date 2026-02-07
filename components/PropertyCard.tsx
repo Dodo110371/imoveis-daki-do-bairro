@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Bed, Bath, Move, MapPin } from 'lucide-react';
+import { FavoriteButton } from './FavoriteButton';
+import { CompareButton } from './CompareButton';
 
 interface PropertyCardProps {
   id: string;
@@ -36,6 +38,10 @@ export function PropertyCard({
         />
         <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white">
           {type}
+        </div>
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
+          <FavoriteButton propertyId={id} />
+          <CompareButton propertyId={id} />
         </div>
       </div>
       <div className="p-4">

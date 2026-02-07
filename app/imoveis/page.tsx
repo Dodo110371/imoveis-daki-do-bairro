@@ -12,12 +12,17 @@ interface SearchPageProps {
     street?: string;
     type?: string;
     view?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    minArea?: string;
   }>;
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const { city, neighborhood, street, type, view } = params;
+  const { city, neighborhood, street, type, view, minPrice, maxPrice, bedrooms, bathrooms, minArea } = params;
   const supabase = await createClient();
 
   const isMapView = view === 'map';
@@ -79,7 +84,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const filteredProperties = propertiesData?.map(mapProperty) || [];
 
-  const hasFilters = city || neighborhood || street || type;
+  const hasFilters = city || neighborhood || street || type || minPrice || maxPrice || bedrooms || bathrooms || minArea;
 
   return (
     <div className="min-h-screen bg-slate-50 pb-16">

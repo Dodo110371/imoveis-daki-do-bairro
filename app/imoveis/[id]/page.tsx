@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2 } from "lucide-react";
 import Link from "next/link";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { CompareButton } from "@/components/CompareButton";
+import { ImageGallery } from "@/components/ImageGallery";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -34,6 +37,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const property = {
     ...propertyData,
+    images: propertyData.images || [],
     imageUrl: propertyData.images?.[0] || '/placeholder.jpg',
     price: propertyData.type === 'Aluguel'
       ? `R$ ${propertyData.price}/mês`
@@ -48,39 +52,55 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
-      {/* Header Image */}
-      <div className="relative h-[400px] w-full md:h-[500px]">
-        <Image
-          src={property.imageUrl}
-          alt={property.title}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12">
-          <div className="container mx-auto">
-            <Link
-              href="/"
-              className="mb-4 inline-flex items-center text-sm font-medium text-white/80 hover:text-white"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar para Home
-            </Link>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
-                  {property.type}
-                </span>
+      {/* Header Image / Gallery */}
+      <ImageGallery images={property.images} title={property.title} />
+
+      {/* Property Info Overlay (Absolute positioned over the gallery in the component, 
+          but here we have the title/info separately or we need to adjust structure.
+          
+          Wait, the previous design had the title overlaying the image. 
+          The ImageGallery component I built has the image and the overlay gradient INSIDE it?
+          Let's check ImageGallery.tsx again.
+          
+          Yes, ImageGallery has:
+          <div className="relative ...">
+             <Image ... />
+             <div className="absolute inset-0 bg-gradient..." />
+             <div className="absolute bottom-4 right-4 ... button" />
+          </div>
+          
+          It DOES NOT include the title/price overlay that was present in the page.
+          
+          I should wrap the ImageGallery in a relative container OR pass the overlay content as children/props to ImageGallery?
+          Or simply position the overlay content absolute ON TOP of the ImageGallery component here in the page.
+      */}
+
+      <div className="relative -mt-[120px] z-10 pointer-events-none">
+        <div className="container mx-auto px-4 pb-8">
+          <Link
+            href="/"
+            className="mb-4 inline-flex items-center text-sm font-medium text-white/80 hover:text-white pointer-events-auto"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar para Home
+          </Link>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="pointer-events-auto">
+              <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
+                {property.type}
+              </span>
+              <div className="flex items-center gap-4">
                 <h1 className="text-3xl font-bold text-white md:text-5xl">{property.title}</h1>
-                <div className="mt-2 flex items-center text-slate-200">
-                  <MapPin className="mr-2 h-5 w-5" />
-                  {property.location}
-                </div>
+                <FavoriteButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
+                <CompareButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
               </div>
-              <div className="text-3xl font-bold text-white md:text-4xl">
-                {property.price}
+              <div className="mt-2 flex items-center text-slate-200">
+                <MapPin className="mr-2 h-5 w-5" />
+                {property.location}
               </div>
+            </div>
+            <div className="text-3xl font-bold text-white md:text-4xl pointer-events-auto">
+              {property.price}
             </div>
           </div>
         </div>
