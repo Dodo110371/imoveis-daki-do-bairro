@@ -27,9 +27,9 @@ export function Header() {
                                         priority
                                     />
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-base md:text-lg leading-none text-white tracking-tight">Imóveis daki</span>
-                                    <span className="text-xs md:text-sm font-medium leading-none text-blue-200">do Bairro</span>
+                                <div className="flex flex-col items-start justify-center">
+                                    <span className="font-sans font-extrabold text-lg md:text-xl leading-none text-white tracking-tight">Imóveis</span>
+                                    <span className="font-sans font-medium text-xs md:text-sm leading-none text-blue-200 tracking-wide">daki do Bairro</span>
                                 </div>
                             </div>
                         </Link>
