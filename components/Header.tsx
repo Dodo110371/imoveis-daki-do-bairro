@@ -17,14 +17,20 @@ export function Header() {
                     {/* Logo Section - Left */}
                     <div className="flex-1 flex justify-start">
                         <Link href="/" className="flex items-center space-x-2">
-                            <div className="relative h-12 w-48 md:h-14 md:w-64 bg-white/10 rounded-lg p-1 backdrop-blur-sm flex items-center justify-center">
-                                <Image
-                                    src="/Logo_imoveis_daki_do_bairro.png"
-                                    alt="Imóveis daki do Bairro"
-                                    fill
-                                    className="object-contain object-center"
-                                    priority
-                                />
+                            <div className="flex items-center gap-3 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm border border-white/5 hover:bg-white/20 transition-colors">
+                                <div className="relative h-10 w-10 md:h-12 md:w-12 shrink-0">
+                                    <Image
+                                        src="/Logo_imoveis_daki_do_bairro.png"
+                                        alt="Imóveis daki do Bairro"
+                                        fill
+                                        className="object-contain"
+                                        priority
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-base md:text-lg leading-none text-white tracking-tight">Imóveis daki</span>
+                                    <span className="text-xs md:text-sm font-medium leading-none text-blue-200">do Bairro</span>
+                                </div>
                             </div>
                         </Link>
                     </div>
