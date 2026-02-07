@@ -86,7 +86,7 @@ export function SearchForm() {
               value={selectedNeighborhood}
               onChange={(e) => setSelectedNeighborhood(e.target.value)}
             >
-              <option value="">{selectedCity ? "Bairro" : "Selecione cidade"}</option>
+              <option value="">{selectedCity ? "Selecione o bairro" : "Selecione o bairro"}</option>
               {neighborhoods.map((neighborhood) => (
                 <option key={neighborhood} value={neighborhood}>
                   {neighborhood}
