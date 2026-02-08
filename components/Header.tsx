@@ -46,6 +46,7 @@ export function Header() {
                     <nav className="hidden md:flex flex-1 items-center justify-center gap-8 text-base font-medium text-blue-100">
                         <Link href="/comprar" className="hover:text-white hover:scale-105 transition-all">Comprar</Link>
                         <Link href="/alugar" className="hover:text-white hover:scale-105 transition-all">Alugar</Link>
+                        <Link href="/corretores" className="hover:text-white hover:scale-105 transition-all">Corretores</Link>
                         <Link href="/municipios" className="hover:text-white hover:scale-105 transition-all">Municípios</Link>
                         <Link href="/favoritos" className="flex items-center gap-1 hover:text-white hover:scale-105 transition-all">
                             Favoritos
@@ -153,6 +154,9 @@ export function Header() {
                             </Link>
                             <Link href="/alugar" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
                                 Alugar
+                            </Link>
+                            <Link href="/corretores" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
+                                Corretores
                             </Link>
                             <Link href="/municipios" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
                                 Municípios
