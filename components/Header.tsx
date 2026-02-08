@@ -134,9 +134,6 @@ export function Header() {
                             <Link href="/imobiliarias" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
                                 Imobiliárias
                             </Link>
-                            <Link href="/bairro" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
-                                O Bairro
-                            </Link>
                             <Link href="/planos" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
                                 Nossos Planos
                             </Link>
