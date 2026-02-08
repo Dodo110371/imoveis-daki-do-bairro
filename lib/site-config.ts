@@ -6,5 +6,9 @@ export const siteConfig = {
     address: "",
     cityState: "",
     mapsLink: ""
+  },
+  social: {
+    instagram: "https://instagram.com/imoveis_daki_do_bairro",
+    instagramHandle: "@imoveis_daki_do_bairro"
   }
 };

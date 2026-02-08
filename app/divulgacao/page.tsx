@@ -246,7 +246,7 @@ export default function FlyerPage() {
                   <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
                     <Instagram className="w-4 h-4" />
                   </div>
-                  <span className="font-medium text-sm">@imoveisdakidobairro</span>
+                  <span className="font-medium text-sm">@imoveis_daki_do_bairro</span>
                 </div>
               </div>
 
