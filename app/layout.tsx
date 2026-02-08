@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ComparisonProvider } from "@/context/ComparisonContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { ComparisonBar } from "@/components/ComparisonBar";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,17 +24,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
-        <FavoritesProvider>
-          <ComparisonProvider>
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <WhatsAppFloat />
-            <ComparisonBar />
-            <Footer />
-          </ComparisonProvider>
-        </FavoritesProvider>
+        <AuthProvider>
+          <FavoritesProvider>
+            <ComparisonProvider>
+              <Header />
+              <main className="flex-1">
+                {children}
+              </main>
+              <WhatsAppFloat />
+              <ComparisonBar />
+              <Footer />
+            </ComparisonProvider>
+          </FavoritesProvider>
+        </AuthProvider>
       </body>
     </html>
   );

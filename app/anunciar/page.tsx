@@ -21,6 +21,8 @@ import {
   CreditCard
 } from 'lucide-react';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
+import { useAuth } from '@/context/AuthContext';
+import { useEffect } from 'react';
 
 // Step definitions
 const STEPS = [
@@ -70,12 +72,19 @@ interface AdvertiseFormData {
 
 export default function AdvertisePage() {
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [hasIdentified, setHasIdentified] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setHasIdentified(true);
+    }
+  }, [isAuthenticated]);
 
   // Form State
   const [formData, setFormData] = useState<AdvertiseFormData>({
@@ -213,7 +222,7 @@ export default function AdvertisePage() {
     setIsSubmitting(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Redirect to payment page with selected plan
     const plan = formData.paymentPlan || 'mensal';
     router.push(`/pagamento?plano=${plan}`);
@@ -299,7 +308,7 @@ export default function AdvertisePage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Login Card */}
-          <Link href="/minha-conta" className="group">
+          <Link href="/minha-conta?redirect=/anunciar" className="group">
             <div className="bg-white p-8 rounded-xl border-2 border-slate-100 hover:border-blue-500 transition-all h-full shadow-sm hover:shadow-md">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
                 <LogIn className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
@@ -315,7 +324,7 @@ export default function AdvertisePage() {
           </Link>
 
           {/* Register Card */}
-          <Link href="/cadastro" className="group">
+          <Link href="/cadastro?redirect=/anunciar" className="group">
             <div className="bg-white p-8 rounded-xl border-2 border-slate-100 hover:border-green-500 transition-all h-full shadow-sm hover:shadow-md">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-600 transition-colors">
                 <UserPlus className="w-6 h-6 text-green-600 group-hover:text-white transition-colors" />

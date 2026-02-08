@@ -1,22 +1,38 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, User, ArrowRight, Github, Chrome } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
-export default function MinhaContaPage() {
+function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, register, isLoading } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulating API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    // In a real app, handle auth here
-    alert(isLogin ? "Login simulado com sucesso!" : "Cadastro simulado com sucesso!");
+    
+    try {
+      if (isLogin) {
+        await login(email, name || 'Usuário');
+      } else {
+        await register(email, name);
+      }
+      
+      // Redirect after successful auth
+      router.push(redirectUrl);
+    } catch (error) {
+      console.error('Authentication error:', error);
+      alert('Ocorreu um erro ao tentar autenticar. Tente novamente.');
+    }
   };
 
   return (
@@ -96,7 +112,9 @@ export default function MinhaContaPage() {
                   </div>
                   <input
                     type="text"
-                    required
+                    required={!isLogin}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                     placeholder="Seu nome"
                   />
@@ -113,6 +131,8 @@ export default function MinhaContaPage() {
                 <input
                   type="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                   placeholder="seu@email.com"
                 />
@@ -135,6 +155,8 @@ export default function MinhaContaPage() {
                 <input
                   type="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                   placeholder="••••••••"
                 />
@@ -185,5 +207,17 @@ export default function MinhaContaPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MinhaContaPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+      </div>
+    }>
+      <MinhaContaContent />
+    </Suspense>
   );
 }
