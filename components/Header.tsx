@@ -46,15 +46,6 @@ export function Header() {
                     <nav className="hidden md:flex flex-1 items-center justify-center gap-8 text-base font-medium text-blue-100">
                         <Link href="/comprar" className="hover:text-white hover:scale-105 transition-all">Comprar</Link>
                         <Link href="/alugar" className="hover:text-white hover:scale-105 transition-all">Alugar</Link>
-                        <Link href="/municipios" className="hover:text-white hover:scale-105 transition-all">Municípios</Link>
-                        <Link href="/favoritos" className="flex items-center gap-1 hover:text-white hover:scale-105 transition-all">
-                            Favoritos
-                            {favorites.length > 0 && (
-                                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                                    {favorites.length}
-                                </span>
-                            )}
-                        </Link>
                     </nav>
 
                     {/* Actions - Right */}
