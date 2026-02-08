@@ -52,15 +52,15 @@ export function Header() {
 
                     {/* Actions - Right */}
                     <div className="flex-1 flex items-center justify-end gap-4">
+                        <Link href="/anunciar" className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-blue-900 bg-white rounded-full hover:bg-blue-50 hover:shadow-md transition-all shadow-sm">
+                            Anuncie seu Imóvel
+                        </Link>
+
                         <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
                             <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
                                 <User className="h-5 w-5" />
                             </div>
                             <span className="hidden lg:inline font-medium">Minha Conta</span>
-                        </Link>
-
-                        <Link href="/anunciar" className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-blue-900 bg-white rounded-full hover:bg-blue-50 hover:shadow-md transition-all shadow-sm">
-                            Anuncie seu Imóvel
                         </Link>
 
                         <button
