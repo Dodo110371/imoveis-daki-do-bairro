@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, User, Heart } from 'lucide-react';
+import { Menu, X, User, Heart, LogOut } from 'lucide-react';
 import { useFavorites } from '@/context/FavoritesContext';
+import { useAuth } from '@/context/AuthContext';
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { favorites } = useFavorites();
+    const { user, isAuthenticated, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        setIsMenuOpen(false);
+    };
 
     return (
         <>
@@ -56,12 +63,32 @@ export function Header() {
                             Anuncie seu Imóvel
                         </Link>
 
-                        <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
-                            <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-                                <User className="h-5 w-5" />
+                        {isAuthenticated ? (
+                            <div className="flex items-center gap-2">
+                                <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
+                                    <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
+                                        <User className="h-5 w-5" />
+                                    </div>
+                                    <span className="hidden lg:inline font-medium truncate max-w-[150px]">
+                                        Olá, {user?.name?.split(' ')[0]}
+                                    </span>
+                                </Link>
+                                <button
+                                    onClick={() => logout()}
+                                    className="hidden lg:flex p-2 text-blue-100 hover:text-red-300 hover:bg-white/10 rounded-full transition-colors"
+                                    title="Sair da conta"
+                                >
+                                    <LogOut className="h-5 w-5" />
+                                </button>
                             </div>
-                            <span className="hidden lg:inline font-medium">Minha Conta</span>
-                        </Link>
+                        ) : (
+                            <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
+                                <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
+                                    <User className="h-5 w-5" />
+                                </div>
+                                <span className="hidden lg:inline font-medium">Minha Conta</span>
+                            </Link>
+                        )}
 
                         <button
                             className="p-2 text-blue-100 hover:text-white hover:bg-white/10 rounded-full transition-colors"
@@ -145,6 +172,19 @@ export function Header() {
                             <Link href="/contato" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
                                 Contato
                             </Link>
+
+                            {isAuthenticated && (
+                                <>
+                                    <div className="my-2 border-t border-slate-100" />
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                                    >
+                                        <LogOut className="h-5 w-5 mr-2" />
+                                        Sair da conta
+                                    </button>
+                                </>
+                            )}
                         </nav>
 
                         <div className="p-4 border-t bg-slate-50">
