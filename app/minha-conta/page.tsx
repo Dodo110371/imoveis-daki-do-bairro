@@ -14,7 +14,7 @@ function MinhaContaContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRealtor, setIsRealtor] = useState(false);
-  const { login, register, isLoading, user, isAuthenticated, logout } = useAuth();
+  const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
@@ -152,6 +152,17 @@ function MinhaContaContent() {
     } catch (error: any) {
       console.error('Authentication error:', error);
       alert(error.message || 'Ocorreu um erro ao tentar autenticar. Tente novamente.');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) throw error;
+      // Redirect is handled by Supabase OAuth flow
+    } catch (error: any) {
+      console.error('Google auth error:', error);
+      alert('Erro ao conectar com Google.');
     }
   };
 
@@ -297,33 +308,29 @@ function MinhaContaContent() {
                 </>
               )}
             </button>
+          </form>
 
-            <div className="relative my-6">
+          <div className="mt-6">
+            <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
+                <div className="w-full border-t border-slate-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-slate-500">Ou continue com</span>
+                <span className="bg-white px-2 text-slate-500">Ou continue com</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="mt-6">
               <button
                 type="button"
-                className="flex items-center justify-center px-4 py-2.5 border border-slate-200 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-slate-300 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all"
               >
-                <Chrome className="h-5 w-5 mr-2 text-slate-900" />
+                <Chrome className="h-5 w-5 text-slate-900" />
                 Google
               </button>
-              <button
-                type="button"
-                className="flex items-center justify-center px-4 py-2.5 border border-slate-200 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                <Github className="h-5 w-5 mr-2 text-slate-900" />
-                GitHub
-              </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

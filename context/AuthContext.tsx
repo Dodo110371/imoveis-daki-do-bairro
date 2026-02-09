@@ -17,6 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password?: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
   logout: () => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<{ error: any }>;
 }
@@ -33,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         if (session?.user) {
           const { data: profile } = await supabase
             .from('profiles')
@@ -86,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password?: string) => {
     setIsLoading(true);
-    
+
     // If no password provided, use magic link (otp) or throw error depending on requirements
     // For now, assuming password login is standard
     if (!password) {
@@ -104,9 +105,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
+  const signInWithGoogle = async () => {
+    setIsLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    // Note: Loading state might need to persist or be handled by the redirect flow
+    if (error) setIsLoading(false);
+    return { error };
+  };
+
   const register = async (email: string, password: string, name: string) => {
     setIsLoading(true);
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -129,11 +143,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated: !!user, 
-      isLoading, 
-      login, 
+    <AuthContext.Provider value={{
+      user,
+      isAuthenticated: !!user,
+      isLoading,
+      login,
+      signInWithGoogle,
       logout,
       register
     }}>
