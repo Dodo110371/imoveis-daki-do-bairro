@@ -70,9 +70,11 @@ interface AdvertiseFormData {
   paymentMethod: string;
 }
 
+import { createClient } from '@/lib/supabase/client';
+
 export default function AdvertisePage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading, user } = useAuth();
   const [hasIdentified, setHasIdentified] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -220,12 +222,55 @@ export default function AdvertisePage() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Redirect to payment page with selected plan
-    const plan = formData.paymentPlan || 'mensal';
-    router.push(`/pagamento?plano=${plan}`);
+    try {
+      if (!user) {
+        alert('Você precisa estar logado para anunciar.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const supabase = createClient();
+
+      const parseCurrency = (val: string) => {
+        if (!val) return 0;
+        return parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+      };
+
+      const price = parseCurrency(formData.price);
+      const area = parseFloat(formData.area.replace(',', '.')) || 0;
+
+      const { error } = await supabase.from('properties').insert({
+        title: formData.title,
+        description: formData.description,
+        price: price,
+        location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
+        bedrooms: formData.bedrooms,
+        bathrooms: formData.bathrooms,
+        area: area,
+        type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
+        features: [], // Can be enhanced to include selected features
+        images: formData.photos,
+        owner_id: user.id,
+        featured: false
+      });
+
+      if (error) {
+        console.error('Error creating property:', error);
+        alert('Erro ao criar anúncio: ' + error.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Redirect to payment page with selected plan
+      const plan = formData.paymentPlan || 'mensal';
+      router.push(`/pagamento?plano=${plan}`);
+
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      alert('Ocorreu um erro inesperado.');
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {

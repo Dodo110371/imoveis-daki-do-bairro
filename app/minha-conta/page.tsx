@@ -4,24 +4,41 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Mail, Lock, User, ArrowRight, Github, Chrome, LogOut, Heart } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Github, Chrome, LogOut, Heart, ShieldCheck, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { createClient } from '@/lib/supabase/client';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isRealtor, setIsRealtor] = useState(false);
   const { login, register, isLoading, user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
 
+  useEffect(() => {
+    const checkRealtorStatus = async () => {
+      if (user) {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from('realtors')
+          .select('id')
+          .eq('id', user.id)
+          .single();
+        setIsRealtor(!!data);
+      }
+    };
+    checkRealtorStatus();
+  }, [user]);
+
   // If authenticated, show profile instead of login form
   if (isAuthenticated && !isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-6">
           <div className="bg-white shadow rounded-lg overflow-hidden">
             <div className="px-4 py-5 sm:px-6 bg-slate-900 text-white flex justify-between items-center">
               <div>
@@ -61,6 +78,58 @@ function MinhaContaContent() {
               </button>
             </div>
           </div>
+
+          {/* Realtor Section */}
+          <div className="bg-white shadow rounded-lg overflow-hidden border border-blue-100">
+            <div className="px-4 py-5 sm:px-6 bg-blue-600 text-white flex justify-between items-center">
+              <div>
+                <h3 className="text-lg leading-6 font-bold flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5" />
+                  Área do Corretor
+                </h3>
+                <p className="mt-1 max-w-2xl text-sm text-blue-100">
+                  {isRealtor
+                    ? 'Gerencie seu perfil profissional e seus imóveis.'
+                    : 'Torne-se um corretor parceiro e divulgue seus imóveis.'}
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+              {isRealtor ? (
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href={`/corretores/${user?.id}`}
+                    className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Ver Meu Perfil Público
+                  </Link>
+                  <Link
+                    href="/anunciar"
+                    className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Anunciar Novo Imóvel
+                  </Link>
+                </div>
+              ) : (
+                <div className="text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-lg font-medium text-slate-900">Você é corretor imobiliário?</h4>
+                    <p className="text-slate-500 text-sm mt-1">
+                      Cadastre-se gratuitamente como parceiro, divulgue seu perfil e aumente suas vendas.
+                    </p>
+                  </div>
+                  <Link
+                    href="/cadastro-corretor"
+                    className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shrink-0"
+                  >
+                    Criar Perfil de Corretor
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -71,16 +140,18 @@ function MinhaContaContent() {
 
     try {
       if (isLogin) {
-        await login(email, name || 'Usuário');
+        const { error } = await login(email, password);
+        if (error) throw error;
       } else {
-        await register(email, name);
+        const { error } = await register(email, password, name);
+        if (error) throw error;
       }
 
       // Redirect after successful auth
       router.push(redirectUrl);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Authentication error:', error);
-      alert('Ocorreu um erro ao tentar autenticar. Tente novamente.');
+      alert(error.message || 'Ocorreu um erro ao tentar autenticar. Tente novamente.');
     }
   };
 

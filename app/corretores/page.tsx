@@ -1,9 +1,37 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, User, ShieldCheck } from 'lucide-react';
-import { MOCK_REALTORS } from '@/lib/mock-realtors';
+import { createClient } from '@/lib/supabase/server';
 
-export default function CorretoresPage() {
+export default async function CorretoresPage() {
+  const supabase = await createClient();
+
+  const { data: realtorsData } = await supabase
+    .from('realtors')
+    .select(`
+      id,
+      creci,
+      bio,
+      regions,
+      whatsapp,
+      profiles (
+        full_name,
+        avatar_url
+      )
+    `);
+
+  // Transform data to match UI needs
+  const realtors = realtorsData?.map((r: any) => ({
+    id: r.id,
+    name: r.profiles?.full_name || 'Corretor',
+    creci: r.creci,
+    photo: r.profiles?.avatar_url || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop', // Fallback image
+    bio: r.bio || 'Corretor parceiro Imóveis do Bairro.',
+    regions: r.regions || [],
+    whatsapp: r.whatsapp,
+    propertiesCount: 0 // Placeholder until we implement count query
+  })) || [];
+
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Hero Section */}
@@ -17,7 +45,7 @@ export default function CorretoresPage() {
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-slate-900/90" />
-        
+
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Corretores Parceiros
@@ -29,63 +57,78 @@ export default function CorretoresPage() {
       </div>
 
       <div className="container mx-auto px-4 -mt-10 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_REALTORS.map((realtor) => (
-            <div key={realtor.id} className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
-              <div className="relative h-48 bg-slate-100">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
-                <Image
-                  src={realtor.photo}
-                  alt={realtor.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute bottom-4 left-4 right-4 z-20 text-white">
-                  <h3 className="text-xl font-bold">{realtor.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-200">
-                    <ShieldCheck className="w-4 h-4 text-green-400" />
-                    <span>CRECI: {realtor.creci}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="p-6 flex flex-col flex-grow">
-                <p className="text-slate-600 mb-6 text-sm line-clamp-3 flex-grow">
-                  {realtor.bio}
-                </p>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <MapPin className="h-4 w-4 text-blue-500 shrink-0" />
-                    <span>{realtor.regions.join(', ')}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <User className="h-4 w-4 text-blue-500 shrink-0" />
-                    <span>{realtor.propertiesCount} imóveis ativos</span>
+        {realtors.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {realtors.map((realtor) => (
+              <div key={realtor.id} className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
+                <div className="relative h-48 bg-slate-100">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
+                  <Image
+                    src={realtor.photo}
+                    alt={realtor.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute bottom-4 left-4 right-4 z-20 text-white">
+                    <h3 className="text-xl font-bold">{realtor.name}</h3>
+                    <div className="flex items-center gap-2 text-sm text-slate-200">
+                      <ShieldCheck className="w-4 h-4 text-green-400" />
+                      <span>CRECI: {realtor.creci}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mt-auto">
-                  <Link
-                    href={`/corretores/${realtor.id}`}
-                    className="flex items-center justify-center px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
-                  >
-                    Ver Perfil
-                  </Link>
-                  <a
-                    href={`https://wa.me/${realtor.whatsapp}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    WhatsApp
-                  </a>
+                <div className="p-6 flex flex-col flex-grow">
+                  <p className="text-slate-600 mb-6 text-sm line-clamp-3 flex-grow">
+                    {realtor.bio}
+                  </p>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <MapPin className="h-4 w-4 text-blue-500 shrink-0" />
+                      <span>{realtor.regions.join(', ') || 'Atende toda a região'}</span>
+                    </div>
+                    {/* 
+                    <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <User className="h-4 w-4 text-blue-500 shrink-0" />
+                      <span>{realtor.propertiesCount} imóveis ativos</span>
+                    </div>
+                    */}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mt-auto">
+                    <Link
+                      href={`/corretores/${realtor.id}`}
+                      className="flex items-center justify-center px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+                    >
+                      Ver Perfil
+                    </Link>
+                    {realtor.whatsapp && (
+                      <a
+                        href={`https://wa.me/${realtor.whatsapp}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        WhatsApp
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-slate-100">
+            <User className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Nenhum corretor encontrado</h3>
+            <p className="text-slate-500 mb-6">Seja o primeiro corretor parceiro a se cadastrar!</p>
+            <Link href="/cadastro?redirect=/minha-conta" className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+              Cadastrar-se Agora
+            </Link>
+          </div>
+        )}
 
         {/* CTA Section for Realtors */}
         <div className="mt-20 bg-white rounded-2xl overflow-hidden shadow-xl border border-slate-100">

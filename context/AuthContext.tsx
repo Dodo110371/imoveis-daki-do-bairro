@@ -2,20 +2,23 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
   id: string;
   name: string;
   email: string;
+  avatar_url?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, name: string) => Promise<void>;
-  logout: () => void;
-  register: (email: string, name: string) => Promise<void>;
+  login: (email: string, password?: string) => Promise<{ error: any }>;
+  logout: () => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,46 +27,105 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
-    // Check for persisted user in localStorage
-    const storedUser = localStorage.getItem('imoveis_auth_user');
-    if (storedUser) {
+    const initializeAuth = async () => {
       try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Failed to parse user from localStorage', e);
-        localStorage.removeItem('imoveis_auth_user');
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            name: profile?.full_name || session.user.user_metadata?.full_name || 'Usuário',
+            avatar_url: profile?.avatar_url
+          });
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error checking auth session:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        setUser({
+          id: session.user.id,
+          email: session.user.email!,
+          name: profile?.full_name || session.user.user_metadata?.full_name || 'Usuário',
+          avatar_url: profile?.avatar_url
+        });
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const login = async (email: string, name: string = 'Usuário') => {
+  const login = async (email: string, password?: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const mockUser = {
-      id: 'user-' + Date.now(),
-      name,
+    // If no password provided, use magic link (otp) or throw error depending on requirements
+    // For now, assuming password login is standard
+    if (!password) {
+      const { error } = await supabase.auth.signInWithOtp({ email });
+      setIsLoading(false);
+      return { error };
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('imoveis_auth_user', JSON.stringify(mockUser));
+      password,
+    });
+
     setIsLoading(false);
+    return { error };
   };
 
-  const register = async (email: string, name: string) => {
-    // For this mock implementation, register is same as login
-    return login(email, name);
+  const register = async (email: string, password: string, name: string) => {
+    setIsLoading(true);
+    
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
+    });
+
+    setIsLoading(false);
+    return { error };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('imoveis_auth_user');
     router.push('/');
+    router.refresh();
   };
 
   return (

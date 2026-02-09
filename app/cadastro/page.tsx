@@ -18,11 +18,12 @@ function CadastroContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(email, name);
+      const { error } = await register(email, password, name);
+      if (error) throw error;
       router.push(redirectUrl);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      alert('Erro ao criar conta. Tente novamente.');
+      alert(error.message || 'Erro ao criar conta. Tente novamente.');
     }
   };
 

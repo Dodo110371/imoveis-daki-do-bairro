@@ -2,45 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MapPin, Phone, MessageCircle, User, ShieldCheck, Mail, ArrowLeft } from 'lucide-react';
-import { MOCK_REALTORS } from '@/lib/mock-realtors';
+import { createClient } from '@/lib/supabase/server';
 import { PropertyCard } from '@/components/PropertyCard';
-
-// Mock properties for demonstration
-const MOCK_PROPERTIES = [
-  {
-    id: '101',
-    title: 'Apartamento Moderno no Centro',
-    price: 'R$ 450.000',
-    location: 'Centro, São Paulo',
-    bedrooms: 2,
-    bathrooms: 2,
-    area: 75,
-    imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop',
-    type: 'Venda' as const,
-  },
-  {
-    id: '102',
-    title: 'Casa Espaçosa com Jardim',
-    price: 'R$ 850.000',
-    location: 'Jardins, São Paulo',
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 200,
-    imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=600&auto=format&fit=crop',
-    type: 'Venda' as const,
-  },
-  {
-    id: '103',
-    title: 'Studio Mobiliado Próximo ao Metrô',
-    price: 'R$ 2.500/mês',
-    location: 'Vila Madalena, São Paulo',
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 35,
-    imageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop',
-    type: 'Aluguel' as const,
-  },
-];
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -49,18 +12,59 @@ interface PageProps {
 export default async function RealtorProfilePage({ params }: PageProps) {
   // Await params correctly in Next.js 15+
   const { id } = await params;
-  const realtor = MOCK_REALTORS.find((r) => r.id === id);
+  const supabase = await createClient();
 
-  if (!realtor) {
+  // Fetch realtor details
+  const { data: realtorData } = await supabase
+    .from('realtors')
+    .select(`
+      *,
+      profiles (full_name, avatar_url, email, phone)
+    `)
+    .eq('id', id)
+    .single();
+
+  if (!realtorData) {
     notFound();
   }
+
+  const realtor = {
+    id: realtorData.id,
+    name: realtorData.profiles?.full_name || 'Corretor',
+    creci: realtorData.creci,
+    photo: realtorData.profiles?.avatar_url || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop',
+    bio: realtorData.bio || '',
+    regions: realtorData.regions || [],
+    whatsapp: realtorData.whatsapp,
+    email: realtorData.profiles?.email,
+    phone: realtorData.profiles?.phone
+  };
+
+  // Fetch realtor's properties
+  const { data: propertiesData } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('owner_id', id);
+
+  // Map properties to PropertyCard props
+  const properties = propertiesData?.map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    price: `R$ ${p.price.toLocaleString('pt-BR')}`,
+    location: p.location,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    area: p.area,
+    imageUrl: p.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600&auto=format&fit=crop',
+    type: p.type
+  })) || [];
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Header / Banner */}
       <div className="bg-slate-900 text-white pt-24 pb-32 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-           <Image
+          <Image
             src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000&auto=format&fit=crop"
             alt="City Background"
             fill
@@ -72,7 +76,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar para Corretores
           </Link>
-          
+
           <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
             <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-4 border-white shadow-2xl shrink-0">
               <Image
@@ -92,125 +96,119 @@ export default async function RealtorProfilePage({ params }: PageProps) {
               </div>
               <p className="text-slate-300 text-lg mb-4">CRECI: {realtor.creci}</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                <a 
-                  href={`https://wa.me/${realtor.whatsapp}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  WhatsApp
-                </a>
-                <a 
-                  href={`tel:${realtor.phone.replace(/\D/g, '')}`} 
-                  className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                  <Phone className="w-4 h-4" />
-                  Ligar
-                </a>
-                <a 
-                  href={`mailto:${realtor.email}`} 
-                  className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  E-mail
-                </a>
+                {realtor.whatsapp && (
+                  <a
+                    href={`https://wa.me/${realtor.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    WhatsApp
+                  </a>
+                )}
+                {realtor.phone && (
+                  <a
+                    href={`tel:${realtor.phone}`}
+                    className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    Ligar
+                  </a>
+                )}
+                {realtor.email && (
+                  <a
+                    href={`mailto:${realtor.email}`}
+                    className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 -mt-12 relative z-20">
+      <div className="container mx-auto px-4 -mt-20 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content - Bio and Properties */}
+          {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Bio Section */}
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Sobre {realtor.name.split(' ')[0]}</h2>
-              <p className="text-slate-600 leading-relaxed text-lg">
-                {realtor.bio}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Sobre o Corretor</h2>
+              <p className="text-slate-600 leading-relaxed">
+                {realtor.bio || 'Este corretor ainda não adicionou uma biografia.'}
               </p>
-              
-              <div className="mt-6 pt-6 border-t border-slate-100">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3 uppercase tracking-wider">Regiões de Atuação</h3>
+
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h3 className="text-sm font-semibold text-slate-900 mb-4 uppercase tracking-wider">Áreas de Atuação</h3>
                 <div className="flex flex-wrap gap-2">
-                  {realtor.regions.map((region) => (
-                    <span key={region} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                      <MapPin className="w-3 h-3" />
-                      {region}
-                    </span>
-                  ))}
+                  {realtor.regions && realtor.regions.length > 0 ? (
+                    realtor.regions.map((region: string) => (
+                      <span key={region} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {region}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-slate-500 italic">Nenhuma região especificada.</span>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Properties Section */}
+            {/* Listings Section */}
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-900">Imóveis em Destaque</h2>
-                <span className="text-slate-500 text-sm">{realtor.propertiesCount} imóveis encontrados</span>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {MOCK_PROPERTIES.map((property) => (
-                  <PropertyCard key={property.id} {...property} />
-                ))}
-              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <User className="w-6 h-6 text-blue-600" />
+                Imóveis do Corretor
+              </h2>
+
+              {properties.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {properties.map((property: any) => (
+                    <PropertyCard key={property.id} {...property} />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <User className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-slate-900 mb-1">Nenhum imóvel encontrado</h3>
+                  <p className="text-slate-500">Este corretor ainda não possui imóveis cadastrados.</p>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Sidebar - Contact Form */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-6 sticky top-24">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Fale com {realtor.name.split(' ')[0]}</h3>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 sticky top-24">
+              <h3 className="font-bold text-slate-900 mb-4">Entre em Contato</h3>
               <form className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">Seu Nome</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nome completo"
-                  />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Seu Nome</label>
+                  <input type="text" className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Digite seu nome" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Seu E-mail</label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="exemplo@email.com"
-                  />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Seu Email</label>
+                  <input type="email" className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="seu@email.com" />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">Seu Telefone</label>
-                  <input 
-                    type="tel" 
-                    id="phone" 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="(11) 99999-9999"
-                  />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Seu Telefone</label>
+                  <input type="tel" className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="(00) 00000-0000" />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">Mensagem</label>
-                  <textarea 
-                    id="message" 
-                    rows={4} 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder={`Olá, gostaria de saber mais sobre seus imóveis...`}
-                  ></textarea>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Mensagem</label>
+                  <textarea rows={4} className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Olá, gostaria de mais informações..."></textarea>
                 </div>
-                <button 
-                  type="button" 
-                  className="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition-colors"
-                >
+                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
                   Enviar Mensagem
                 </button>
               </form>
-              <p className="mt-4 text-xs text-slate-500 text-center">
-                Ao enviar, você concorda com nossos Termos de Uso e Política de Privacidade.
-              </p>
             </div>
           </div>
         </div>
