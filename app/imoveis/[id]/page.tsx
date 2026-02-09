@@ -13,6 +13,8 @@ interface PropertyPageProps {
   }>;
 }
 
+import { MortgageCalculator } from "@/components/MortgageCalculator";
+
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { id } = await params;
   const supabase = await createClient();
@@ -146,6 +148,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 ))}
               </div>
             </div>
+
+            {/* Mortgage Calculator (Only for Sales) */}
+            {property.type === 'Venda' && (
+              <MortgageCalculator propertyPrice={Number(property.price.replace(/[^0-9.-]+/g, ""))} />
+            )}
           </div>
 
           {/* Sidebar / Contact */}
