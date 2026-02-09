@@ -1,11 +1,23 @@
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Mail, Smartphone } from 'lucide-react';
+import { NewsletterForm } from './NewsletterForm';
 
 export function Footer() {
   return (
     <footer className="print:hidden w-full border-t bg-slate-50">
       <div className="container mx-auto px-4 py-12 md:py-16">
+        {/* Newsletter Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12 mb-12 border-b border-slate-200">
+          <div className="max-w-xl text-center md:text-left">
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Fique por dentro das novidades</h3>
+            <p className="text-slate-600">
+              Receba ofertas exclusivas, lançamentos e dicas do mercado imobiliário diretamente no seu e-mail.
+            </p>
+          </div>
+          <NewsletterForm />
+        </div>
+
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-4">
             <span className="text-xl font-bold text-slate-900">{siteConfig.name}</span>
