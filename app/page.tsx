@@ -1,5 +1,6 @@
 import { SearchForm } from "@/components/SearchForm";
 import { PropertyCard } from "@/components/PropertyCard";
+import { Testimonials } from "@/components/Testimonials";
 import { MapPin, Home, Key, Sparkles, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,7 +51,7 @@ export default async function HomePage() {
         <div
           className="absolute inset-0 bg-[url('/bairro-hero.jpeg')] bg-cover bg-center opacity-50 z-0 scale-105 animate-[pulse_10s_ease-in-out_infinite]"
         />
-        
+
         {/* Floating Decorative Elements */}
         <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-float delay-0" />
         <div className="absolute bottom-40 right-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl animate-float delay-1000" />
@@ -125,7 +126,7 @@ export default async function HomePage() {
       <section className="py-20 relative overflow-hidden">
         {/* Abstract Background Shapes */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-50 to-purple-50 rounded-full blur-3xl -z-10 opacity-60" />
-        
+
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-slate-900 mb-4">Por que escolher o Bairro?</h2>
@@ -159,6 +160,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <Testimonials />
     </div>
   );
 }
