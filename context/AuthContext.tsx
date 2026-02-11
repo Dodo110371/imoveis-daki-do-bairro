@@ -5,11 +5,16 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
   avatar_url?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
 }
 
 interface AuthContextType {
@@ -20,6 +25,8 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<{ error: any }>;
   logout: () => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<{ error: any }>;
+  updateProfile: (data: Partial<User>) => Promise<{ error: any }>;
+  deleteAccount: () => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,7 +53,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             id: session.user.id,
             email: session.user.email!,
             name: profile?.full_name || session.user.user_metadata?.full_name || 'Usuário',
-            avatar_url: profile?.avatar_url
+            avatar_url: profile?.avatar_url,
+            phone: profile?.phone,
+            address: profile?.address,
+            city: profile?.city,
+            state: profile?.state,
+            zip_code: profile?.zip_code,
           });
         } else {
           setUser(null);
@@ -72,7 +84,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: session.user.id,
           email: session.user.email!,
           name: profile?.full_name || session.user.user_metadata?.full_name || 'Usuário',
-          avatar_url: profile?.avatar_url
+          avatar_url: profile?.avatar_url,
+          phone: profile?.phone,
+          address: profile?.address,
+          city: profile?.city,
+          state: profile?.state,
+          zip_code: profile?.zip_code,
         });
       } else {
         setUser(null);
@@ -88,8 +105,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password?: string) => {
     setIsLoading(true);
 
-    // If no password provided, use magic link (otp) or throw error depending on requirements
-    // For now, assuming password login is standard
     if (!password) {
       const { error } = await supabase.auth.signInWithOtp({ email });
       setIsLoading(false);
@@ -113,7 +128,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    // Note: Loading state might need to persist or be handled by the redirect flow
     if (error) setIsLoading(false);
     return { error };
   };
@@ -142,6 +156,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.refresh();
   };
 
+  const updateProfile = async (data: Partial<User>) => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: data.name,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          zip_code: data.zip_code,
+          avatar_url: data.avatar_url,
+        })
+        .eq('id', user?.id);
+
+      if (error) throw error;
+
+      setUser((prev) => prev ? { ...prev, ...data } : null);
+      return { error: null };
+    } catch (error) {
+      return { error };
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const { error } = await supabase.rpc('delete_own_account');
+      if (error) throw error;
+      await logout();
+      return { error: null };
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      return { error };
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -150,7 +200,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       signInWithGoogle,
       logout,
-      register
+      register,
+      updateProfile,
+      deleteAccount
     }}>
       {children}
     </AuthContext.Provider>

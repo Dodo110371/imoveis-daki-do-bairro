@@ -1,27 +1,59 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Mail, Lock, User, ArrowRight, Github, Chrome, LogOut, Heart, ShieldCheck, ExternalLink } from 'lucide-react';
+import { 
+  Mail, Lock, User, ArrowRight, Chrome, LogOut, Heart, ShieldCheck, 
+  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle 
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+  // Login/Register Form State
+  const [authName, setAuthName] = useState('');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  
+  // Profile Edit State
+  const [isEditing, setIsEditing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Profile Form Data
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: ''
+  });
+
   const [isRealtor, setIsRealtor] = useState(false);
-  const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout } = useAuth();
+  const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout, updateProfile, deleteAccount } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Initialize form data when user loads
   useEffect(() => {
-    const checkRealtorStatus = async () => {
-      if (user) {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        city: user.city || '',
+        state: user.state || '',
+        zip_code: user.zip_code || ''
+      });
+      
+      const checkRealtorStatus = async () => {
         const supabase = createClient();
         const { data } = await supabase
           .from('realtors')
@@ -29,125 +61,21 @@ function MinhaContaContent() {
           .eq('id', user.id)
           .single();
         setIsRealtor(!!data);
-      }
-    };
-    checkRealtorStatus();
+      };
+      checkRealtorStatus();
+    }
   }, [user]);
 
-  // If authenticated, show profile instead of login form
-  if (isAuthenticated && !isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            <div className="px-4 py-5 sm:px-6 bg-slate-900 text-white flex justify-between items-center">
-              <div>
-                <h3 className="text-lg leading-6 font-medium">Minha Conta</h3>
-                <p className="mt-1 max-w-2xl text-sm text-slate-300">Detalhes do seu perfil</p>
-              </div>
-              <div className="bg-white/10 p-2 rounded-full">
-                <User className="h-6 w-6" />
-              </div>
-            </div>
-            <div className="border-t border-slate-200 px-4 py-5 sm:p-0">
-              <dl className="sm:divide-y sm:divide-slate-200">
-                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-slate-500">Nome completo</dt>
-                  <dd className="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2">{user?.name}</dd>
-                </div>
-                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-slate-500">Endereço de e-mail</dt>
-                  <dd className="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2">{user?.email}</dd>
-                </div>
-              </dl>
-            </div>
-            <div className="px-4 py-5 sm:px-6 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-end gap-3">
-              <button
-                onClick={() => router.push('/favoritos')}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <Heart className="mr-2 h-4 w-4 text-slate-500" />
-                Meus Favoritos
-              </button>
-              <button
-                onClick={() => logout()}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Sair da conta
-              </button>
-            </div>
-          </div>
-
-          {/* Realtor Section */}
-          <div className="bg-white shadow rounded-lg overflow-hidden border border-blue-100">
-            <div className="px-4 py-5 sm:px-6 bg-blue-600 text-white flex justify-between items-center">
-              <div>
-                <h3 className="text-lg leading-6 font-bold flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5" />
-                  Área do Corretor
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm text-blue-100">
-                  {isRealtor
-                    ? 'Gerencie seu perfil profissional e seus imóveis.'
-                    : 'Torne-se um corretor parceiro e divulgue seus imóveis.'}
-                </p>
-              </div>
-            </div>
-            <div className="px-4 py-5 sm:p-6">
-              {isRealtor ? (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href={`/corretores/${user?.id}`}
-                    className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    Ver Meu Perfil Público
-                  </Link>
-                  <Link
-                    href="/anunciar"
-                    className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    Anunciar Novo Imóvel
-                  </Link>
-                </div>
-              ) : (
-                <div className="text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div>
-                    <h4 className="text-lg font-medium text-slate-900">Você é corretor imobiliário?</h4>
-                    <p className="text-slate-500 text-sm mt-1">
-                      Cadastre-se gratuitamente como parceiro, divulgue seu perfil e aumente suas vendas.
-                    </p>
-                  </div>
-                  <Link
-                    href="/cadastro-corretor"
-                    className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shrink-0"
-                  >
-                    Criar Perfil de Corretor
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       if (isLogin) {
-        const { error } = await login(email, password);
+        const { error } = await login(authEmail, authPassword);
         if (error) throw error;
       } else {
-        const { error } = await register(email, password, name);
+        const { error } = await register(authEmail, authPassword, authName);
         if (error) throw error;
       }
-
-      // Redirect after successful auth
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Authentication error:', error);
@@ -159,13 +87,366 @@ function MinhaContaContent() {
     try {
       const { error } = await signInWithGoogle();
       if (error) throw error;
-      // Redirect is handled by Supabase OAuth flow
     } catch (error: any) {
       console.error('Google auth error:', error);
       alert('Erro ao conectar com Google.');
     }
   };
 
+  const handleProfileUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { error } = await updateProfile(formData);
+      if (error) throw error;
+      setIsEditing(false);
+      alert('Perfil atualizado com sucesso!');
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      alert('Erro ao atualizar perfil.');
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0 || !user) return;
+    
+    const file = e.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    setIsUploading(true);
+    const supabase = createClient();
+    
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      await updateProfile({ avatar_url: publicUrl });
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error);
+      alert('Erro ao fazer upload da imagem.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const { error } = await deleteAccount();
+      if (error) throw error;
+      alert('Sua conta foi excluída permanentemente.');
+    } catch (error: any) {
+      console.error('Error deleting account:', error);
+      alert('Erro ao excluir conta. Tente novamente.');
+    }
+  };
+
+  // If authenticated, show full profile management
+  if (isAuthenticated && !isLoading && user) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-6">
+          
+          {/* Header Profile Card */}
+          <div className="bg-white shadow rounded-lg overflow-hidden">
+            <div className="relative h-32 bg-slate-900">
+              <div className="absolute -bottom-12 left-8">
+                <div className="relative group">
+                  <div className="h-24 w-24 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
+                    {user.avatar_url ? (
+                      <Image 
+                        src={user.avatar_url} 
+                        alt={user.name} 
+                        width={96} 
+                        height={96} 
+                        className="object-cover h-full w-full"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-slate-200 flex items-center justify-center">
+                        <User className="h-10 w-10 text-slate-400" />
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute bottom-0 right-0 bg-blue-600 p-1.5 rounded-full text-white shadow-sm hover:bg-blue-700 transition-colors"
+                    title="Alterar foto"
+                  >
+                    <Camera className="h-4 w-4" />
+                  </button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleAvatarUpload} 
+                    className="hidden" 
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="pt-16 pb-6 px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900">{user.name}</h1>
+                <p className="text-slate-500 flex items-center gap-2">
+                  <Mail className="h-4 w-4" /> {user.email}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  href="/favoritos"
+                  className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 transition-colors"
+                >
+                  <Heart className="mr-2 h-4 w-4 text-red-500" />
+                  Favoritos
+                </Link>
+                <button
+                  onClick={() => logout()}
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 transition-colors"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sair
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Left Column - Navigation/Status */}
+            <div className="space-y-6">
+              {/* Realtor Status Card */}
+              <div className="bg-white shadow rounded-lg overflow-hidden border border-blue-100">
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-2">
+                    <ShieldCheck className="h-5 w-5 text-blue-600" />
+                    Status da Conta
+                  </h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    {isRealtor
+                      ? 'Você possui perfil de Corretor verificado.'
+                      : 'Você é um usuário padrão.'}
+                  </p>
+                  
+                  {isRealtor ? (
+                    <div className="space-y-2">
+                      <Link
+                        href={`/corretores/${user.id}`}
+                        className="block w-full text-center px-4 py-2 border border-blue-200 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-50"
+                      >
+                        Ver Perfil Público
+                      </Link>
+                      <Link
+                        href="/anunciar"
+                        className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+                      >
+                        Gerenciar Anúncios
+                      </Link>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/cadastro-corretor"
+                      className="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700"
+                    >
+                      Virar Corretor Parceiro
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="bg-white shadow rounded-lg overflow-hidden border border-red-100">
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-red-700 flex items-center gap-2 mb-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    Zona de Perigo
+                  </h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    A exclusão da conta é irreversível e removerá todos os seus dados.
+                  </p>
+                  {!showDeleteConfirm ? (
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full flex items-center justify-center px-4 py-2 border border-red-200 text-red-700 rounded-md text-sm font-medium hover:bg-red-50"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Excluir Conta
+                    </button>
+                  ) : (
+                    <div className="space-y-2 bg-red-50 p-3 rounded-md">
+                      <p className="text-xs font-bold text-red-800 text-center">Tem certeza?</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleDeleteAccount}
+                          className="flex-1 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700"
+                        >
+                          Sim, Excluir
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="flex-1 px-3 py-1 bg-white text-slate-700 text-xs rounded border border-slate-300 hover:bg-slate-50"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Edit Profile Form */}
+            <div className="lg:col-span-2">
+              <div className="bg-white shadow rounded-lg overflow-hidden">
+                <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
+                  <h3 className="text-lg font-medium text-slate-900">Dados Pessoais</h3>
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="text-sm text-blue-600 hover:text-blue-500 font-medium"
+                  >
+                    {isEditing ? 'Cancelar Edição' : 'Editar Dados'}
+                  </button>
+                </div>
+                
+                <form onSubmit={handleProfileUpdate} className="p-6 space-y-6">
+                  <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    
+                    {/* Name */}
+                    <div className="sm:col-span-4">
+                      <label className="block text-sm font-medium text-slate-700">Nome Completo</label>
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                          type="text"
+                          disabled={!isEditing}
+                          value={formData.name}
+                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-medium text-slate-700">Telefone / WhatsApp</label>
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Phone className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                          type="text"
+                          disabled={!isEditing}
+                          value={formData.phone}
+                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                          placeholder="(99) 99999-9999"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email (Read Only) */}
+                    <div className="sm:col-span-6">
+                      <label className="block text-sm font-medium text-slate-700">E-mail</label>
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Mail className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                          type="email"
+                          disabled
+                          value={user.email}
+                          className="bg-slate-50 block w-full pl-10 sm:text-sm border-slate-300 rounded-md text-slate-500 cursor-not-allowed"
+                        />
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                          <span className="text-slate-400 text-xs italic">Não editável</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Address */}
+                    <div className="sm:col-span-6">
+                      <label className="block text-sm font-medium text-slate-700">Endereço</label>
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <MapPin className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                          type="text"
+                          disabled={!isEditing}
+                          value={formData.address}
+                          onChange={(e) => setFormData({...formData, address: e.target.value})}
+                          className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* City */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-medium text-slate-700">Cidade</label>
+                      <input
+                        type="text"
+                        disabled={!isEditing}
+                        value={formData.city}
+                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                        className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                      />
+                    </div>
+
+                    {/* State */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-medium text-slate-700">Estado</label>
+                      <input
+                        type="text"
+                        disabled={!isEditing}
+                        value={formData.state}
+                        onChange={(e) => setFormData({...formData, state: e.target.value})}
+                        className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                      />
+                    </div>
+
+                    {/* Zip Code */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-medium text-slate-700">CEP</label>
+                      <input
+                        type="text"
+                        disabled={!isEditing}
+                        value={formData.zip_code}
+                        onChange={(e) => setFormData({...formData, zip_code: e.target.value})}
+                        className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                      />
+                    </div>
+
+                  </div>
+
+                  {isEditing && (
+                    <div className="flex justify-end pt-4 border-t border-slate-200">
+                      <button
+                        type="submit"
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        <Save className="mr-2 h-4 w-4" />
+                        Salvar Alterações
+                      </button>
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Login/Register View (Unauthenticated)
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
       {/* Left Side - Image/Branding */}
@@ -233,7 +514,7 @@ function MinhaContaContent() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleAuthSubmit} className="space-y-6">
             {!isLogin && (
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Nome Completo</label>
@@ -244,8 +525,8 @@ function MinhaContaContent() {
                   <input
                     type="text"
                     required={!isLogin}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={authName}
+                    onChange={(e) => setAuthName(e.target.value)}
                     className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                     placeholder="Seu nome"
                   />
@@ -262,8 +543,8 @@ function MinhaContaContent() {
                 <input
                   type="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                   placeholder="seu@email.com"
                 />
@@ -286,8 +567,8 @@ function MinhaContaContent() {
                 <input
                   type="password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
                   placeholder="••••••••"
                 />
