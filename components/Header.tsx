@@ -62,8 +62,19 @@ export function Header() {
                                     </Link>
                                 )}
                                 <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
-                                    <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-                                        <User className="h-5 w-5" />
+                                    <div className="relative h-9 w-9 rounded-full overflow-hidden bg-white/10 group-hover:bg-white/20 transition-colors border border-white/20">
+                                        {user?.avatar_url ? (
+                                            <Image
+                                                src={user.avatar_url}
+                                                alt={user.name || 'Avatar'}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <div className="h-full w-full flex items-center justify-center">
+                                                <User className="h-5 w-5" />
+                                            </div>
+                                        )}
                                     </div>
                                     <span className="hidden lg:inline font-medium truncate max-w-[150px]">
                                         Olá, {user?.name?.split(' ')[0]}
