@@ -36,6 +36,7 @@ function MinhaContaContent() {
   });
 
   const [isRealtor, setIsRealtor] = useState(false);
+  const [myProperties, setMyProperties] = useState<any[]>([]);
   const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout, updateProfile, deleteAccount } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
