@@ -631,7 +631,7 @@ function MinhaContaContent() {
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-slate-700">Senha</label>
                 {isLogin && (
-                  <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                  <a href="/recuperar-senha" className="text-sm font-medium text-blue-600 hover:text-blue-500">
                     Esqueceu a senha?
                   </a>
                 )}
