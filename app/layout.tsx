@@ -8,6 +8,7 @@ import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ComparisonProvider } from "@/context/ComparisonContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ComparisonBar } from "@/components/ComparisonBar";
+import { TrustedTypesPolyfill } from "@/components/TrustedTypesPolyfill";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+        <TrustedTypesPolyfill />
         <AuthProvider>
           <FavoritesProvider>
             <ComparisonProvider>
