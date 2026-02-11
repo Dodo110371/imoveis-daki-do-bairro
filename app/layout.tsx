@@ -24,23 +24,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (window.trustedTypes && window.trustedTypes.createPolicy) {
-                try {
-                  window.trustedTypes.createPolicy('default', {
-                    createHTML: (string) => string,
-                    createScript: (string) => string,
-                    createScriptURL: (string) => string,
-                  });
-                } catch (e) {
-                  console.warn('TrustedTypes policy already exists');
-                }
-              }
-            `,
-          }}
-        />
+        <script src="/trusted-security-policy.js" />
       </head>
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
