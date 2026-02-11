@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, User, Heart, LogOut } from 'lucide-react';
+import { Menu, X, User, Heart, LogOut, Shield } from 'lucide-react';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useAuth } from '@/context/AuthContext';
 
@@ -56,6 +56,11 @@ export function Header() {
 
                         {isAuthenticated ? (
                             <div className="flex items-center gap-2">
+                                {user?.role === 'admin' && (
+                                    <Link href="/admin" className="p-2 text-blue-100 hover:text-white hover:bg-white/10 rounded-full transition-colors" title="Painel Admin">
+                                        <Shield className="h-5 w-5" />
+                                    </Link>
+                                )}
                                 <Link href="/minha-conta" className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors group">
                                     <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
                                         <User className="h-5 w-5" />
@@ -170,6 +175,16 @@ export function Header() {
                             {isAuthenticated && (
                                 <>
                                     <div className="my-2 border-t border-slate-100" />
+                                    {user?.role === 'admin' && (
+                                        <Link
+                                            href="/admin"
+                                            className="w-full flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium"
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <Shield className="h-5 w-5 mr-2" />
+                                            Painel Admin
+                                        </Link>
+                                    )}
                                     <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"

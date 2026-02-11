@@ -15,6 +15,7 @@ export interface User {
   city?: string;
   state?: string;
   zip_code?: string;
+  role?: 'user' | 'admin';
 }
 
 interface AuthContextType {
@@ -59,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             city: profile?.city,
             state: profile?.state,
             zip_code: profile?.zip_code,
+            role: profile?.role,
           });
         } else {
           setUser(null);
@@ -90,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           city: profile?.city,
           state: profile?.state,
           zip_code: profile?.zip_code,
+          role: profile?.role,
         });
       } else {
         setUser(null);
