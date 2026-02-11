@@ -47,6 +47,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     query = query.ilike('location', `%${street}%`);
   }
 
+  // Filter only active properties
+  query = query.eq('status', 'active');
+
   if (type && type !== 'todos') {
     const typeMap: Record<string, string> = {
       'apto': 'Apartamento',

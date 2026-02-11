@@ -8,7 +8,8 @@ export default async function AlugarPage() {
   const { data: propertiesData } = await supabase
     .from('properties')
     .select('*')
-    .eq('type', 'Aluguel');
+    .eq('type', 'Aluguel')
+    .eq('status', 'active');
 
   // Helper to map DB to Card Props
   const mapProperty = (p: any) => ({

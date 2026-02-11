@@ -4,26 +4,26 @@ import React, { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { 
-  Mail, Lock, User, ArrowRight, Chrome, LogOut, Heart, ShieldCheck, 
-  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle 
+import {
+  Mail, Lock, User, ArrowRight, Chrome, LogOut, Heart, ShieldCheck,
+  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
-  
+
   // Login/Register Form State
   const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
-  
+
   // Profile Edit State
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
+
   // Profile Form Data
   const [formData, setFormData] = useState({
     name: '',
@@ -52,7 +52,7 @@ function MinhaContaContent() {
         state: user.state || '',
         zip_code: user.zip_code || ''
       });
-      
+
       const checkRealtorStatus = async () => {
         const supabase = createClient();
         const { data } = await supabase
@@ -61,6 +61,15 @@ function MinhaContaContent() {
           .eq('id', user.id)
           .single();
         setIsRealtor(!!data);
+
+        // Fetch user properties
+        const { data: properties } = await supabase
+          .from('properties')
+          .select('*')
+          .eq('owner_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (properties) setMyProperties(properties);
       };
       checkRealtorStatus();
     }
@@ -108,7 +117,7 @@ function MinhaContaContent() {
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0 || !user) return;
-    
+
     const file = e.target.files[0];
     const fileExt = file.name.split('.').pop();
     const fileName = `${user.id}-${Math.random()}.${fileExt}`;
@@ -116,7 +125,7 @@ function MinhaContaContent() {
 
     setIsUploading(true);
     const supabase = createClient();
-    
+
     try {
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -153,7 +162,7 @@ function MinhaContaContent() {
     return (
       <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-6">
-          
+
           {/* Header Profile Card */}
           <div className="bg-white shadow rounded-lg overflow-hidden">
             <div className="relative h-32 bg-slate-900">
@@ -161,11 +170,11 @@ function MinhaContaContent() {
                 <div className="relative group">
                   <div className="h-24 w-24 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
                     {user.avatar_url ? (
-                      <Image 
-                        src={user.avatar_url} 
-                        alt={user.name} 
-                        width={96} 
-                        height={96} 
+                      <Image
+                        src={user.avatar_url}
+                        alt={user.name}
+                        width={96}
+                        height={96}
                         className="object-cover h-full w-full"
                       />
                     ) : (
@@ -174,18 +183,18 @@ function MinhaContaContent() {
                       </div>
                     )}
                   </div>
-                  <button 
+                  <button
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute bottom-0 right-0 bg-blue-600 p-1.5 rounded-full text-white shadow-sm hover:bg-blue-700 transition-colors"
                     title="Alterar foto"
                   >
                     <Camera className="h-4 w-4" />
                   </button>
-                  <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    onChange={handleAvatarUpload} 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleAvatarUpload}
+                    className="hidden"
                     accept="image/*"
                   />
                 </div>
@@ -218,7 +227,7 @@ function MinhaContaContent() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             {/* Left Column - Navigation/Status */}
             <div className="space-y-6">
               {/* Realtor Status Card */}
@@ -233,7 +242,7 @@ function MinhaContaContent() {
                       ? 'Você possui perfil de Corretor verificado.'
                       : 'Você é um usuário padrão.'}
                   </p>
-                  
+
                   {isRealtor ? (
                     <div className="space-y-2">
                       <Link
@@ -313,10 +322,10 @@ function MinhaContaContent() {
                     {isEditing ? 'Cancelar Edição' : 'Editar Dados'}
                   </button>
                 </div>
-                
+
                 <form onSubmit={handleProfileUpdate} className="p-6 space-y-6">
                   <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    
+
                     {/* Name */}
                     <div className="sm:col-span-4">
                       <label className="block text-sm font-medium text-slate-700">Nome Completo</label>
@@ -328,7 +337,7 @@ function MinhaContaContent() {
                           type="text"
                           disabled={!isEditing}
                           value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                         />
                       </div>
@@ -345,7 +354,7 @@ function MinhaContaContent() {
                           type="text"
                           disabled={!isEditing}
                           value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                           placeholder="(99) 99999-9999"
                         />
@@ -382,7 +391,7 @@ function MinhaContaContent() {
                           type="text"
                           disabled={!isEditing}
                           value={formData.address}
-                          onChange={(e) => setFormData({...formData, address: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                           className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                         />
                       </div>
@@ -395,7 +404,7 @@ function MinhaContaContent() {
                         type="text"
                         disabled={!isEditing}
                         value={formData.city}
-                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                         className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                       />
                     </div>
@@ -407,7 +416,7 @@ function MinhaContaContent() {
                         type="text"
                         disabled={!isEditing}
                         value={formData.state}
-                        onChange={(e) => setFormData({...formData, state: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                         className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                       />
                     </div>
@@ -419,7 +428,7 @@ function MinhaContaContent() {
                         type="text"
                         disabled={!isEditing}
                         value={formData.zip_code}
-                        onChange={(e) => setFormData({...formData, zip_code: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
                         className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
                       />
                     </div>
@@ -438,6 +447,73 @@ function MinhaContaContent() {
                     </div>
                   )}
                 </form>
+              </div>
+
+              {/* My Properties Section */}
+              <div className="bg-white shadow rounded-lg overflow-hidden mt-6">
+                <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
+                  <h3 className="text-lg font-medium text-slate-900">Meus Anúncios</h3>
+                  <Link href="/anunciar" className="text-sm text-blue-600 hover:text-blue-500 font-medium">
+                    + Novo Anúncio
+                  </Link>
+                </div>
+
+                <div className="divide-y divide-slate-200">
+                  {myProperties.length > 0 ? (
+                    myProperties.map((property) => (
+                      <div key={property.id} className="p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                        <div className="relative h-20 w-20 bg-slate-100 rounded-lg overflow-hidden shrink-0">
+                          {property.images?.[0] ? (
+                            <Image
+                              src={property.images[0]}
+                              alt={property.title}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center text-slate-400">
+                              <Camera className="h-8 w-8" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="text-sm font-bold text-slate-900 truncate">{property.title}</h4>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+                              ${property.status === 'active' ? 'bg-green-100 text-green-800' :
+                                property.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-slate-100 text-slate-800'}`}>
+                              {property.status === 'active' ? 'Ativo' :
+                                property.status === 'pending' ? 'Pendente' :
+                                  property.status === 'sold' ? 'Vendido' : property.status}
+                            </span>
+                          </div>
+                          <p className="text-sm text-slate-500 truncate">{property.location}</p>
+                          <p className="text-sm font-medium text-slate-900 mt-1">
+                            {property.type === 'Aluguel'
+                              ? `R$ ${property.price}/mês`
+                              : `R$ ${Number(property.price).toLocaleString('pt-BR')}`}
+                          </p>
+                        </div>
+
+                        <div className="flex gap-2 shrink-0">
+                          <Link
+                            href={`/imoveis/${property.id}`}
+                            className="p-2 text-slate-400 hover:text-blue-600 transition-colors"
+                            title="Ver Anúncio"
+                          >
+                            <ExternalLink className="h-5 w-5" />
+                          </Link>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-8 text-center text-slate-500">
+                      Você ainda não possui imóveis cadastrados.
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

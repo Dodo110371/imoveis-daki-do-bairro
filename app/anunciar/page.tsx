@@ -18,8 +18,11 @@ import {
   LogIn,
   UserPlus,
   Info,
-  CreditCard
+  CreditCard,
+  X,
+  Trash2
 } from 'lucide-react';
+import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
@@ -81,6 +84,7 @@ export default function AdvertisePage() {
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -204,6 +208,64 @@ export default function AdvertisePage() {
     }
   };
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0 || !user) return;
+
+    setIsUploadingImages(true);
+    const supabase = createClient();
+    const files = Array.from(e.target.files);
+    const newPhotos: string[] = [];
+
+    try {
+      for (const file of files) {
+        // Validation: Size < 5MB, Type Image
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`Arquivo ${file.name} é muito grande (máx 5MB).`);
+          continue;
+        }
+        if (!file.type.startsWith('image/')) {
+          alert(`Arquivo ${file.name} não é uma imagem.`);
+          continue;
+        }
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('properties')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('properties')
+          .getPublicUrl(fileName);
+
+        newPhotos.push(publicUrl);
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        photos: [...prev.photos, ...newPhotos]
+      }));
+
+    } catch (error: any) {
+      console.error('Error uploading photos:', error);
+      alert('Erro ao fazer upload das imagens.');
+    } finally {
+      setIsUploadingImages(false);
+      // Reset input
+      e.target.value = '';
+    }
+  };
+
+  const removePhoto = (indexToRemove: number) => {
+    setFormData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
   const nextStep = () => {
     if (currentStep < STEPS.length) {
       setCurrentStep(curr => curr + 1);
@@ -252,7 +314,12 @@ export default function AdvertisePage() {
         features: [], // Can be enhanced to include selected features
         images: formData.photos,
         owner_id: user.id,
-        featured: false
+        featured: false,
+        contact_name: formData.name,
+        contact_email: formData.email,
+        contact_phone: formData.phone,
+        contact_whatsapp: formData.whatsapp,
+        status: 'pending' // Default status for new ads
       });
 
       if (error) {
@@ -772,25 +839,69 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 5: PHOTOS (MOCK) */}
+          {/* STEP 5: PHOTOS */}
           {currentStep === 5 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Fotos do Imóvel</h2>
-                <p className="text-slate-500 mt-2">Boas fotos aumentam muito suas chances</p>
+                <p className="text-slate-500 mt-2">Boas fotos aumentam muito suas chances. A primeira foto será a capa do anúncio.</p>
               </div>
 
-              <div className="border-2 border-dashed border-slate-300 rounded-xl p-12 flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer group">
-                <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Camera className="h-8 w-8 text-blue-600" />
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {/* Upload Button */}
+                <label className={`aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors ${isUploadingImages ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                  {isUploadingImages ? (
+                    <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+                  ) : (
+                    <>
+                      <Camera className="h-8 w-8 text-slate-400 mb-2" />
+                      <span className="text-sm text-slate-500 font-medium">Adicionar Fotos</span>
+                    </>
+                  )}
+                </label>
+
+                {/* Photo Previews */}
+                {formData.photos.map((photo, index) => (
+                  <div key={index} className="group relative aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+                    <Image
+                      src={photo}
+                      alt={`Foto ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        onClick={() => removePhoto(index)}
+                        className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                        title="Remover foto"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                    {index === 0 && (
+                      <div className="absolute top-2 left-2 px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded shadow-sm">
+                        Capa
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {formData.photos.length === 0 && (
+                <div className="text-center p-8 bg-slate-50 rounded-lg border border-slate-200 text-slate-500">
+                  Nenhuma foto selecionada. Adicione pelo menos uma foto para continuar.
                 </div>
-                <h3 className="font-semibold text-slate-900 text-lg mb-1">Clique para adicionar fotos</h3>
-                <p className="text-slate-500 text-sm">ou arraste e solte seus arquivos aqui</p>
-                <p className="text-xs text-slate-400 mt-4">Formatos aceitos: JPG, PNG (Max 5MB)</p>
-              </div>
+              )}
 
-              <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-100 text-yellow-800 text-sm">
-                <p>⚠️ Para este protótipo, o upload de imagens é apenas ilustrativo.</p>
+              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-100 text-blue-800 text-sm">
+                <p>💡 Dica: Fotos bem iluminadas e horizontais funcionam melhor.</p>
               </div>
             </div>
           )}

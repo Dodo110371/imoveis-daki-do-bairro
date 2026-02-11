@@ -15,12 +15,14 @@ export default async function HomePage() {
     .from('properties')
     .select('*')
     .eq('featured', true)
+    .eq('status', 'active')
     .limit(3);
 
   // Fetch new properties
   const { data: newData } = await supabase
     .from('properties')
     .select('*')
+    .eq('status', 'active')
     .order('created_at', { ascending: false })
     .limit(3);
 

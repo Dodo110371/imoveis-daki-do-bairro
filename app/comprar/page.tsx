@@ -8,7 +8,8 @@ export default async function ComprarPage() {
   const { data: propertiesData } = await supabase
     .from('properties')
     .select('*')
-    .eq('type', 'Venda');
+    .eq('type', 'Venda')
+    .eq('status', 'active');
 
   // Helper to map DB to Card Props
   const mapProperty = (p: any) => ({
