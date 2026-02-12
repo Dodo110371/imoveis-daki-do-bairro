@@ -84,7 +84,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           Or simply position the overlay content absolute ON TOP of the ImageGallery component here in the page.
       */}
 
-      <div className="relative -mt-[120px] z-10 pointer-events-none">
+      <div className="relative -mt-[240px] z-10 pointer-events-none">
         <div className="container mx-auto px-4 pb-8">
           <div className="flex justify-between items-center mb-4">
             <Link
