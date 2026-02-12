@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Mail, Lock, User, ArrowRight, Chrome, LogOut, Heart, ShieldCheck,
-  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle, Eye, EyeOff
+  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle, Eye, EyeOff, FileEdit
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
@@ -506,6 +506,13 @@ function MinhaContaContent() {
                             title="Ver Anúncio"
                           >
                             <ExternalLink className="h-5 w-5" />
+                          </Link>
+                          <Link
+                            href={`/imoveis/${property.id}/editar`}
+                            className="p-2 text-slate-400 hover:text-yellow-600 transition-colors"
+                            title="Editar Anúncio"
+                          >
+                            <FileEdit className="h-5 w-5" />
                           </Link>
                         </div>
                       </div>
