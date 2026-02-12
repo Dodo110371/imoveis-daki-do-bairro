@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit } from "lucide-react";
+import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
@@ -200,13 +200,15 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <h3 className="mb-6 text-lg font-bold text-slate-900">Interessou? Entre em contato</h3>
 
               <div className="space-y-4">
-                {(agency?.phone || property.contact_phone || property.contact_whatsapp) && (
+                {(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone) && (
                   <a
-                    href={`tel:${(agency?.phone || property.contact_phone || property.contact_whatsapp || '').replace(/\D/g, '')}`}
+                    href={`https://wa.me/55${(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis do Bairro e gostaria de mais informações.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
                   >
-                    <Phone className="h-5 w-5" />
-                    Ligar Agora
+                    <MessageCircle className="h-5 w-5" />
+                    Chame no WhatsApp
                   </a>
                 )}
 
