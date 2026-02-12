@@ -16,12 +16,21 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
   let query = supabase
     .from('properties')
     .select('*')
-    .eq('type', 'Venda')
+    .ilike('type', 'Venda')
     .eq('status', 'active');
 
   // Apply filters
   if (params.category) {
-    query = query.eq('category', params.category);
+    const categoryMap: Record<string, string> = {
+      'Apartamento': 'apto',
+      'Casa': 'casa',
+      'Comercial': 'comercial',
+      'Terreno': 'terreno',
+      'Sobrado': 'casa', // Fallback for Sobrado
+      'Rural': 'terreno' // Fallback for Rural
+    };
+    const dbValue = categoryMap[params.category as string] || params.category;
+    query = query.ilike('category', dbValue as string);
   }
   
   if (params.bedrooms) {
