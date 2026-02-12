@@ -10,7 +10,7 @@ export default async function AdminPropertiesPage() {
     .from('properties')
     .select(`
       *,
-      profiles:owner_id (full_name, email, phone)
+      profiles:owner_id (full_name, phone)
     `)
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
