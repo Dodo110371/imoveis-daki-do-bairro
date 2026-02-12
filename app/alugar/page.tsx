@@ -90,7 +90,7 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar - Desktop: Sticky, Mobile: Fixed overlay */}
           <div className="lg:w-72 flex-shrink-0">
-            <FilterSidebar />
+            <FilterSidebar type="Aluguel" />
           </div>
 
           {/* Results Grid */}

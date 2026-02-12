@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { 
-  Building2, 
-  MapPin, 
-  BedDouble, 
-  Bath, 
-  Car, 
-  Ruler, 
+import {
+  Building2,
+  MapPin,
+  BedDouble,
+  Bath,
+  Car,
+  Ruler,
   Search,
   Filter,
   X
@@ -26,7 +26,11 @@ interface FilterState {
   type: string; // 'Aluguel' is fixed for this page, but good to have in state
 }
 
-export function FilterSidebar() {
+interface FilterSidebarProps {
+  type: 'Aluguel' | 'Venda';
+}
+
+export function FilterSidebar({ type }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false); // Mobile state
@@ -40,7 +44,7 @@ export function FilterSidebar() {
     maxPrice: '',
     minArea: '',
     maxArea: '',
-    type: 'Aluguel'
+    type: type
   });
 
   // Sync state with URL params on mount/update
@@ -54,9 +58,9 @@ export function FilterSidebar() {
       maxPrice: searchParams.get('maxPrice') || '',
       minArea: searchParams.get('minArea') || '',
       maxArea: searchParams.get('maxArea') || '',
-      type: 'Aluguel'
+      type: type
     });
-  }, [searchParams]);
+  }, [searchParams, type]);
 
   const updateFilters = (key: keyof FilterState, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -64,9 +68,9 @@ export function FilterSidebar() {
 
   const applyFilters = () => {
     const params = new URLSearchParams();
-    
-    // Always filter by Aluguel on this page
-    params.set('type', 'Aluguel');
+
+    // Always filter by the current page type
+    params.set('type', type);
 
     if (filters.category) params.set('category', filters.category);
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
@@ -77,7 +81,8 @@ export function FilterSidebar() {
     if (filters.minArea) params.set('minArea', filters.minArea);
     if (filters.maxArea) params.set('maxArea', filters.maxArea);
 
-    router.push(`/alugar?${params.toString()}`);
+    const basePath = type === 'Aluguel' ? '/alugar' : '/comprar';
+    router.push(`${basePath}?${params.toString()}`);
     setIsOpen(false); // Close mobile sidebar
   };
 
@@ -91,9 +96,10 @@ export function FilterSidebar() {
       maxPrice: '',
       minArea: '',
       maxArea: '',
-      type: 'Aluguel'
+      type: type
     });
-    router.push('/alugar');
+    const basePath = type === 'Aluguel' ? '/alugar' : '/comprar';
+    router.push(basePath);
     setIsOpen(false);
   };
 
@@ -109,7 +115,7 @@ export function FilterSidebar() {
   return (
     <>
       {/* Mobile Toggle */}
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden fixed bottom-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg flex items-center gap-2"
       >
@@ -162,8 +168,8 @@ export function FilterSidebar() {
                     onClick={() => updateFilters('bedrooms', filters.bedrooms === num.toString() ? '' : num.toString())}
                     className={`
                       w-10 h-10 rounded-lg border font-medium transition-colors
-                      ${filters.bedrooms === num.toString() 
-                        ? 'bg-blue-600 text-white border-blue-600' 
+                      ${filters.bedrooms === num.toString()
+                        ? 'bg-blue-600 text-white border-blue-600'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400'}
                     `}
                   >
@@ -186,8 +192,8 @@ export function FilterSidebar() {
                     onClick={() => updateFilters('bathrooms', filters.bathrooms === num.toString() ? '' : num.toString())}
                     className={`
                       w-10 h-10 rounded-lg border font-medium transition-colors
-                      ${filters.bathrooms === num.toString() 
-                        ? 'bg-blue-600 text-white border-blue-600' 
+                      ${filters.bathrooms === num.toString()
+                        ? 'bg-blue-600 text-white border-blue-600'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400'}
                     `}
                   >
@@ -210,8 +216,8 @@ export function FilterSidebar() {
                     onClick={() => updateFilters('parking', filters.parking === num.toString() ? '' : num.toString())}
                     className={`
                       w-10 h-10 rounded-lg border font-medium transition-colors
-                      ${filters.parking === num.toString() 
-                        ? 'bg-blue-600 text-white border-blue-600' 
+                      ${filters.parking === num.toString()
+                        ? 'bg-blue-600 text-white border-blue-600'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400'}
                     `}
                   >
@@ -284,10 +290,10 @@ export function FilterSidebar() {
             </div>
           </div>
         </div>
-        
+
         {/* Overlay for Mobile */}
         {isOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-30 lg:hidden"
             onClick={() => setIsOpen(false)}
           />

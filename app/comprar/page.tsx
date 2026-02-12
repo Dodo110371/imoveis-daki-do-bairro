@@ -2,14 +2,57 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { FilterSidebar } from "@/components/FilterSidebar";
 
-export default async function ComprarPage() {
+interface ComprarPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function ComprarPage({ searchParams }: ComprarPageProps) {
+  const params = await searchParams;
   const supabase = await createClient();
-  const { data: propertiesData } = await supabase
+
+  // Start building the query
+  let query = supabase
     .from('properties')
     .select('*')
     .eq('type', 'Venda')
     .eq('status', 'active');
+
+  // Apply filters
+  if (params.category) {
+    query = query.eq('category', params.category);
+  }
+  
+  if (params.bedrooms) {
+    query = query.gte('bedrooms', parseInt(params.bedrooms as string));
+  }
+
+  if (params.bathrooms) {
+    query = query.gte('bathrooms', parseInt(params.bathrooms as string));
+  }
+
+  if (params.parking) {
+    query = query.gte('parking', parseInt(params.parking as string));
+  }
+
+  if (params.minPrice) {
+    query = query.gte('price', parseFloat(params.minPrice as string));
+  }
+
+  if (params.maxPrice) {
+    query = query.lte('price', parseFloat(params.maxPrice as string));
+  }
+
+  if (params.minArea) {
+    query = query.gte('area', parseFloat(params.minArea as string));
+  }
+
+  if (params.maxArea) {
+    query = query.lte('area', parseFloat(params.maxArea as string));
+  }
+
+  const { data: propertiesData } = await query;
 
   // Helper to map DB to Card Props
   const mapProperty = (p: any) => ({
@@ -44,24 +87,35 @@ export default async function ComprarPage() {
           </p>
         </div>
 
-        {properties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties.map((prop) => (
-              <PropertyCard key={prop.id} {...prop} />
-            ))}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar - Desktop: Sticky, Mobile: Fixed overlay */}
+          <div className="lg:w-72 flex-shrink-0">
+            <FilterSidebar type="Venda" />
           </div>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-xl border border-slate-100">
-            <p className="text-slate-500 mb-4">Nenhum imóvel disponível para venda no momento.</p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
-            >
-              <Search className="h-4 w-4" />
-              Voltar para o Início
-            </Link>
+
+          {/* Results Grid */}
+          <div className="flex-grow">
+            {properties.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {properties.map((prop) => (
+                  <PropertyCard key={prop.id} {...prop} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-xl border border-slate-100 h-full flex flex-col items-center justify-center">
+                <Search className="w-12 h-12 text-slate-200 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Nenhum imóvel encontrado</h3>
+                <p className="text-slate-500 mb-6">Tente ajustar seus filtros para encontrar o que procura.</p>
+                <Link
+                  href="/comprar"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
+                >
+                  Limpar Filtros
+                </Link>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
