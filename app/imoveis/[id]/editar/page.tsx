@@ -228,6 +228,7 @@ export default function EditPropertyPage() {
           neighborhood,
           city: cityKey,
           // Contact info
+          // Fix: use user.name instead of user.user_metadata.name to match User type
           name: property.contact_name || user.name || '',
           email: property.contact_email || user.email || '',
           phone: property.contact_phone || '',
