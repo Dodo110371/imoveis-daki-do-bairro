@@ -240,6 +240,58 @@ export default function PlanosPage() {
             </div>
 
           </div>
+
+          {/* Na Mira! Option */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="relative bg-gradient-to-r from-red-600 to-rose-600 rounded-2xl p-1 shadow-xl transform hover:scale-[1.01] transition-transform duration-300">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-red-600 px-6 py-1 rounded-full font-bold shadow-md border-2 border-red-100 flex items-center gap-2 whitespace-nowrap z-20">
+                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                OPÇÃO TURBO
+                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+              </div>
+              <div className="bg-white rounded-xl p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="flex-1 text-center md:text-left relative z-10">
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                    <h3 className="text-3xl font-extrabold text-slate-900">Na Mira!</h3>
+                    <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Destaque</span>
+                  </div>
+                  <p className="text-slate-600 mb-6 text-lg">
+                    Coloque seu imóvel no <strong>topo das buscas</strong> e multiplique suas chances de fechar negócio.
+                    Ideal para quem tem pressa.
+                  </p>
+                  <ul className="space-y-3 mb-2 inline-block text-left bg-slate-50 p-4 rounded-lg border border-slate-100 w-full">
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
+                      <span className="font-medium">Apareça antes dos outros anúncios</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
+                      <span className="font-medium">Tag exclusiva "Na Mira" no card</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col items-center gap-4 relative z-10 min-w-[260px] border-l-0 md:border-l border-slate-100 md:pl-8">
+                  <div className="text-center">
+                    <div className="text-sm text-slate-500 font-medium mb-1">Investimento Único</div>
+                    <div className="text-6xl font-black text-slate-900 tracking-tight flex items-start justify-center">
+                      <span className="text-2xl mt-2 mr-1 font-bold text-slate-400">R$</span>
+                      50
+                      <span className="text-2xl mt-2 font-bold text-slate-400">,00</span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/pagamento?plano=na_mira"
+                    className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg rounded-xl hover:bg-red-700 hover:shadow-lg hover:shadow-red-200 transition-all text-center flex items-center justify-center gap-2 group"
+                  >
+                    Contratar Agora
+                    <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <p className="text-xs text-slate-400 text-center">Válido por 15 dias de destaque</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
