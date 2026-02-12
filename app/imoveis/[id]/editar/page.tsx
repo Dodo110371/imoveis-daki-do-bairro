@@ -228,7 +228,7 @@ export default function EditPropertyPage() {
           neighborhood,
           city: cityKey,
           // Contact info
-          name: property.contact_name || user.user_metadata?.name || '',
+          name: property.contact_name || user.name || '',
           email: property.contact_email || user.email || '',
           phone: property.contact_phone || '',
           whatsapp: property.contact_whatsapp || '',
