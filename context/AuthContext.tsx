@@ -23,7 +23,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password?: string) => Promise<{ error: any }>;
-  signInWithGoogle: () => Promise<{ error: any }>;
+  signInWithGoogle: (redirectUrl?: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<{ error: any }>;
   updateProfile: (data: Partial<User>) => Promise<{ error: any }>;
