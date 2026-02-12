@@ -5,8 +5,8 @@ import { AdminPropertyActions } from "./actions";
 
 export default async function AdminPropertiesPage() {
   const supabase = await createClient();
-  
-  const { data: properties } = await supabase
+
+  const { data: properties, error } = await supabase
     .from('properties')
     .select(`
       *,
@@ -14,6 +14,11 @@ export default async function AdminPropertiesPage() {
     `)
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error("Erro ao buscar imóveis:", error);
+    return <div>Erro ao carregar imóveis: {error.message}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -54,8 +59,8 @@ export default async function AdminPropertiesPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-lg text-blue-600">
-                      {property.type === 'Aluguel' 
-                        ? `R$ ${property.price}/mês` 
+                      {property.type === 'Aluguel'
+                        ? `R$ ${property.price}/mês`
                         : `R$ ${Number(property.price).toLocaleString('pt-BR')}`}
                     </p>
                     <p className="text-xs text-slate-400 capitalize">{property.type}</p>
