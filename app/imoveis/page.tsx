@@ -81,6 +81,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.area,
+    images: p.images || [],
     imageUrl: p.images?.[0] || '/placeholder.jpg',
     type: p.type,
   });

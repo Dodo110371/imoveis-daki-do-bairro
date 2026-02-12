@@ -54,6 +54,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     bathrooms: p.bathrooms,
     area: p.area,
     imageUrl: p.images?.[0] || '/placeholder.jpg',
+    images: p.images || [],
     type: p.type,
   });
 

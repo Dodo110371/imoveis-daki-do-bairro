@@ -1,8 +1,12 @@
+"use client";
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bed, Bath, Move, MapPin } from 'lucide-react';
+import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
+import { cn } from '@/lib/utils';
 
 interface PropertyCardProps {
   id: string;
@@ -13,6 +17,7 @@ interface PropertyCardProps {
   bathrooms: number;
   area: number;
   imageUrl: string;
+  images?: string[];
   type: 'Venda' | 'Aluguel';
 }
 
@@ -25,49 +30,104 @@ export function PropertyCard({
   bathrooms,
   area,
   imageUrl,
+  images = [],
   type,
 }: PropertyCardProps) {
+  // Use images array if provided and not empty, otherwise fallback to [imageUrl]
+  const displayImages = images && images.length > 0 ? images : [imageUrl];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
+  };
+
   return (
-    <Link href={`/imoveis/${id}`} className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg">
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-        <Image
-          src={imageUrl}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white">
-          {type}
+    <div className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg relative">
+      <Link href={`/imoveis/${id}`} className="block">
+        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+          <Image
+            src={displayImages[currentImageIndex]}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          
+          <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white z-10">
+            {type}
+          </div>
+          
+          <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
+            <FavoriteButton propertyId={id} />
+            <CompareButton propertyId={id} />
+          </div>
+
+          {/* Navigation Arrows */}
+          {displayImages.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
+                aria-label="Imagem anterior"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
+                aria-label="Próxima imagem"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              {/* Dots Indicator */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                {displayImages.slice(0, 5).map((_, idx) => (
+                  <div 
+                    key={idx}
+                    className={cn(
+                      "h-1.5 rounded-full transition-all shadow-sm",
+                      idx === currentImageIndex ? "w-4 bg-white" : "w-1.5 bg-white/60"
+                    )}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
-        <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
-          <FavoriteButton propertyId={id} />
-          <CompareButton propertyId={id} />
-        </div>
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600 truncate">{title}</h3>
-        <div className="mt-1 flex items-center text-sm text-slate-500">
-          <MapPin className="mr-1 h-3.5 w-3.5" />
-          {location}
-        </div>
-        <div className="mt-4 flex items-center justify-between border-t pt-4">
-          <div className="flex gap-4 text-sm text-slate-600">
-            <div className="flex items-center gap-1">
-              <Bed className="h-4 w-4" />
-              <span>{bedrooms}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Bath className="h-4 w-4" />
-              <span>{bathrooms}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Move className="h-4 w-4" />
-              <span>{area}m²</span>
+
+        <div className="p-4">
+          <h3 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600 truncate">{title}</h3>
+          <div className="mt-1 flex items-center text-sm text-slate-500">
+            <MapPin className="mr-1 h-3.5 w-3.5" />
+            {location}
+          </div>
+          <div className="mt-4 flex items-center justify-between border-t pt-4">
+            <div className="flex gap-4 text-sm text-slate-600">
+              <div className="flex items-center gap-1">
+                <Bed className="h-4 w-4" />
+                <span>{bedrooms}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Bath className="h-4 w-4" />
+                <span>{bathrooms}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Move className="h-4 w-4" />
+                <span>{area}m²</span>
+              </div>
             </div>
           </div>
+          <div className="mt-4 text-xl font-bold text-slate-900">{price}</div>
         </div>
-        <div className="mt-4 text-xl font-bold text-slate-900">{price}</div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
