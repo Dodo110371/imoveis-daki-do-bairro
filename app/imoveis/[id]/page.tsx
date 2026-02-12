@@ -168,6 +168,28 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               </div>
             </div>
 
+            {/* Map Section */}
+            <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-100 overflow-hidden">
+              <h2 className="mb-4 text-xl font-bold text-slate-900 flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-blue-600" />
+                Localização
+              </h2>
+              <p className="mb-4 text-slate-600">{property.location}</p>
+              <div className="w-full h-[400px] rounded-lg overflow-hidden bg-slate-100 relative">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  scrolling="no"
+                  marginHeight={0}
+                  marginWidth={0}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                  className="absolute inset-0"
+                  title="Mapa de Localização"
+                ></iframe>
+              </div>
+            </div>
+
             {/* Mortgage Calculator (Only for Sales) */}
             {property.type === 'Venda' && (
               <MortgageCalculator propertyPrice={Number(property.price.replace(/[^0-9.-]+/g, ""))} />
