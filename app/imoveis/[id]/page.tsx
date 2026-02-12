@@ -200,20 +200,25 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <h3 className="mb-6 text-lg font-bold text-slate-900">Interessou? Entre em contato</h3>
 
               <div className="space-y-4">
-                <a
-                  href={agency ? `tel:${agency.phone.replace(/\D/g, '')}` : '#'}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
-                >
-                  <Phone className="h-5 w-5" />
-                  Ligar Agora
-                </a>
-                <a
-                  href={agency ? `mailto:${agency.email}` : '#'}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-                >
-                  <Mail className="h-5 w-5" />
-                  Entrar em Contato
-                </a>
+                {(agency?.phone || property.contact_phone || property.contact_whatsapp) && (
+                  <a
+                    href={`tel:${(agency?.phone || property.contact_phone || property.contact_whatsapp || '').replace(/\D/g, '')}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
+                  >
+                    <Phone className="h-5 w-5" />
+                    Ligar Agora
+                  </a>
+                )}
+
+                {(agency?.email || property.contact_email) && (
+                  <a
+                    href={`mailto:${agency?.email || property.contact_email}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                  >
+                    <Mail className="h-5 w-5" />
+                    Entrar em Contato
+                  </a>
+                )}
               </div>
 
               <div className="mt-6 text-center text-xs text-slate-500">
