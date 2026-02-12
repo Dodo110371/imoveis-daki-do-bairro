@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2 } from "lucide-react";
+import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit } from "lucide-react";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
@@ -36,6 +36,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     .select('*')
     .eq('id', propertyData.agency_id)
     .single();
+
+  // Get current user to check ownership
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const isOwner = user && propertyData.owner_id === user.id;
 
   const property = {
     ...propertyData,
