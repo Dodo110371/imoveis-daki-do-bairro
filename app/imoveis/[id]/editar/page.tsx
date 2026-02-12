@@ -420,9 +420,11 @@ export default function EditPropertyPage() {
           location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
           bedrooms: formData.bedrooms,
           bathrooms: formData.bathrooms,
+          parking: formData.parking,
           area: area,
           // Keeping existing logic for type/purpose
           type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
+          category: formData.type,
           images: formData.photos,
           contact_name: formData.name,
           contact_email: formData.email,

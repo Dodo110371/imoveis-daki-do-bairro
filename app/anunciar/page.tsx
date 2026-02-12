@@ -309,8 +309,10 @@ export default function AdvertisePage() {
         location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
         bedrooms: formData.bedrooms,
         bathrooms: formData.bathrooms,
+        parking: formData.parking,
         area: area,
         type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
+        category: formData.type,
         features: [], // Can be enhanced to include selected features
         images: formData.photos,
         owner_id: user.id,

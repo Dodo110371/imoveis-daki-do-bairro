@@ -29,7 +29,7 @@ function CadastroContent() {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await signInWithGoogle();
+      const { error } = await signInWithGoogle(redirectUrl);
       if (error) throw error;
     } catch (error: any) {
       console.error('Google auth error:', error);

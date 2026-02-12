@@ -55,7 +55,7 @@ export default function CadastroCorretorPage() {
       if (error) throw error;
 
       alert('Cadastro de corretor realizado com sucesso!');
-      router.push('/corretores/' + user.id);
+      router.push('/anunciar');
     } catch (error: any) {
       console.error('Error registering realtor:', error);
       alert('Erro ao cadastrar: ' + error.message);
@@ -162,9 +162,8 @@ export default function CadastroCorretorPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
-                isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
+              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
             >
               {isSubmitting ? 'Cadastrando...' : 'Finalizar Cadastro de Corretor'}
             </button>
