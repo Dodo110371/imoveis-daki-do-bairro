@@ -35,11 +35,11 @@ export function Footer() {
             <Link href="/corretores" className="text-sm text-slate-600 hover:text-slate-900">Corretores</Link>
             <Link href="/divulgacao" className="text-sm text-slate-600 hover:text-slate-900">Divulgação</Link>
             <Link href="/faq" className="text-sm text-slate-600 hover:text-slate-900">Perguntas Frequentes</Link>
-            <Link href="/contato" className="text-sm text-slate-600 hover:text-slate-900">Contato</Link>
+            <Link href="/contato" className="text-sm text-slate-600 hover:text-slate-900">Fale Conosco</Link>
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="font-semibold text-slate-900">Contato</h3>
+            <h3 className="font-semibold text-slate-900">Fale Conosco</h3>
             <Link href="/contato" className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
               <Mail className="h-4 w-4" />
               <span>{siteConfig.contact.email}</span>

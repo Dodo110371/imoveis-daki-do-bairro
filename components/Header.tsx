@@ -180,7 +180,7 @@ export function Header() {
                                 Quem Somos
                             </Link>
                             <Link href="/contato" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
-                                Contato
+                                Fale Conosco
                             </Link>
 
                             {isAuthenticated && (
