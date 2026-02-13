@@ -4,17 +4,18 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  CreditCard, 
-  QrCode, 
-  Barcode, 
-  CheckCircle2, 
-  Lock, 
-  ShieldCheck, 
+import {
+  CreditCard,
+  QrCode,
+  Barcode,
+  CheckCircle2,
+  Lock,
+  ShieldCheck,
   ArrowLeft,
   Loader2,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  ChevronDown
 } from 'lucide-react';
 
 // Tipos de Plano para o Resumo
@@ -42,6 +43,12 @@ const PLAN_DETAILS: Record<string, { title: string; price: number; period: strin
     price: 1000,
     period: 'pagamento único',
     features: ['Sem prazo de validade', 'Fotos ilimitadas', 'Destaque Premium']
+  },
+  na_mira: {
+    title: 'Opção Na Mira!',
+    price: 50,
+    period: '15 dias',
+    features: ['Topo das buscas', 'Destaque visual', 'Tag exclusiva']
   }
 };
 
@@ -52,16 +59,17 @@ function PaymentContent() {
   const plan = PLAN_DETAILS[planKey] || PLAN_DETAILS['mensal'];
 
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'pix' | 'boleto'>('credit_card');
+  const [installments, setInstallments] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState<'details' | 'success'>('details');
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    
+
     // Simulação de processamento
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     setIsProcessing(false);
     setStep('success');
     window.scrollTo(0, 0);
@@ -79,14 +87,14 @@ function PaymentContent() {
             Seu anúncio do <strong>{plan.title}</strong> foi ativado com sucesso. Você receberá os detalhes por e-mail.
           </p>
           <div className="space-y-3">
-            <Link 
-              href="/minha-conta" 
+            <Link
+              href="/minha-conta"
               className="block w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors"
             >
               Acessar Painel
             </Link>
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="block w-full py-3 px-4 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
               Voltar para Home
@@ -107,8 +115,8 @@ function PaymentContent() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex items-center gap-2">
-               <ShieldCheck className="w-5 h-5 text-green-600" />
-               <span className="font-semibold text-slate-700 text-sm md:text-base">Pagamento Seguro</span>
+              <ShieldCheck className="w-5 h-5 text-green-600" />
+              <span className="font-semibold text-slate-700 text-sm md:text-base">Pagamento Seguro</span>
             </div>
           </div>
           <div className="text-xs md:text-sm text-slate-500">
@@ -119,17 +127,17 @@ function PaymentContent() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
-          
+
           {/* Coluna Esquerda: Formulário */}
           <div className="flex-1 space-y-6">
-            
+
             {/* Seção 1: Dados Pessoais */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
               <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
                 Dados do Responsável
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Nome Completo</label>
@@ -159,21 +167,21 @@ function PaymentContent() {
 
               {/* Seletor de Método */}
               <div className="grid grid-cols-3 gap-3 mb-8">
-                <button 
+                <button
                   onClick={() => setPaymentMethod('credit_card')}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${paymentMethod === 'credit_card' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-100 hover:border-slate-300 text-slate-600'}`}
                 >
                   <CreditCard className="w-6 h-6 mb-2" />
                   <span className="text-sm font-medium">Cartão</span>
                 </button>
-                <button 
+                <button
                   onClick={() => setPaymentMethod('pix')}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${paymentMethod === 'pix' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-100 hover:border-slate-300 text-slate-600'}`}
                 >
                   <QrCode className="w-6 h-6 mb-2" />
                   <span className="text-sm font-medium">PIX</span>
                 </button>
-                <button 
+                <button
                   onClick={() => setPaymentMethod('boleto')}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${paymentMethod === 'boleto' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-100 hover:border-slate-300 text-slate-600'}`}
                 >
@@ -193,7 +201,7 @@ function PaymentContent() {
                         <input type="text" className="w-full pl-10 p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600" placeholder="0000 0000 0000 0000" />
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-700">Validade</label>
@@ -214,6 +222,27 @@ function PaymentContent() {
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Nome no Cartão</label>
                       <input type="text" className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600" placeholder="Como impresso no cartão" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Parcelamento</label>
+                      <div className="relative">
+                        <select
+                          value={installments}
+                          onChange={(e) => setInstallments(Number(e.target.value))}
+                          className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 appearance-none bg-white cursor-pointer"
+                        >
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map((count) => {
+                            const value = plan.price / count;
+                            return (
+                              <option key={count} value={count}>
+                                {count}x de {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} sem juros
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2 mt-2">
@@ -272,7 +301,7 @@ function PaymentContent() {
                 </>
               )}
             </button>
-            
+
             <p className="text-center text-xs text-slate-400 mt-4 flex items-center justify-center gap-1">
               <Lock className="w-3 h-3" />
               Seus dados estão protegidos com criptografia de 256 bits.
@@ -292,7 +321,7 @@ function PaymentContent() {
                   </div>
                   <div className="mt-1 text-sm font-medium text-blue-300">{plan.title}</div>
                 </div>
-                
+
                 <div className="p-6">
                   <ul className="space-y-4 mb-6">
                     {plan.features.map((feature, i) => (
@@ -314,20 +343,27 @@ function PaymentContent() {
                     </div>
                     <div className="flex justify-between text-lg font-bold text-slate-900 pt-2 border-t border-slate-100 mt-2">
                       <span>Total</span>
-                      <span>R$ {plan.price.toFixed(2)}</span>
+                      <div className="text-right">
+                        <div>{plan.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                        {installments > 1 && paymentMethod === 'credit_card' && (
+                          <div className="text-xs text-slate-500 font-normal">
+                            em {installments}x de {(plan.price / installments).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-slate-50 p-4 border-t border-slate-100 text-xs text-slate-500 text-center">
-                   Renovação automática cancelável a qualquer momento.
+                  Renovação automática cancelável a qualquer momento.
                 </div>
               </div>
 
               {/* Depoimento Rápido / Social Proof */}
               <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
                 <div className="flex gap-1 mb-2">
-                  {[1,2,3,4,5].map(i => <div key={i} className="w-4 h-4 bg-yellow-400 rounded-sm clip-star" />)} 
+                  {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-4 h-4 bg-yellow-400 rounded-sm clip-star" />)}
                   {/* Star mockup with CSS or SVG would be better, using text for now */}
                   <span className="text-yellow-500 text-sm">★★★★★</span>
                 </div>

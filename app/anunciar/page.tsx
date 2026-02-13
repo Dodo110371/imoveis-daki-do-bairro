@@ -20,7 +20,9 @@ import {
   Info,
   CreditCard,
   X,
-  Trash2
+  Trash2,
+  Briefcase,
+  BadgeCheck
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
@@ -29,16 +31,18 @@ import { useEffect } from 'react';
 
 // Step definitions
 const STEPS = [
-  { id: 1, title: 'Tipo de Imóvel', icon: Home },
-  { id: 2, title: 'Localização', icon: MapPin },
-  { id: 3, title: 'Detalhes', icon: Building2 },
-  { id: 4, title: 'Valores', icon: DollarSign },
-  { id: 5, title: 'Fotos', icon: Camera },
-  { id: 6, title: 'Contato', icon: User },
-  { id: 7, title: 'Planos', icon: CreditCard },
+  { id: 1, title: 'Identificação', icon: BadgeCheck },
+  { id: 2, title: 'Tipo de Imóvel', icon: Home },
+  { id: 3, title: 'Localização', icon: MapPin },
+  { id: 4, title: 'Detalhes', icon: Building2 },
+  { id: 5, title: 'Valores', icon: DollarSign },
+  { id: 6, title: 'Fotos', icon: Camera },
+  { id: 7, title: 'Contato', icon: User },
+  { id: 8, title: 'Planos', icon: CreditCard },
 ];
 
 interface AdvertiseFormData {
+  advertiserType: 'imobiliaria' | 'corretor' | 'proprietario' | '';
   purpose: string;
   type: string;
   cep: string;
@@ -94,7 +98,10 @@ export default function AdvertisePage() {
 
   // Form State
   const [formData, setFormData] = useState<AdvertiseFormData>({
-    // Step 1: Type
+    // Step 1: Identification
+    advertiserType: '',
+
+    // Step 2: Type
     purpose: 'venda', // venda | aluguel
     type: 'casa', // casa | apto | comercial | terreno
 
@@ -267,6 +274,12 @@ export default function AdvertisePage() {
   };
 
   const nextStep = () => {
+    // Validation for Step 1
+    if (currentStep === 1 && !formData.advertiserType) {
+      alert('Por favor, selecione uma opção de identificação para continuar.');
+      return;
+    }
+
     if (currentStep < STEPS.length) {
       setCurrentStep(curr => curr + 1);
       window.scrollTo(0, 0);
@@ -364,6 +377,7 @@ export default function AdvertisePage() {
               setIsSuccess(false);
               setCurrentStep(1);
               setFormData({
+                advertiserType: '',
                 purpose: 'venda',
                 type: 'casa',
                 cep: '',
@@ -529,8 +543,135 @@ export default function AdvertisePage() {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-10">
 
-          {/* STEP 1: TYPE */}
+          {/* STEP 1: IDENTIFICATION */}
           {currentStep === 1 && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-slate-900">Como você se identifica?</h2>
+                <p className="text-slate-500 mt-2">Escolha a opção que melhor descreve seu perfil</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4">
+                <button
+                  onClick={() => handleInputChange('advertiserType', 'proprietario')}
+                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'proprietario'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
+                    : 'border-slate-200 hover:border-blue-300 text-slate-600'
+                    }`}
+                >
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${formData.advertiserType === 'proprietario' ? 'bg-blue-200' : 'bg-slate-100'
+                    }`}>
+                    <User className="w-8 h-8" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-bold text-lg mb-1">Proprietário</h3>
+                    <p className="text-xs text-slate-500">Sou o dono do imóvel</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => handleInputChange('advertiserType', 'corretor')}
+                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'corretor'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
+                    : 'border-slate-200 hover:border-blue-300 text-slate-600'
+                    }`}
+                >
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${formData.advertiserType === 'corretor' ? 'bg-blue-200' : 'bg-slate-100'
+                    }`}>
+                    <Briefcase className="w-8 h-8" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-bold text-lg mb-1">Corretor</h3>
+                    <p className="text-xs text-slate-500">Profissional autônomo</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => handleInputChange('advertiserType', 'imobiliaria')}
+                  className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'imobiliaria'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
+                    : 'border-slate-200 hover:border-blue-300 text-slate-600'
+                    }`}
+                >
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${formData.advertiserType === 'imobiliaria' ? 'bg-blue-200' : 'bg-slate-100'
+                    }`}>
+                    <Building2 className="w-8 h-8" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-bold text-lg mb-1">Imobiliária</h3>
+                    <p className="text-xs text-slate-500">Empresa / Gestão</p>
+                  </div>
+                </button>
+              </div>
+
+              {/* Orientation Box */}
+              {formData.advertiserType && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 animate-in fade-in slide-in-from-bottom-2">
+                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <Info className="w-5 h-5 text-blue-600" />
+                    Como funciona para {
+                      formData.advertiserType === 'proprietario' ? 'Proprietários' :
+                        formData.advertiserType === 'corretor' ? 'Corretores' : 'Imobiliárias'
+                    }:
+                  </h4>
+
+                  {formData.advertiserType === 'proprietario' && (
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">1</div>
+                        <span>Preencha os detalhes do seu imóvel com atenção. Quanto mais informações, melhor.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">2</div>
+                        <span>Adicione fotos de alta qualidade. Imóveis com boas fotos recebem 5x mais visitas.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">3</div>
+                        <span>Escolha um plano de destaque para vender ou alugar mais rápido.</span>
+                      </li>
+                    </ul>
+                  )}
+
+                  {formData.advertiserType === 'corretor' && (
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">1</div>
+                        <span>Cadastre os imóveis da sua carteira de forma organizada.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">2</div>
+                        <span>Use seu CRECI na descrição para passar mais credibilidade.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">3</div>
+                        <span>Gerencie seus leads diretamente pelo painel de controle.</span>
+                      </li>
+                    </ul>
+                  )}
+
+                  {formData.advertiserType === 'imobiliaria' && (
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">1</div>
+                        <span>Centralize a gestão de todos os imóveis da imobiliária.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">2</div>
+                        <span>Destaque sua marca em todos os anúncios.</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-slate-600 text-sm">
+                        <div className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">3</div>
+                        <span>Acesse relatórios de performance para otimizar suas vendas.</span>
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* STEP 2: TYPE */}
+          {currentStep === 2 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">O que você deseja anunciar?</h2>
@@ -580,8 +721,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 2: LOCATION */}
-          {currentStep === 2 && (
+          {/* STEP 3: LOCATION */}
+          {currentStep === 3 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Onde fica o imóvel?</h2>
@@ -694,8 +835,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 3: DETAILS */}
-          {currentStep === 3 && (
+          {/* STEP 4: DETAILS */}
+          {currentStep === 4 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Características</h2>
@@ -774,8 +915,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 4: VALUES */}
-          {currentStep === 4 && (
+          {/* STEP 5: VALUES */}
+          {currentStep === 5 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Valores e Descrição</h2>
@@ -841,8 +982,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 5: PHOTOS */}
-          {currentStep === 5 && (
+          {/* STEP 6: PHOTOS */}
+          {currentStep === 6 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Fotos do Imóvel</h2>
@@ -908,8 +1049,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 6: CONTACT */}
-          {currentStep === 6 && (
+          {/* STEP 7: CONTACT */}
+          {currentStep === 7 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Seus Dados</h2>
@@ -1132,8 +1273,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 7: PAYMENT PLANS */}
-          {currentStep === 7 && (
+          {/* STEP 8: PAYMENT PLANS */}
+          {currentStep === 8 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Escolha o plano ideal</h2>
