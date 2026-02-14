@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, User, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { PageViewTracker } from '@/components/PageViewTracker';
+import { ContactEventLink } from '@/components/ContactEventLink';
 
 export default async function CorretoresPage() {
   const supabase = await createClient();
@@ -106,15 +107,16 @@ export default async function CorretoresPage() {
                       Ver Perfil
                     </Link>
                     {realtor.whatsapp && (
-                      <a
+                      <ContactEventLink
                         href={`https://wa.me/${realtor.whatsapp}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                        channel="whatsapp"
                       >
                         <MessageCircle className="w-4 h-4" />
                         WhatsApp
-                      </a>
+                      </ContactEventLink>
                     )}
                   </div>
                 </div>

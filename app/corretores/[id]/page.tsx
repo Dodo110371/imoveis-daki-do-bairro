@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { MapPin, Phone, MessageCircle, User, ShieldCheck, Mail, ArrowLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { PropertyCard } from '@/components/PropertyCard';
+import { ContactEventLink } from '@/components/ContactEventLink';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -98,33 +99,36 @@ export default async function RealtorProfilePage({ params }: PageProps) {
               <p className="text-slate-300 text-lg mb-4">CRECI: {realtor.creci}</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
                 {realtor.whatsapp && (
-                  <a
+                  <ContactEventLink
                     href={`https://wa.me/${realtor.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    channel="whatsapp"
                   >
                     <MessageCircle className="w-4 h-4" />
                     WhatsApp
-                  </a>
+                  </ContactEventLink>
                 )}
                 {realtor.phone && (
-                  <a
+                  <ContactEventLink
                     href={`tel:${realtor.phone}`}
                     className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    channel="phone"
                   >
                     <Phone className="w-4 h-4" />
                     Ligar
-                  </a>
+                  </ContactEventLink>
                 )}
                 {realtor.email && (
-                  <a
+                  <ContactEventLink
                     href={`mailto:${realtor.email}`}
                     className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    channel="email"
                   >
                     <Mail className="w-4 h-4" />
                     Email
-                  </a>
+                  </ContactEventLink>
                 )}
               </div>
             </div>
