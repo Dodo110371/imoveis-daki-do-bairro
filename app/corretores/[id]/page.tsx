@@ -174,7 +174,22 @@ export default async function RealtorProfilePage({ params }: PageProps) {
               {properties.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {properties.map((property: any) => (
-                    <PropertyCard key={property.id} {...property} />
+                    <div key={property.id} className="space-y-2">
+                      <PropertyCard {...property} />
+                      {realtor.whatsapp && (
+                        <ContactEventLink
+                          href={`https://wa.me/${realtor.whatsapp}?text=Olá, vi o imóvel ${property.title} e gostaria de mais informações.`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                          propertyId={property.id}
+                          channel="whatsapp"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          WhatsApp sobre este imóvel
+                        </ContactEventLink>
+                      )}
+                    </div>
                   ))}
                 </div>
               ) : (

@@ -119,7 +119,30 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
               {agencyProperties.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {agencyProperties.map((prop) => (
-                    <PropertyCard key={prop.id} {...prop} />
+                    <div key={prop.id} className="space-y-2">
+                      <PropertyCard {...prop} />
+                      {agency.email ? (
+                        <ContactEventLink
+                          href={`mailto:${agency.email}`}
+                          className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                          channel="email"
+                          propertyId={prop.id}
+                        >
+                          <Mail className="w-4 h-4" />
+                          Email sobre este imóvel
+                        </ContactEventLink>
+                      ) : (
+                        <ContactEventLink
+                          href={`tel:${agency.phone.replace(/\D/g, '')}`}
+                          className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors"
+                          channel="phone"
+                          propertyId={prop.id}
+                        >
+                          <Phone className="w-4 h-4" />
+                          Ligar sobre este imóvel
+                        </ContactEventLink>
+                      )}
+                    </div>
                   ))}
                 </div>
               ) : (
