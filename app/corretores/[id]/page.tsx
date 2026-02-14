@@ -60,7 +60,8 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     area: p.area,
     imageUrl: p.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600&auto=format&fit=crop',
     images: p.images || [],
-    type: p.type
+    type: p.type,
+    realtorPartner: realtor.isPartner
   })) || [];
 
   return (

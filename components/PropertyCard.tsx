@@ -8,6 +8,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
 import { cn } from '@/lib/utils';
 import { AgencyPartnerBadge } from './AgencyPartnerBadge';
+import { PartnerBadge } from './PartnerBadge';
 
 interface PropertyCardProps {
   id: string;
@@ -21,6 +22,7 @@ interface PropertyCardProps {
   images?: string[];
   type: 'Venda' | 'Aluguel';
   agencyPartner?: boolean;
+  realtorPartner?: boolean;
 }
 
 export function PropertyCard({
@@ -35,6 +37,7 @@ export function PropertyCard({
   images = [],
   type,
   agencyPartner = false,
+  realtorPartner = false,
 }: PropertyCardProps) {
   // Use images array if provided and not empty, otherwise fallback to [imageUrl]
   const displayImages = images && images.length > 0 ? images : [imageUrl];
@@ -62,17 +65,23 @@ export function PropertyCard({
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          
+
           <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white z-10">
             {type}
           </div>
-          
+
           {agencyPartner && (
             <div className="absolute bottom-2 left-2 z-10">
               <AgencyPartnerBadge size="sm" />
             </div>
           )}
-          
+
+          {realtorPartner && (
+            <div className="absolute bottom-2 right-2 z-10">
+              <PartnerBadge size="sm" />
+            </div>
+          )}
+
           <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
             <FavoriteButton propertyId={id} />
             <CompareButton propertyId={id} />
@@ -95,11 +104,11 @@ export function PropertyCard({
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
-              
+
               {/* Dots Indicator */}
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
                 {displayImages.slice(0, 5).map((_, idx) => (
-                  <div 
+                  <div
                     key={idx}
                     className={cn(
                       "h-1.5 rounded-full transition-all shadow-sm",

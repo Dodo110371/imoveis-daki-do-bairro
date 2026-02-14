@@ -100,11 +100,30 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
     });
   }
 
+  // Fetch partner status for realtors (owners) referenced by properties
+  const ownerIds = Array.from(
+    new Set((propertiesData || [])
+      .map((p: any) => p.owner_id)
+      .filter((id: any) => id != null))
+  );
+  let realtorsMap = new Map<string, boolean>();
+  if (ownerIds.length > 0) {
+    const { data: realtorsData } = await supabase
+      .from('realtors')
+      .select('id, partner, is_partner')
+      .in('id', ownerIds);
+    (realtorsData || []).forEach((r: any) => {
+      const isPartner = !!(r.partner ?? r.is_partner);
+      realtorsMap.set(r.id, isPartner);
+    });
+  }
+
   const properties = (propertiesData || []).map((p: any) => {
     const base = mapProperty(p);
     return {
       ...base,
       agencyPartner: agenciesMap.get(p.agency_id) || false,
+      realtorPartner: realtorsMap.get(p.owner_id) || false,
     };
   });
 

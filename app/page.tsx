@@ -65,13 +65,33 @@ export default async function HomePage() {
     });
   }
 
+  // Fetch partner status for realtors (owners) referenced by Home properties
+  const homeOwnerIds = Array.from(
+    new Set([...(featuredData || []), ...(newData || [])]
+      .map((p: any) => p.owner_id)
+      .filter((id: any) => id != null))
+  );
+  let homeRealtorsMap = new Map<string, boolean>();
+  if (homeOwnerIds.length > 0) {
+    const { data: realtorsData } = await supabase
+      .from('realtors')
+      .select('id, partner, is_partner')
+      .in('id', homeOwnerIds);
+    (realtorsData || []).forEach((r: any) => {
+      const isPartner = !!(r.partner ?? r.is_partner);
+      homeRealtorsMap.set(r.id, isPartner);
+    });
+  }
+
   const featuredProperties = (featuredData || []).map((p: any) => ({
     ...mapProperty(p),
     agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
+    realtorPartner: homeRealtorsMap.get(p.owner_id) || false,
   }));
   const newProperties = (newData || []).map((p: any) => ({
     ...mapProperty(p),
     agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
+    realtorPartner: homeRealtorsMap.get(p.owner_id) || false,
   }));
 
   return (
