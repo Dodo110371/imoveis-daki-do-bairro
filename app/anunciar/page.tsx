@@ -139,7 +139,7 @@ export default function AdvertisePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleTypeSelection = (type: string) => {
+  const handleTypeSelection = (type: AdvertiseFormData['advertiserType']) => {
     setFormData(prev => ({ ...prev, advertiserType: type }));
 
     if (type === 'imobiliaria') {
