@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
 import { PageViewTracker } from '@/components/PageViewTracker';
+import { AgencyPartnerBadge } from '@/components/AgencyPartnerBadge';
 
 export default async function ImobiliariasPage() {
   const supabase = await createClient();
@@ -20,7 +21,8 @@ export default async function ImobiliariasPage() {
   const agencies = agenciesData?.map((agency: any) => ({
     ...agency,
     logo: agency.logo_url,
-    propertiesCount: agency.properties?.[0]?.count || 0
+    propertiesCount: agency.properties?.[0]?.count || 0,
+    isPartner: !!(agency.partner ?? agency.is_partner)
   })) || [];
 
   return (
@@ -53,6 +55,11 @@ export default async function ImobiliariasPage() {
                     <h3 className="text-lg font-bold text-slate-900 line-clamp-1">
                       {imobiliaria.name}
                     </h3>
+                    {imobiliaria.isPartner && (
+                      <div className="mt-1">
+                        <AgencyPartnerBadge />
+                      </div>
+                    )}
                     <div className="flex items-center gap-1 text-sm text-slate-500 mt-1">
                       <span className="font-medium text-slate-900">{imobiliaria.propertiesCount}</span> imóveis ativos
                     </div>

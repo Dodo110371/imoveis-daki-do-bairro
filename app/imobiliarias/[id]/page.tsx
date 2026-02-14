@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MapPin, Phone, Mail, Building2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
 
 interface AgencyPageProps {
   params: Promise<{
@@ -40,7 +41,8 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
 
   const agency = {
     ...agencyData,
-    logo: agencyData.logo_url
+    logo: agencyData.logo_url,
+    isPartner: !!(agencyData.partner ?? agencyData.is_partner)
   };
 
   // Helper to map DB to Card Props
@@ -85,7 +87,10 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
             </div>
 
             <div className="flex-grow">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{agency.name}</h1>
+              <div className="flex items-center gap-3 mb-4">
+                <h1 className="text-3xl md:text-4xl font-bold">{agency.name}</h1>
+                {agency.isPartner && <AgencyPartnerBadge />}
+              </div>
               <div className="flex flex-wrap gap-6 text-slate-300 mb-6">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-blue-400" />
