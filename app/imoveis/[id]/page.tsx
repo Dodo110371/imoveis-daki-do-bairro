@@ -9,6 +9,7 @@ import { ImageGallery } from "@/components/ImageGallery";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
 import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
+import { PartnerBadge } from "@/components/PartnerBadge";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -40,6 +41,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     .eq('id', propertyData.agency_id)
     .single();
 
+  // Fetch realtor (owner)
+  const { data: realtorData } = await supabase
+    .from('realtors')
+    .select(`
+      *,
+      profiles (full_name, avatar_url, email, phone)
+    `)
+    .eq('id', propertyData.owner_id)
+    .single();
+
   // Get current user to check ownership
   const {
     data: { user },
@@ -63,11 +74,25 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     isPartner: !!(agencyData.partner ?? agencyData.is_partner)
   } : null;
 
+  const realtor = realtorData ? {
+    ...realtorData,
+    name: realtorData.profiles?.full_name || 'Corretor',
+    photo: realtorData.profiles?.avatar_url || '/placeholder.jpg',
+    email: realtorData.profiles?.email,
+    phone: realtorData.profiles?.phone,
+    isPartner: !!(realtorData.partner ?? realtorData.is_partner)
+  } : null;
+
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
       <PageViewTracker propertyId={id} />
-      {/* Header Image / Gallery */}
-      <ImageGallery images={property.images} title={property.title} />
+      <div className="relative">
+        <ImageGallery images={property.images} title={property.title} />
+        <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+          {agency?.isPartner && <AgencyPartnerBadge size="md" />}
+          {realtor?.isPartner && <PartnerBadge size="md" />}
+        </div>
+      </div>
 
       {/* Property Info Overlay (Absolute positioned over the gallery in the component, 
           but here we have the title/info separately or we need to adjust structure.
@@ -115,8 +140,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
                 {property.type}
               </span>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 flex-wrap">
                 <h1 className="text-3xl font-bold text-white md:text-5xl">{property.title}</h1>
+                {agency?.isPartner && <AgencyPartnerBadge size="sm" />}
+                {realtor?.isPartner && <PartnerBadge size="sm" />}
                 <FavoriteButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
                 <CompareButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
               </div>
@@ -204,7 +231,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           {/* Sidebar / Contact */}
           <div className="space-y-6">
             <div className="sticky top-24 rounded-xl bg-white p-6 shadow-sm border border-slate-100">
-              {agency && (
+              {agency ? (
                 <div className="mb-6 pb-6 border-b border-slate-100">
                   <h3 className="text-sm uppercase tracking-wide text-slate-500 font-semibold mb-4">Anunciado por</h3>
                   <Link href={`/imobiliarias/${agency.id}`} className="flex items-center gap-4 group">
@@ -225,14 +252,35 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                     </div>
                   </Link>
                 </div>
-              )}
+              ) : realtor ? (
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <h3 className="text-sm uppercase tracking-wide text-slate-500 font-semibold mb-4">Anunciado por</h3>
+                  <Link href={`/corretores/${realtor.id}`} className="flex items-center gap-4 group">
+                    <div className="h-12 w-12 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200">
+                      <Image
+                        src={realtor.photo}
+                        alt={realtor.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{realtor.name}</h4>
+                        {realtor.isPartner && <PartnerBadge size="sm" />}
+                      </div>
+                      {realtor.creci && <p className="text-xs text-slate-500">CRECI: {realtor.creci}</p>}
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               <h3 className="mb-6 text-lg font-bold text-slate-900">Interessou? Entre em contato</h3>
 
               <div className="space-y-4">
-                {(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone) && (
+                {(agency?.whatsapp || realtor?.whatsapp || property.contact_whatsapp || agency?.phone || realtor?.phone || property.contact_phone) && (
                   <ContactEventLink
-                    href={`https://wa.me/55${(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis do Bairro e gostaria de mais informações.`}
+                    href={`https://wa.me/55${(agency?.whatsapp || realtor?.whatsapp || property.contact_whatsapp || agency?.phone || realtor?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis do Bairro e gostaria de mais informações.`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
@@ -244,9 +292,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </ContactEventLink>
                 )}
 
-                {(agency?.email || property.contact_email) && (
+                {(agency?.email || realtor?.email || property.contact_email) && (
                   <ContactEventLink
-                    href={`mailto:${agency?.email || property.contact_email}`}
+                    href={`mailto:${agency?.email || realtor?.email || property.contact_email}`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                     propertyId={property.id}
                     channel="email"
