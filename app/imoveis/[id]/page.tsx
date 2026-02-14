@@ -89,8 +89,26 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       <div className="relative">
         <ImageGallery images={property.images} title={property.title} />
         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-          {agency?.isPartner && <AgencyPartnerBadge size="md" />}
-          {realtor?.isPartner && <PartnerBadge size="md" />}
+          {agency?.isPartner && (
+            <>
+              <span className="md:hidden">
+                <AgencyPartnerBadge size="sm" />
+              </span>
+              <span className="hidden md:inline-flex">
+                <AgencyPartnerBadge size="md" />
+              </span>
+            </>
+          )}
+          {realtor?.isPartner && (
+            <>
+              <span className="md:hidden">
+                <PartnerBadge size="sm" />
+              </span>
+              <span className="hidden md:inline-flex">
+                <PartnerBadge size="md" />
+              </span>
+            </>
+          )}
         </div>
       </div>
 
