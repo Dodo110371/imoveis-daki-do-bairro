@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SearchForm } from "@/components/SearchForm";
 import { createClient } from "@/lib/supabase/server";
 import { CITIES } from "@/lib/cities";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -92,6 +93,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-16">
+      <PageViewTracker />
       {/* Header with Search */}
       <div className="bg-slate-900 pt-8 pb-12 px-4">
         <div className="container mx-auto flex flex-col items-center">

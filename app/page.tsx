@@ -5,6 +5,7 @@ import { MapPin, Home, Key, Sparkles, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 // HomePage Component
 export default async function HomePage() {
@@ -47,6 +48,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-16 pb-16 overflow-x-hidden">
+      <PageViewTracker />
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] md:min-h-[850px] w-full flex flex-col items-center justify-start pt-1 bg-slate-900 overflow-hidden">
         {/* Animated Background Overlay */}

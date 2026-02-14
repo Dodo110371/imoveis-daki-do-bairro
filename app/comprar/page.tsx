@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { FilterSidebar } from "@/components/FilterSidebar";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 interface ComprarPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -81,6 +82,7 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 relative overflow-hidden">
+      <PageViewTracker />
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
       <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -z-10 animate-float" />

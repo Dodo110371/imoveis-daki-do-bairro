@@ -2,6 +2,7 @@ import { MapPin, Phone, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
+import { PageViewTracker } from '@/components/PageViewTracker';
 
 export default async function ImobiliariasPage() {
   const supabase = await createClient();
@@ -24,6 +25,7 @@ export default async function ImobiliariasPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
+      <PageViewTracker />
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">

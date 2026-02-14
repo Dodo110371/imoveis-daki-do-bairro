@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, User, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { PageViewTracker } from '@/components/PageViewTracker';
 
 export default async function CorretoresPage() {
   const supabase = await createClient();
@@ -34,6 +35,7 @@ export default async function CorretoresPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
+      <PageViewTracker />
       {/* Hero Section */}
       <div className="relative bg-slate-900 text-white py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-20">

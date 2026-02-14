@@ -28,6 +28,7 @@ import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
+import { PageViewTracker } from '@/components/PageViewTracker';
 
 // Step definitions
 const STEPS = [
@@ -529,6 +530,7 @@ export default function AdvertisePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden relative">
+      <PageViewTracker />
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -z-10 animate-float" />

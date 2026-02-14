@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
 import { ImageGallery } from "@/components/ImageGallery";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -61,6 +62,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
+      <PageViewTracker propertyId={id} />
       {/* Header Image / Gallery */}
       <ImageGallery images={property.images} title={property.title} />
 
