@@ -7,6 +7,7 @@ import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight } from 'lucide-react
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
 import { cn } from '@/lib/utils';
+import { AgencyPartnerBadge } from './AgencyPartnerBadge';
 
 interface PropertyCardProps {
   id: string;
@@ -19,6 +20,7 @@ interface PropertyCardProps {
   imageUrl: string;
   images?: string[];
   type: 'Venda' | 'Aluguel';
+  agencyPartner?: boolean;
 }
 
 export function PropertyCard({
@@ -32,6 +34,7 @@ export function PropertyCard({
   imageUrl,
   images = [],
   type,
+  agencyPartner = false,
 }: PropertyCardProps) {
   // Use images array if provided and not empty, otherwise fallback to [imageUrl]
   const displayImages = images && images.length > 0 ? images : [imageUrl];
@@ -63,6 +66,12 @@ export function PropertyCard({
           <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white z-10">
             {type}
           </div>
+          
+          {agencyPartner && (
+            <div className="absolute bottom-2 left-2 z-10">
+              <AgencyPartnerBadge size="sm" />
+            </div>
+          )}
           
           <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
             <FavoriteButton propertyId={id} />

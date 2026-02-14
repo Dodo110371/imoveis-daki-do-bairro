@@ -59,6 +59,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     imageUrl: p.images?.[0] || '/placeholder.jpg',
     images: p.images || [],
     type: p.type,
+    agencyPartner: agency.isPartner,
   });
 
   const agencyProperties = propertiesData?.map(mapProperty) || [];
