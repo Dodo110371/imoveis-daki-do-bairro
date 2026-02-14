@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Building2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ContactEventLink } from "@/components/ContactEventLink";
 
 interface AgencyPageProps {
   params: Promise<{
@@ -135,9 +136,10 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
               <h3 className="text-lg font-bold text-slate-900 mb-6">Fale com a Imobiliária</h3>
 
               <div className="space-y-4">
-                <a
+                <ContactEventLink
                   href={`tel:${agency.phone.replace(/\D/g, '')}`}
                   className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
+                  channel="phone"
                 >
                   <div className="h-10 w-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
                     <Phone className="h-5 w-5" />
@@ -146,11 +148,12 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
                     <div className="text-xs text-slate-500 font-medium uppercase">Telefone</div>
                     <div className="font-semibold text-slate-900">{agency.phone}</div>
                   </div>
-                </a>
+                </ContactEventLink>
 
-                <a
+                <ContactEventLink
                   href={`mailto:${agency.email}`}
                   className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
+                  channel="email"
                 >
                   <div className="h-10 w-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <Mail className="h-5 w-5" />
@@ -159,7 +162,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
                     <div className="text-xs text-slate-500 font-medium uppercase">Email</div>
                     <div className="font-semibold text-slate-900 truncate" title={agency.email}>{agency.email}</div>
                   </div>
-                </a>
+                </ContactEventLink>
               </div>
 
               <div className="mt-6 pt-6 border-t border-slate-100">

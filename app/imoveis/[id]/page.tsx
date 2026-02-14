@@ -7,6 +7,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
 import { ImageGallery } from "@/components/ImageGallery";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { ContactEventLink } from "@/components/ContactEventLink";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -225,25 +226,29 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
               <div className="space-y-4">
                 {(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone) && (
-                  <a
+                  <ContactEventLink
                     href={`https://wa.me/55${(agency?.whatsapp || property.contact_whatsapp || agency?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis do Bairro e gostaria de mais informações.`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"
+                    propertyId={property.id}
+                    channel="whatsapp"
                   >
                     <MessageCircle className="h-5 w-5" />
                     Chame no WhatsApp
-                  </a>
+                  </ContactEventLink>
                 )}
 
                 {(agency?.email || property.contact_email) && (
-                  <a
+                  <ContactEventLink
                     href={`mailto:${agency?.email || property.contact_email}`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                    propertyId={property.id}
+                    channel="email"
                   >
                     <Mail className="h-5 w-5" />
                     Entrar em Contato
-                  </a>
+                  </ContactEventLink>
                 )}
               </div>
 
