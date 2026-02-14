@@ -3,18 +3,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Check, Building2, BadgeCheck, FileText, Upload, Shield } from 'lucide-react';
+import { Check, Building2, BadgeCheck, FileText, Upload, Shield, TrendingUp, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { registerAgency } from './actions';
 
 const PLANS = [
   {
-    id: 'bronze',
-    name: 'Iniciante',
-    price: 199.90,
-    ads: 10,
+    id: 'plan-5',
+    name: 'Até 5',
+    price: 129.90,
+    ads: 5,
     features: [
-      '10 Anúncios Ativos',
+      '5 Anúncios Ativos',
       'Gestão Básica',
       'Suporte por Email',
       'Integração Manual'
@@ -22,29 +22,40 @@ const PLANS = [
     recommended: false
   },
   {
-    id: 'silver',
-    name: 'Profissional',
-    price: 499.90,
-    ads: 50,
+    id: 'plan-10',
+    name: 'Até 10',
+    price: 199.90,
+    ads: 10,
     features: [
-      '50 Anúncios Ativos',
-      '5 Destaques Mensais',
+      '10 Anúncios Ativos',
+      '2 Destaques Mensais',
       'Relatórios de Performance',
-      'Suporte Prioritário',
-      'Integração XML'
+      'Suporte Prioritário'
     ],
     recommended: true
   },
   {
-    id: 'gold',
-    name: 'Elite',
-    price: 999.90,
-    ads: 'Ilimitado',
+    id: 'plan-15',
+    name: 'Até 15',
+    price: 269.90,
+    ads: 15,
     features: [
-      'Anúncios Ilimitados',
-      '20 Destaques Mensais',
-      'Gestor de Conta Dedicado',
-      'API Completa',
+      '15 Anúncios Ativos',
+      '5 Destaques Mensais',
+      'Gestor de Conta',
+      'API Completa'
+    ],
+    recommended: false
+  },
+  {
+    id: 'plan-20',
+    name: 'Até 20',
+    price: 349.90,
+    ads: 20,
+    features: [
+      '20 Anúncios Ativos',
+      '10 Destaques Mensais',
+      'Gestor Dedicado VIP',
       'Consultoria de Marketing'
     ],
     recommended: false
@@ -178,51 +189,104 @@ export default function CadastroImobiliariaPage() {
 
         {step === 1 ? (
           /* Step 1: Plan Selection */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative bg-white rounded-2xl shadow-sm border-2 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col ${plan.recommended ? 'border-blue-600 scale-105 z-10' : 'border-slate-100 hover:border-blue-200'
-                  }`}
-              >
-                {plan.recommended && (
-                  <div className="absolute top-0 inset-x-0 bg-blue-600 text-white text-xs font-bold text-center py-1 uppercase tracking-wider">
-                    Mais Popular
-                  </div>
-                )}
+          <div className="space-y-16 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {PLANS.map((plan) => (
+                <div
+                  key={plan.id}
+                  className={`relative bg-white rounded-2xl shadow-sm border-2 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full ${plan.recommended ? 'border-blue-600 scale-105 z-10' : 'border-slate-100 hover:border-blue-200'
+                    }`}
+                >
+                  {plan.recommended && (
+                    <div className="absolute top-0 inset-x-0 bg-blue-600 text-white text-xs font-bold text-center py-1 uppercase tracking-wider">
+                      Mais Popular
+                    </div>
+                  )}
 
-                <div className={`p-8 ${plan.recommended ? 'pt-10' : ''}`}>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1 mb-6">
-                    <span className="text-sm text-slate-500">R$</span>
-                    <span className="text-4xl font-extrabold text-slate-900">{Math.floor(plan.price)}</span>
-                    <span className="text-xl font-bold text-slate-900">,{plan.price.toFixed(2).split('.')[1]}</span>
-                    <span className="text-slate-500">/mês</span>
+                  <div className={`p-6 ${plan.recommended ? 'pt-10' : ''}`}>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">{plan.name}</h3>
+                    <div className="flex items-baseline gap-1 mb-6">
+                      <span className="text-sm text-slate-500">R$</span>
+                      <span className="text-3xl font-extrabold text-slate-900">{Math.floor(plan.price)}</span>
+                      <span className="text-lg font-bold text-slate-900">,{plan.price.toFixed(2).split('.')[1]}</span>
+                      <span className="text-slate-500 text-xs">/mês</span>
+                    </div>
+
+                    <button
+                      onClick={() => handlePlanSelect(plan.id)}
+                      className={`w-full py-3 rounded-xl font-bold transition-all text-sm ${plan.recommended
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        }`}
+                    >
+                      Selecionar
+                    </button>
                   </div>
 
-                  <button
-                    onClick={() => handlePlanSelect(plan.id)}
-                    className={`w-full py-3 rounded-xl font-bold transition-all ${plan.recommended
-                      ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                      }`}
-                  >
-                    Selecionar Plano
-                  </button>
+                  <div className="bg-slate-50 p-6 border-t border-slate-100 flex-grow">
+                    <ul className="space-y-3">
+                      {plan.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs text-slate-600">
+                          <Check className="w-4 h-4 text-green-500 shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
+              ))}
+            </div>
 
-                <div className="bg-slate-50 p-8 border-t border-slate-100 flex-grow">
-                  <ul className="space-y-4">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm text-slate-600">
-                        <Check className="w-5 h-5 text-green-500 shrink-0" />
-                        <span>{feature}</span>
+            {/* Na Mira! Option */}
+            <div className="max-w-4xl mx-auto">
+              <div className="relative bg-gradient-to-r from-red-600 to-rose-600 rounded-2xl p-1 shadow-xl transform hover:scale-[1.01] transition-transform duration-300">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-red-600 px-6 py-1 rounded-full font-bold shadow-md border-2 border-red-100 flex items-center gap-2 whitespace-nowrap z-20">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  OPÇÃO TURBO
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                </div>
+                <div className="bg-white rounded-xl p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                  <div className="flex-1 text-center md:text-left relative z-10">
+                    <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                      <h3 className="text-3xl font-extrabold text-slate-900">Na Mira!</h3>
+                      <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Destaque</span>
+                    </div>
+                    <p className="text-slate-600 mb-6 text-lg">
+                      Coloque seus imóveis no <strong>topo das buscas</strong> e multiplique suas chances de fechar negócio.
+                    </p>
+                    <ul className="space-y-3 mb-2 inline-block text-left bg-slate-50 p-4 rounded-lg border border-slate-100 w-full">
+                      <li className="flex items-center gap-3 text-slate-700">
+                        <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
+                        <span className="font-medium">Apareça antes dos outros anúncios</span>
                       </li>
-                    ))}
-                  </ul>
+                      <li className="flex items-center gap-3 text-slate-700">
+                        <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
+                        <span className="font-medium">Tag exclusiva "Na Mira" nos cards</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="flex flex-col items-center gap-4 relative z-10 min-w-[260px] border-l-0 md:border-l border-slate-100 md:pl-8">
+                    <div className="text-center">
+                      <div className="text-sm text-slate-500 font-medium mb-1">Adicional Mensal</div>
+                      <div className="text-6xl font-black text-slate-900 tracking-tight flex items-start justify-center">
+                        <span className="text-2xl mt-2 mr-1 font-bold text-slate-400">R$</span>
+                        50
+                        <span className="text-2xl mt-2 font-bold text-slate-400">,00</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handlePlanSelect('na-mira')}
+                      className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg rounded-xl hover:bg-red-700 hover:shadow-lg hover:shadow-red-200 transition-all text-center flex items-center justify-center gap-2 group"
+                    >
+                      Adicionar Turbo
+                      <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <p className="text-xs text-slate-400 text-center">Válido para todos os anúncios do plano</p>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         ) : (
           /* Step 2: Registration Form */
@@ -233,7 +297,7 @@ export default function CadastroImobiliariaPage() {
                 Dados da Imobiliária
               </h2>
               <p className="text-slate-500 mt-2">
-                Preencha as informações abaixo para finalizar seu cadastro no plano <strong>{PLANS.find(p => p.id === selectedPlan)?.name}</strong>.
+                Preencha as informações abaixo para finalizar seu cadastro no plano <strong>{selectedPlan === 'na-mira' ? 'Na Mira! (Turbo)' : PLANS.find(p => p.id === selectedPlan)?.name}</strong>.
               </p>
             </div>
 
