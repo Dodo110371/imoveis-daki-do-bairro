@@ -139,6 +139,17 @@ export default function AdvertisePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleTypeSelection = (type: string) => {
+    setFormData(prev => ({ ...prev, advertiserType: type }));
+
+    if (type === 'imobiliaria') {
+      router.push('/cadastro-imobiliaria');
+    } else {
+      setCurrentStep(curr => curr + 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
   const fetchAddressByCep = async (cep: string) => {
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -555,7 +566,7 @@ export default function AdvertisePage() {
 
               <div className="grid md:grid-cols-3 gap-4">
                 <button
-                  onClick={() => handleInputChange('advertiserType', 'proprietario')}
+                  onClick={() => handleTypeSelection('proprietario')}
                   className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'proprietario'
                     ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
                     : 'border-slate-200 hover:border-blue-300 text-slate-600'
@@ -572,7 +583,7 @@ export default function AdvertisePage() {
                 </button>
 
                 <button
-                  onClick={() => handleInputChange('advertiserType', 'corretor')}
+                  onClick={() => handleTypeSelection('corretor')}
                   className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'corretor'
                     ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
                     : 'border-slate-200 hover:border-blue-300 text-slate-600'
@@ -589,7 +600,7 @@ export default function AdvertisePage() {
                 </button>
 
                 <button
-                  onClick={() => handleInputChange('advertiserType', 'imobiliaria')}
+                  onClick={() => handleTypeSelection('imobiliaria')}
                   className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-4 hover:shadow-md ${formData.advertiserType === 'imobiliaria'
                     ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
                     : 'border-slate-200 hover:border-blue-300 text-slate-600'
