@@ -86,26 +86,26 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
       <PageViewTracker propertyId={id} />
-      <div className="relative">
+      <div className="relative group">
         <ImageGallery images={property.images} title={property.title} />
         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
           {agency?.isPartner && (
             <>
               <span className="md:hidden">
-                <AgencyPartnerBadge size="sm" />
+                <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <AgencyPartnerBadge size="md" />
+                <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
               </span>
             </>
           )}
           {realtor?.isPartner && (
             <>
               <span className="md:hidden">
-                <PartnerBadge size="sm" />
+                <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <PartnerBadge size="md" />
+                <PartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
               </span>
             </>
           )}
@@ -158,10 +158,28 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
                 {property.type}
               </span>
-              <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-4 flex-wrap group">
                 <h1 className="text-3xl font-bold text-white md:text-5xl">{property.title}</h1>
-                {agency?.isPartner && <AgencyPartnerBadge size="sm" />}
-                {realtor?.isPartner && <PartnerBadge size="sm" />}
+                {agency?.isPartner && (
+                  <>
+                    <span className="md:hidden">
+                      <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                    </span>
+                    <span className="hidden md:inline-flex">
+                      <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                    </span>
+                  </>
+                )}
+                {realtor?.isPartner && (
+                  <>
+                    <span className="md:hidden">
+                      <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                    </span>
+                    <span className="hidden md:inline-flex">
+                      <PartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                    </span>
+                  </>
+                )}
                 <FavoriteButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
                 <CompareButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
               </div>
