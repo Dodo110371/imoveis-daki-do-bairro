@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { ContactEventLink } from "@/components/ContactEventLink";
 
 interface ComprarPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -33,7 +34,7 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
     const dbValue = categoryMap[params.category as string] || params.category;
     query = query.ilike('category', dbValue as string);
   }
-  
+
   if (params.bedrooms) {
     query = query.gte('bedrooms', parseInt(params.bedrooms as string));
   }
@@ -76,6 +77,9 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
     imageUrl: p.images?.[0] || '/placeholder.jpg',
     images: p.images || [],
     type: p.type,
+    contactWhatsapp: p.contact_whatsapp,
+    contactPhone: p.contact_phone,
+    contactEmail: p.contact_email,
   });
 
   const properties = propertiesData?.map(mapProperty) || [];
@@ -109,7 +113,30 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
             {properties.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {properties.map((prop) => (
-                  <PropertyCard key={prop.id} {...prop} />
+                  <div key={prop.id} className="space-y-2">
+                    <PropertyCard {...prop} />
+                    {(prop.contactWhatsapp || prop.contactPhone) ? (
+                      <ContactEventLink
+                        href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                        propertyId={prop.id}
+                        channel="whatsapp"
+                      >
+                        Contato pelo WhatsApp
+                      </ContactEventLink>
+                    ) : prop.contactEmail ? (
+                      <ContactEventLink
+                        href={`mailto:${prop.contactEmail}`}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                        propertyId={prop.id}
+                        channel="email"
+                      >
+                        Contato por Email
+                      </ContactEventLink>
+                    ) : null}
+                  </div>
                 ))}
               </div>
             ) : (

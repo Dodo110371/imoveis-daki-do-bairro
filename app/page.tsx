@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { ContactEventLink } from "@/components/ContactEventLink";
 
 // HomePage Component
 export default async function HomePage() {
@@ -41,6 +42,9 @@ export default async function HomePage() {
     imageUrl: p.images?.[0] || '/placeholder.jpg',
     images: p.images || [],
     type: p.type,
+    contactWhatsapp: p.contact_whatsapp,
+    contactPhone: p.contact_phone,
+    contactEmail: p.contact_email,
   });
 
   const featuredProperties = featuredData?.map(mapProperty) || [];
@@ -99,7 +103,30 @@ export default async function HomePage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProperties.map((prop) => (
-            <PropertyCard key={prop.id} {...prop} />
+            <div key={prop.id} className="space-y-2">
+              <PropertyCard {...prop} />
+              {(prop.contactWhatsapp || prop.contactPhone) ? (
+                <ContactEventLink
+                  href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                  propertyId={prop.id}
+                  channel="whatsapp"
+                >
+                  Contato pelo WhatsApp
+                </ContactEventLink>
+              ) : prop.contactEmail ? (
+                <ContactEventLink
+                  href={`mailto:${prop.contactEmail}`}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  propertyId={prop.id}
+                  channel="email"
+                >
+                  Contato por Email
+                </ContactEventLink>
+              ) : null}
+            </div>
           ))}
         </div>
       </section>
@@ -121,7 +148,30 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newProperties.map((prop) => (
-              <PropertyCard key={prop.id} {...prop} />
+              <div key={prop.id} className="space-y-2">
+                <PropertyCard {...prop} />
+                {(prop.contactWhatsapp || prop.contactPhone) ? (
+                  <ContactEventLink
+                    href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                    propertyId={prop.id}
+                    channel="whatsapp"
+                  >
+                    Contato pelo WhatsApp
+                  </ContactEventLink>
+                ) : prop.contactEmail ? (
+                  <ContactEventLink
+                    href={`mailto:${prop.contactEmail}`}
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                    propertyId={prop.id}
+                    channel="email"
+                  >
+                    Contato por Email
+                  </ContactEventLink>
+                ) : null}
+              </div>
             ))}
           </div>
         </div>
