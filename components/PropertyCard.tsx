@@ -71,7 +71,7 @@ export function PropertyCard({
           </div>
 
           {agencyPartner && (
-            <div className="absolute bottom-2 left-2 z-10">
+            <div className="absolute bottom-2 md:bottom-3 lg:bottom-4 left-2 md:left-3 lg:left-4 z-10">
               <span className="md:hidden">
                 <AgencyPartnerBadge size="sm" />
               </span>
@@ -82,7 +82,7 @@ export function PropertyCard({
           )}
 
           {realtorPartner && (
-            <div className="absolute bottom-2 right-2 z-10">
+            <div className="absolute bottom-2 md:bottom-3 lg:bottom-4 right-2 md:right-3 lg:right-4 z-10">
               <span className="md:hidden">
                 <PartnerBadge size="sm" />
               </span>
