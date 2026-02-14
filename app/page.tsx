@@ -47,8 +47,32 @@ export default async function HomePage() {
     contactEmail: p.contact_email,
   });
 
-  const featuredProperties = featuredData?.map(mapProperty) || [];
-  const newProperties = newData?.map(mapProperty) || [];
+  // Fetch partner status for agencies referenced by Home properties (to display badge on cards)
+  const homeAgencyIds = Array.from(
+    new Set([...(featuredData || []), ...(newData || [])]
+      .map((p: any) => p.agency_id)
+      .filter((id: any) => id != null))
+  );
+  let homeAgenciesMap = new Map<number, boolean>();
+  if (homeAgencyIds.length > 0) {
+    const { data: agenciesData } = await supabase
+      .from('agencies')
+      .select('id, partner, is_partner')
+      .in('id', homeAgencyIds);
+    (agenciesData || []).forEach((a: any) => {
+      const isPartner = !!(a.partner ?? a.is_partner);
+      homeAgenciesMap.set(a.id, isPartner);
+    });
+  }
+
+  const featuredProperties = (featuredData || []).map((p: any) => ({
+    ...mapProperty(p),
+    agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
+  }));
+  const newProperties = (newData || []).map((p: any) => ({
+    ...mapProperty(p),
+    agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
+  }));
 
   return (
     <div className="flex flex-col gap-16 pb-16 overflow-x-hidden">
