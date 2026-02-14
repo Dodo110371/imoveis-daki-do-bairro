@@ -4,6 +4,7 @@ import { MapPin, Phone, MessageCircle, User, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { ContactEventLink } from '@/components/ContactEventLink';
+import { PartnerBadge } from '@/components/PartnerBadge';
 
 export default async function CorretoresPage() {
   const supabase = await createClient();
@@ -15,6 +16,7 @@ export default async function CorretoresPage() {
       creci,
       bio,
       regions,
+      partner,
       whatsapp,
       profiles (
         full_name,
@@ -31,6 +33,7 @@ export default async function CorretoresPage() {
     bio: r.bio || 'Corretor parceiro Imóveis do Bairro.',
     regions: r.regions || [],
     whatsapp: r.whatsapp,
+    isPartner: !!(r.partner ?? r.is_partner),
     propertiesCount: 0 // Placeholder until we implement count query
   })) || [];
 
@@ -78,6 +81,11 @@ export default async function CorretoresPage() {
                       <ShieldCheck className="w-4 h-4 text-green-400" />
                       <span>CRECI: {realtor.creci}</span>
                     </div>
+                    {realtor.isPartner && (
+                      <div className="mt-2">
+                        <PartnerBadge />
+                      </div>
+                    )}
                   </div>
                 </div>
 

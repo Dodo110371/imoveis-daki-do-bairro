@@ -5,6 +5,7 @@ import { MapPin, Phone, MessageCircle, User, ShieldCheck, Mail, ArrowLeft } from
 import { createClient } from '@/lib/supabase/server';
 import { PropertyCard } from '@/components/PropertyCard';
 import { ContactEventLink } from '@/components/ContactEventLink';
+import { PartnerBadge } from '@/components/PartnerBadge';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -38,7 +39,8 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     regions: realtorData.regions || [],
     whatsapp: realtorData.whatsapp,
     email: realtorData.profiles?.email,
-    phone: realtorData.profiles?.phone
+    phone: realtorData.profiles?.phone,
+    isPartner: !!(realtorData.partner ?? realtorData.is_partner)
   };
 
   // Fetch realtor's properties
@@ -95,6 +97,9 @@ export default async function RealtorProfilePage({ params }: PageProps) {
                   <ShieldCheck className="w-3 h-3" />
                   Verificado
                 </span>
+                {realtor.isPartner && (
+                  <PartnerBadge />
+                )}
               </div>
               <p className="text-slate-300 text-lg mb-4">CRECI: {realtor.creci}</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
