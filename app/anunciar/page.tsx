@@ -148,6 +148,11 @@ export default function AdvertisePage() {
       return;
     }
 
+    if (type === 'corretor') {
+      router.push('/corretores');
+      return;
+    }
+
     if (type === 'proprietario') {
       if (!isAuthenticated) {
         setShowLoginPrompt(true);
