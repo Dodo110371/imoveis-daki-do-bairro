@@ -13,7 +13,7 @@ export function PartnerBadge({ className = '', size = 'sm' }: Props) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full ${padding} ${text} font-extrabold uppercase tracking-wider bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-slate-900 border border-amber-600 shadow-none md:shadow-md md:shadow-amber-200/50 ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full ${padding} ${text} font-extrabold uppercase tracking-wider bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 text-slate-900 border border-amber-600 shadow-none md:shadow md:shadow-amber-200/40 lg:shadow-md lg:shadow-amber-200/50 ${className}`}
     >
       <span className="inline-flex items-center justify-center rounded-full bg-white/40 border border-amber-500">
         <Award className={`${iconSize} text-amber-800`} />
