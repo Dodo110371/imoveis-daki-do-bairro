@@ -13,7 +13,7 @@ export function AgencyPartnerBadge({ className = '', size = 'sm' }: Props) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full ${padding} ${text} font-extrabold uppercase tracking-wider bg-gradient-to-r from-indigo-300 via-violet-400 to-indigo-500 text-slate-900 border border-indigo-600 shadow-md shadow-indigo-200/50 ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full ${padding} ${text} font-extrabold uppercase tracking-wider bg-gradient-to-r from-indigo-300 via-violet-400 to-indigo-500 text-slate-900 border border-indigo-600 shadow-none md:shadow-md md:shadow-indigo-200/50 ${className}`}
     >
       <span className="inline-flex items-center justify-center rounded-full bg-white/40 border border-indigo-500">
         <Building2 className={`${iconSize} text-indigo-800`} />
