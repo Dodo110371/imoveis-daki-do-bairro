@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { LayoutDashboard, Building2, LogOut, Home, Users } from "lucide-react";
+import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3 } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -45,6 +45,10 @@ export default async function AdminLayout({
           <Link href="/admin/imoveis" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
             <Building2 className="w-5 h-5" />
             Moderação de Imóveis
+          </Link>
+          <Link href="/admin/leads" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <BarChart3 className="w-5 h-5" />
+            Gestão de Leads
           </Link>
           <Link href="/admin/usuarios" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
             <Users className="w-5 h-5" />
