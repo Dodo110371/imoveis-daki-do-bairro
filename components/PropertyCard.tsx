@@ -72,13 +72,23 @@ export function PropertyCard({
 
           {agencyPartner && (
             <div className="absolute bottom-2 left-2 z-10">
-              <AgencyPartnerBadge size="sm" />
+              <span className="md:hidden">
+                <AgencyPartnerBadge size="sm" />
+              </span>
+              <span className="hidden md:inline-flex">
+                <AgencyPartnerBadge size="md" />
+              </span>
             </div>
           )}
 
           {realtorPartner && (
             <div className="absolute bottom-2 right-2 z-10">
-              <PartnerBadge size="sm" />
+              <span className="md:hidden">
+                <PartnerBadge size="sm" />
+              </span>
+              <span className="hidden md:inline-flex">
+                <PartnerBadge size="md" />
+              </span>
             </div>
           )}
 
