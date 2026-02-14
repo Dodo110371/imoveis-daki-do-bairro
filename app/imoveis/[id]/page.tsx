@@ -8,6 +8,7 @@ import { CompareButton } from "@/components/CompareButton";
 import { ImageGallery } from "@/components/ImageGallery";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -58,7 +59,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const agency = agencyData ? {
     ...agencyData,
-    logo: agencyData.logo_url
+    logo: agencyData.logo_url,
+    isPartner: !!(agencyData.partner ?? agencyData.is_partner)
   } : null;
 
   return (
@@ -215,7 +217,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                       />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{agency.name}</h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{agency.name}</h4>
+                        {agency.isPartner && <AgencyPartnerBadge size="sm" />}
+                      </div>
                       <p className="text-xs text-slate-500">CRECI: {agency.creci}</p>
                     </div>
                   </Link>
