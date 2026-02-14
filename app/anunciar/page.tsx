@@ -77,6 +77,42 @@ interface AdvertiseFormData {
   paymentMethod: string;
 }
 
+const INITIAL_FORM_DATA: AdvertiseFormData = {
+  advertiserType: '',
+  purpose: 'venda',
+  type: 'casa',
+  cep: '',
+  city: '',
+  neighborhood: '',
+  street: '',
+  number: '',
+  complement: '',
+  bedrooms: 2,
+  bathrooms: 1,
+  parking: 1,
+  area: '',
+  price: '',
+  condoPrice: '',
+  iptuPrice: '',
+  title: '',
+  description: '',
+  photos: [],
+  name: '',
+  email: '',
+  phone: '',
+  cpfCnpj: '',
+  whatsapp: '',
+  advertiserAddressOption: 'same',
+  advertiserCep: '',
+  advertiserCity: '',
+  advertiserNeighborhood: '',
+  advertiserStreet: '',
+  advertiserNumber: '',
+  advertiserComplement: '',
+  paymentPlan: '',
+  paymentMethod: 'pix',
+};
+
 import { createClient } from '@/lib/supabase/client';
 
 export default function AdvertisePage() {
@@ -97,54 +133,7 @@ export default function AdvertisePage() {
   }, [isAuthenticated]);
 
   // Form State
-  const [formData, setFormData] = useState<AdvertiseFormData>({
-    // Step 1: Identification
-    advertiserType: '',
-
-    // Step 2: Type
-    purpose: 'venda', // venda | aluguel
-    type: 'casa', // casa | apto | comercial | terreno
-
-    // Step 2: Location
-    cep: '',
-    city: '',
-    neighborhood: '',
-    street: '',
-    number: '',
-    complement: '',
-
-    // Step 3: Details
-    bedrooms: 2,
-    bathrooms: 1,
-    parking: 1,
-    area: '',
-
-    // Step 4: Values & Description
-    price: '',
-    condoPrice: '',
-    iptuPrice: '',
-    title: '',
-    description: '',
-
-    // Step 5: Photos (Mock)
-    photos: [] as string[],
-
-    // Step 6: Contact
-    name: '',
-    email: '',
-    phone: '',
-    cpfCnpj: '',
-    whatsapp: '',
-    advertiserAddressOption: 'same',
-    advertiserCep: '',
-    advertiserCity: '',
-    advertiserNeighborhood: '',
-    advertiserStreet: '',
-    advertiserNumber: '',
-    advertiserComplement: '',
-    paymentPlan: '',
-    paymentMethod: 'pix',
-  });
+  const [formData, setFormData] = useState<AdvertiseFormData>(INITIAL_FORM_DATA);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -291,6 +280,14 @@ export default function AdvertisePage() {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(curr => curr - 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const resetForm = () => {
+    if (window.confirm('Tem certeza que deseja reiniciar o processo? Todos os dados preenchidos serão perdidos.')) {
+      setFormData(INITIAL_FORM_DATA);
+      setCurrentStep(1);
       window.scrollTo(0, 0);
     }
   };
@@ -1485,17 +1482,29 @@ export default function AdvertisePage() {
 
           {/* Navigation Buttons */}
           <div className="flex items-center justify-between mt-12 pt-6 border-t">
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1 || isSubmitting}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${currentStep === 1
-                ? 'text-slate-300 cursor-not-allowed'
-                : 'text-slate-600 hover:bg-slate-100'
-                }`}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Voltar
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={prevStep}
+                disabled={currentStep === 1 || isSubmitting}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${currentStep === 1
+                  ? 'text-slate-300 cursor-not-allowed'
+                  : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Voltar
+              </button>
+
+              {currentStep > 1 && (
+                <button
+                  onClick={resetForm}
+                  disabled={isSubmitting}
+                  className="px-4 py-3 text-slate-400 hover:text-red-600 font-medium transition-colors text-sm"
+                >
+                  Reiniciar
+                </button>
+              )}
+            </div>
 
             <button
               onClick={nextStep}

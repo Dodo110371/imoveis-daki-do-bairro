@@ -87,7 +87,7 @@ export default async function ImobiliariasPage() {
             Junte-se a nós e anuncie seus imóveis para milhares de pessoas interessadas em morar no nosso bairro.
           </p>
           <Link
-            href="/contato"
+            href="/cadastro-imobiliaria"
             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             Seja um Parceiro
