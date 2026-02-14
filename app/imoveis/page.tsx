@@ -5,6 +5,7 @@ import { SearchForm } from "@/components/SearchForm";
 import { createClient } from "@/lib/supabase/server";
 import { CITIES } from "@/lib/cities";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { ContactEventLink } from "@/components/ContactEventLink";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -85,9 +86,36 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     images: p.images || [],
     imageUrl: p.images?.[0] || '/placeholder.jpg',
     type: p.type,
+    contactWhatsapp: p.contact_whatsapp,
+    contactPhone: p.contact_phone,
+    contactEmail: p.contact_email,
   });
 
-  const filteredProperties = propertiesData?.map(mapProperty) || [];
+  // Fetch partner status for agencies referenced by properties (to display badge on cards)
+  const agencyIds = Array.from(
+    new Set((propertiesData || [])
+      .map((p: any) => p.agency_id)
+      .filter((id: any) => id != null))
+  );
+  let agenciesMap = new Map<number, boolean>();
+  if (agencyIds.length > 0) {
+    const { data: agenciesData } = await supabase
+      .from('agencies')
+      .select('id, partner, is_partner')
+      .in('id', agencyIds);
+    (agenciesData || []).forEach((a: any) => {
+      const isPartner = !!(a.partner ?? a.is_partner);
+      agenciesMap.set(a.id, isPartner);
+    });
+  }
+
+  const filteredProperties = (propertiesData || []).map((p: any) => {
+    const base = mapProperty(p);
+    return {
+      ...base,
+      agencyPartner: agenciesMap.get(p.agency_id) || false,
+    };
+  });
 
   const hasFilters = city || neighborhood || street || type || minPrice || maxPrice || bedrooms || bathrooms || minArea;
 
@@ -160,7 +188,30 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               {/* Property List Side */}
               <div className="lg:col-span-1 overflow-y-auto pr-2 space-y-4 h-full custom-scrollbar">
                 {filteredProperties.map((prop) => (
-                  <PropertyCard key={prop.id} {...prop} />
+                  <div key={prop.id} className="space-y-2">
+                    <PropertyCard {...prop} />
+                    {(prop.contactWhatsapp || prop.contactPhone) ? (
+                      <ContactEventLink
+                        href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                        propertyId={prop.id}
+                        channel="whatsapp"
+                      >
+                        Contato pelo WhatsApp
+                      </ContactEventLink>
+                    ) : prop.contactEmail ? (
+                      <ContactEventLink
+                        href={`mailto:${prop.contactEmail}`}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                        propertyId={prop.id}
+                        channel="email"
+                      >
+                        Contato por Email
+                      </ContactEventLink>
+                    ) : null}
+                  </div>
                 ))}
               </div>
 
@@ -186,7 +237,30 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProperties.map((prop) => (
-                <PropertyCard key={prop.id} {...prop} />
+                <div key={prop.id} className="space-y-2">
+                  <PropertyCard {...prop} />
+                  {(prop.contactWhatsapp || prop.contactPhone) ? (
+                    <ContactEventLink
+                      href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                      propertyId={prop.id}
+                      channel="whatsapp"
+                    >
+                      Contato pelo WhatsApp
+                    </ContactEventLink>
+                  ) : prop.contactEmail ? (
+                    <ContactEventLink
+                      href={`mailto:${prop.contactEmail}`}
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                      propertyId={prop.id}
+                      channel="email"
+                    >
+                      Contato por Email
+                    </ContactEventLink>
+                  ) : null}
+                </div>
               ))}
             </div>
           )

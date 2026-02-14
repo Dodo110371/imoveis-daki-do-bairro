@@ -82,7 +82,31 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
     contactEmail: p.contact_email,
   });
 
-  const properties = propertiesData?.map(mapProperty) || [];
+  // Fetch partner status for agencies referenced by properties (to display badge on cards)
+  const agencyIds = Array.from(
+    new Set((propertiesData || [])
+      .map((p: any) => p.agency_id)
+      .filter((id: any) => id != null))
+  );
+  let agenciesMap = new Map<number, boolean>();
+  if (agencyIds.length > 0) {
+    const { data: agenciesData } = await supabase
+      .from('agencies')
+      .select('id, partner, is_partner')
+      .in('id', agencyIds);
+    (agenciesData || []).forEach((a: any) => {
+      const isPartner = !!(a.partner ?? a.is_partner);
+      agenciesMap.set(a.id, isPartner);
+    });
+  }
+
+  const properties = (propertiesData || []).map((p: any) => {
+    const base = mapProperty(p);
+    return {
+      ...base,
+      agencyPartner: agenciesMap.get(p.agency_id) || false,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 relative overflow-hidden">
