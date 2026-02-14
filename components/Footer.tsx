@@ -1,3 +1,4 @@
+'use client';
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Mail, Smartphone } from 'lucide-react';
