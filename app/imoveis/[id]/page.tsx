@@ -92,20 +92,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           {agency?.isPartner && (
             <>
               <span className="md:hidden">
-                <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
             </>
           )}
           {realtor?.isPartner && (
             <>
               <span className="md:hidden">
-                <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <PartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <PartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
             </>
           )}
@@ -163,20 +163,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 {agency?.isPartner && (
                   <>
                     <span className="md:hidden">
-                      <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                      <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
                     </span>
                     <span className="hidden md:inline-flex">
-                      <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                      <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
                     </span>
                   </>
                 )}
                 {realtor?.isPartner && (
                   <>
                     <span className="md:hidden">
-                      <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                      <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
                     </span>
                     <span className="hidden md:inline-flex">
-                      <PartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                      <PartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
                     </span>
                   </>
                 )}

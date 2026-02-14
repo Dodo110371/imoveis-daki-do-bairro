@@ -73,10 +73,10 @@ export function PropertyCard({
           {agencyPartner && (
             <div className="absolute bottom-2 md:bottom-3 lg:bottom-4 left-2 md:left-3 lg:left-4 z-10">
               <span className="md:hidden">
-                <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
             </div>
           )}
@@ -84,10 +84,10 @@ export function PropertyCard({
           {realtorPartner && (
             <div className="absolute bottom-2 md:bottom-3 lg:bottom-4 right-2 md:right-3 lg:right-4 z-10">
               <span className="md:hidden">
-                <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
               <span className="hidden md:inline-flex">
-                <PartnerBadge size="md" className="opacity-95 transition-opacity duration-200 group-hover:opacity-100" />
+                <PartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
               </span>
             </div>
           )}
