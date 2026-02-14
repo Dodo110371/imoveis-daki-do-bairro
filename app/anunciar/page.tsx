@@ -269,6 +269,11 @@ export default function AdvertisePage() {
       return;
     }
 
+    if (currentStep === 1 && formData.advertiserType === 'imobiliaria') {
+      router.push('/cadastro-imobiliaria');
+      return;
+    }
+
     if (currentStep < STEPS.length) {
       setCurrentStep(curr => curr + 1);
       window.scrollTo(0, 0);

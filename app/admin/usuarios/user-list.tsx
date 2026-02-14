@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { deleteUser } from './actions'
 import { Trash2, Shield, User as UserIcon, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { ptBR } from 'date-fns/locale' // Importação direta do locale pt-BR
 
 export function UserList({ initialUsers }: { initialUsers: any[] }) {
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
