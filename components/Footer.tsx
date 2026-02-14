@@ -2,8 +2,10 @@ import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Mail, Smartphone } from 'lucide-react';
 import { NewsletterForm } from './NewsletterForm';
+import { useCookieConsent } from '@/context/CookieConsentContext';
 
 export function Footer() {
+  const { openPreferences } = useCookieConsent();
   return (
     <footer className="print:hidden w-full border-t bg-slate-50">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -67,6 +69,9 @@ export function Footer() {
             <Link href="/termos-de-uso" className="text-sm text-slate-600 hover:text-slate-900">Termos de Uso</Link>
             <Link href="/politica-de-privacidade" className="text-sm text-slate-600 hover:text-slate-900">Política de Privacidade</Link>
             <Link href="/politica-de-cookies" className="text-sm text-slate-600 hover:text-slate-900">Política de Cookies</Link>
+            <button onClick={openPreferences} className="text-left text-sm text-blue-600 hover:text-blue-700">
+              Gerenciar Cookies
+            </button>
             <Link href="/politica-de-qualidade" className="text-sm text-slate-600 hover:text-slate-900">Política de Qualidade</Link>
           </div>
         </div>

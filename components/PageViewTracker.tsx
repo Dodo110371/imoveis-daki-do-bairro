@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { hasAnalyticsConsent } from '@/context/CookieConsentContext';
 
 type Props = {
   path?: string;
@@ -10,6 +11,7 @@ type Props = {
 export function PageViewTracker({ path, propertyId = null }: Props) {
   useEffect(() => {
     const logPageView = async () => {
+      if (!hasAnalyticsConsent()) return;
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       const safePath = path || (typeof window !== 'undefined' ? window.location.pathname : undefined);

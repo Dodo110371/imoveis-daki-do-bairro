@@ -8,6 +8,8 @@ import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ComparisonProvider } from "@/context/ComparisonContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ComparisonBar } from "@/components/ComparisonBar";
+import { CookieConsentProvider } from "@/context/CookieConsentContext";
+import { CookieBanner } from "@/components/CookieBanner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,19 +29,22 @@ export default function RootLayout({
         <script src="/trusted-security-policy.js" />
       </head>
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
-        <AuthProvider>
-          <FavoritesProvider>
-            <ComparisonProvider>
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <WhatsAppFloat />
-              <ComparisonBar />
-              <Footer />
-            </ComparisonProvider>
-          </FavoritesProvider>
-        </AuthProvider>
+        <CookieConsentProvider>
+          <AuthProvider>
+            <FavoritesProvider>
+              <ComparisonProvider>
+                <Header />
+                <main className="flex-1">
+                  {children}
+                </main>
+                <WhatsAppFloat />
+                <ComparisonBar />
+                <Footer />
+                <CookieBanner />
+              </ComparisonProvider>
+            </FavoritesProvider>
+          </AuthProvider>
+        </CookieConsentProvider>
       </body>
     </html>
   );

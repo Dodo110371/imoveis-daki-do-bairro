@@ -1,6 +1,7 @@
 'use client';
 import { createClient } from '@/lib/supabase/client';
 import React from 'react';
+import { hasAnalyticsConsent } from '@/context/CookieConsentContext';
 
 type Channel = 'whatsapp' | 'email' | 'phone';
 
@@ -26,15 +27,17 @@ export function ContactEventLink({
   const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     try {
       e.preventDefault();
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      const path = typeof window !== 'undefined' ? window.location.pathname : undefined;
-      await supabase.from('analytics_events').insert({
-        event_type: 'lead_contact',
-        user_id: user?.id || null,
-        property_id: propertyId,
-        path,
-      });
+      if (hasAnalyticsConsent()) {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        const path = typeof window !== 'undefined' ? window.location.pathname : undefined;
+        await supabase.from('analytics_events').insert({
+          event_type: 'lead_contact',
+          user_id: user?.id || null,
+          property_id: propertyId,
+          path,
+        });
+      }
     } catch {
       // ignore analytics failures
     } finally {
