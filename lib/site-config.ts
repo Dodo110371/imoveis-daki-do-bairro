@@ -1,8 +1,10 @@
 export const siteConfig = {
   name: "Imóveis daki do Bairro",
+  url: "https://imoveisdakidobairro.com.br/",
   contact: {
     email: "dsdodo18@hotmail.com",
     phone: "(98) 98856-7987",
+    phone2: "(98) 99123-4567",
     address: "",
     cityState: "",
     mapsLink: ""

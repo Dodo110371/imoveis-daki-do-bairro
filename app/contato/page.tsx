@@ -64,9 +64,32 @@ export default function ContactPage() {
                       <Smartphone className="h-6 w-6 text-blue-400" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-lg">Telefone</h4>
-                      <p className="text-slate-300 mt-1">{siteConfig.contact.phone}</p>
-                      <p className="text-sm text-slate-400 mt-1">Seg a Sex, das 9h às 18h</p>
+                      <h4 className="font-semibold text-lg">Telefones / WhatsApp</h4>
+                      <div className="text-slate-300 mt-1 space-y-1">
+                        <p>
+                          <a
+                            href={`https://wa.me/55${siteConfig.contact.phone.replace(/\\D/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-400 hover:underline"
+                          >
+                            {siteConfig.contact.phone} (WhatsApp)
+                          </a>
+                        </p>
+                        {siteConfig.contact.phone2 && (
+                          <p>
+                            <a
+                              href={`https://wa.me/55${siteConfig.contact.phone2.replace(/\\D/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-400 hover:underline"
+                            >
+                              {siteConfig.contact.phone2} (WhatsApp)
+                            </a>
+                          </p>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-400 mt-2">Seg a Sex, das 9h às 18h</p>
                     </div>
                   </div>
 
