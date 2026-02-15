@@ -139,7 +139,7 @@ export function Header() {
                             <div className="mb-6 pb-6 border-b border-slate-100 space-y-2">
                                 <Link
                                     href="/anunciar"
-                                    className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-blue-700 bg-white rounded-full border border-slate-200 hover:bg-blue-50 transition-colors shadow-sm"
+                                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-semibold text-blue-700 bg-white rounded-full border border-slate-200 hover:bg-blue-50 transition-colors shadow-sm"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <Megaphone className="h-4 w-4" />
