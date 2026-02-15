@@ -24,11 +24,23 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }, [searchParams]);
 
   useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("adminDays") : null;
+    if (!searchParams.get("days") && saved) {
+      const d = Number(saved);
+      if ([7, 14, 30].includes(d)) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("days", String(d));
+        router.replace(`${pathname}?${params.toString()}`);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const controller = new AbortController();
     fetch(`/admin/api/counts?days=${days}`, { signal: controller.signal })
       .then((r) => r.ok ? r.json() : Promise.reject(r))
       .then((json) => setCounts(json))
-      .catch(() => {});
+      .catch(() => { });
     return () => controller.abort();
   }, [days]);
 
@@ -37,6 +49,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     params.set("days", String(val));
     router.replace(`${pathname}?${params.toString()}`);
   };
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("adminDays", String(days));
+      }
+    } catch { }
+  }, [days]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
