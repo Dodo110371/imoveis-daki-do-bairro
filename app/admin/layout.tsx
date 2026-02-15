@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3 } from "lucide-react";
+import { AdminMobileNav } from "@/components/AdminMobileNav";
 
 export default async function AdminLayout({
   children,
@@ -63,29 +64,7 @@ export default async function AdminLayout({
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-8">
-        {/* Mobile admin navigation */}
-        <nav className="md:hidden mb-6 bg-slate-900 text-white rounded-lg shadow-sm border border-slate-800 p-2 flex flex-wrap items-center gap-2">
-          <Link href="/admin" className="px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-md transition-colors flex items-center gap-2">
-            <LayoutDashboard className="w-4 h-4" />
-            Dashboard
-          </Link>
-          <Link href="/admin/imoveis" className="px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-md transition-colors flex items-center gap-2">
-            <Building2 className="w-4 h-4" />
-            Imóveis
-          </Link>
-          <Link href="/admin/leads" className="px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-md transition-colors flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            Leads
-          </Link>
-          <Link href="/admin/usuarios" className="px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-md transition-colors flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            Usuários
-          </Link>
-          <Link href="/" className="ml-auto px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-md transition-colors flex items-center gap-2">
-            <Home className="w-4 h-4" />
-            Site
-          </Link>
-        </nav>
+        <AdminMobileNav />
         {children}
       </main>
     </div>
