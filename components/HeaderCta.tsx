@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Megaphone } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 type HeaderCtaProps = {
   variant: 'dark' | 'light';
@@ -7,6 +8,7 @@ type HeaderCtaProps = {
   onClick?: () => void;
   labelFull?: string;
   labelShort?: string;
+  rightIcon?: ReactNode;
 };
 
 export function HeaderCta({
@@ -15,6 +17,7 @@ export function HeaderCta({
   onClick,
   labelFull = 'Anuncie seu Imóvel',
   labelShort = 'Anunciar',
+  rightIcon,
 }: HeaderCtaProps) {
   const base =
     variant === 'dark'
@@ -28,6 +31,7 @@ export function HeaderCta({
       <Megaphone className="h-4 w-4" />
       <span className="hidden lg:inline">{labelFull}</span>
       <span className="lg:hidden">{labelShort}</span>
+      {rightIcon ? <span className="ml-1">{rightIcon}</span> : null}
     </Link>
   );
 }

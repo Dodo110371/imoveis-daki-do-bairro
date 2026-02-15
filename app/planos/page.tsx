@@ -366,13 +366,13 @@ export default function PlanosPage() {
           </div>
 
           <div className="mt-16 text-center">
-            <Link
-              href="/anunciar"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-bold text-white transition-all bg-green-600 rounded-full hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/25 active:scale-95"
-            >
-              Começar agora
-              <TrendingUp className="w-5 h-5" />
-            </Link>
+            <HeaderCta
+              variant="light"
+              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-bold text-white transition-all bg-green-600 rounded-full hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/25 active:scale-95 border-transparent"
+              labelFull="Começar agora"
+              labelShort="Começar"
+              rightIcon={<TrendingUp className="w-5 h-5" />}
+            />
           </div>
         </div>
       </section>
