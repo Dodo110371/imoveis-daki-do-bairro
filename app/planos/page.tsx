@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CheckCircle2, Megaphone, Image as ImageIcon, CreditCard, MousePointerClick, TrendingUp, Users, ShieldCheck } from 'lucide-react';
+import { HeaderCta } from '@/components/HeaderCta';
 
 export default function PlanosPage() {
   return (
@@ -28,12 +29,12 @@ export default function PlanosPage() {
             Escolha o plano ideal e destaque sua propriedade agora mesmo.
           </p>
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/anunciar"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-blue-600 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95"
-            >
-              Criar meu anúncio agora
-            </Link>
+            <HeaderCta
+              variant="light"
+              className="px-8 py-4 text-base font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 border-transparent"
+              labelFull="Criar meu anúncio agora"
+              labelShort="Anunciar"
+            />
             <a
               href="#planos"
               className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-slate-800 border border-slate-700 rounded-xl hover:bg-slate-700 active:scale-95"
