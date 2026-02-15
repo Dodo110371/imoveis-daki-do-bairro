@@ -81,16 +81,24 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <Calendar className="w-4 h-4" />
             <span className="text-sm font-medium">Período: últimos {days} dias</span>
           </div>
-          <div className="inline-flex rounded-lg overflow-hidden border border-slate-200">
-            {[7, 14, 30].map((d) => (
-              <button
-                key={d}
-                onClick={() => setDays(d)}
-                className={`px-3 py-1.5 text-sm font-medium transition-colors ${days === d ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
-              >
-                {d} dias
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <div className="inline-flex rounded-lg overflow-hidden border border-slate-200">
+              {[7, 14, 30].map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDays(d)}
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${days === d ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+                >
+                  {d} dias
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setDays(7)}
+              className="px-3 py-1.5 text-sm font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              Redefinir
+            </button>
           </div>
         </div>
         {children}
