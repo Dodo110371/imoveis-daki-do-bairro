@@ -47,15 +47,25 @@ export function Footer() {
               <Mail className="h-4 w-4" />
               <span>{siteConfig.contact.email}</span>
             </Link>
-            <Link href="/contato" className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+            <a
+              href={`https://wa.me/55${siteConfig.contact.phone.replace(/\D/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+            >
               <Smartphone className="h-4 w-4" />
               <span>{siteConfig.contact.phone} • WhatsApp</span>
-            </Link>
+            </a>
             {siteConfig.contact.phone2 && (
-              <Link href="/contato" className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+              <a
+                href={`https://wa.me/55${siteConfig.contact.phone2.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+              >
                 <Smartphone className="h-4 w-4" />
                 <span>{siteConfig.contact.phone2} • WhatsApp</span>
-              </Link>
+              </a>
             )}
 
             <div className="flex gap-4 mt-2">
