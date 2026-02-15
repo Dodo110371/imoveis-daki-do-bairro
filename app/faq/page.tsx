@@ -65,7 +65,7 @@ export default function FAQPage() {
           question: "Como faço para anunciar meu imóvel?",
           answer: (
             <>
-              É muito simples! Acesse a página <Link href="/anunciar" className="text-blue-600 hover:underline">Anuncie seu Imóvel</Link>, preencha o formulário com os dados básicos e nossa equipe entrará em contato para agendar as fotos e validar as informações.
+              É muito simples! Acesse a página <Link href="/anunciar" className="text-blue-600 hover:text-blue-700 underline underline-offset-2 font-semibold">Anuncie seu Imóvel</Link>, preencha o formulário com os dados básicos e nossa equipe entrará em contato para agendar as fotos e validar as informações.
             </>
           ),
         },

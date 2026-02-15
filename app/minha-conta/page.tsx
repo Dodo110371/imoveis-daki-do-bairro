@@ -459,7 +459,7 @@ function MinhaContaContent() {
               <div className="bg-white shadow rounded-lg overflow-hidden mt-6">
                 <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
                   <h3 className="text-lg font-medium text-slate-900">Meus Anúncios</h3>
-                  <Link href="/anunciar" className="text-sm text-blue-600 hover:text-blue-500 font-medium">
+                  <Link href="/anunciar" className="text-sm text-blue-600 hover:text-blue-700 underline underline-offset-2 font-semibold">
                     + Novo Anúncio
                   </Link>
                 </div>
