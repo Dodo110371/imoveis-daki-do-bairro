@@ -1,10 +1,22 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, LayoutDashboard, Building2, BarChart3, Users, Home } from "lucide-react";
 
-export function AdminMobileNav() {
+type Counts = {
+  pendingProperties?: number;
+  recentLeads?: number;
+  users?: number;
+};
+
+export function AdminMobileNav({ counts }: { counts?: Counts }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const base = "flex items-center px-4 py-3 rounded-lg transition-colors font-medium";
+  const inactive = "text-slate-700 hover:bg-slate-50";
+  const active = "bg-blue-50 text-blue-700 border border-blue-200";
+  const badge = "ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full";
 
   return (
     <>
@@ -34,23 +46,32 @@ export function AdminMobileNav() {
             </div>
 
             <nav className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
-              <Link href="/admin" className="flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium" onClick={() => setOpen(false)}>
+              <Link href="/admin" className={`${base} ${pathname === "/admin" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <LayoutDashboard className="h-5 w-5 mr-2" />
                 Dashboard
               </Link>
-              <Link href="/admin/imoveis" className="flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium" onClick={() => setOpen(false)}>
+              <Link href="/admin/imoveis" className={`${base} ${pathname === "/admin/imoveis" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <Building2 className="h-5 w-5 mr-2" />
                 Imóveis
+                {counts?.pendingProperties ? (
+                  <span className={`${badge} bg-indigo-600 text-white`}>{counts.pendingProperties}</span>
+                ) : null}
               </Link>
-              <Link href="/admin/leads" className="flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium" onClick={() => setOpen(false)}>
+              <Link href="/admin/leads" className={`${base} ${pathname === "/admin/leads" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <BarChart3 className="h-5 w-5 mr-2" />
                 Leads
+                {counts?.recentLeads ? (
+                  <span className={`${badge} bg-blue-600 text-white`}>{counts.recentLeads}</span>
+                ) : null}
               </Link>
-              <Link href="/admin/usuarios" className="flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium" onClick={() => setOpen(false)}>
+              <Link href="/admin/usuarios" className={`${base} ${pathname === "/admin/usuarios" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <Users className="h-5 w-5 mr-2" />
                 Usuários
+                {counts?.users ? (
+                  <span className={`${badge} bg-slate-700 text-white`}>{counts.users}</span>
+                ) : null}
               </Link>
-              <Link href="/" className="flex items-center px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors font-medium" onClick={() => setOpen(false)}>
+              <Link href="/" className={`${base} ${pathname === "/" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <Home className="h-5 w-5 mr-2" />
                 Voltar ao Site
               </Link>

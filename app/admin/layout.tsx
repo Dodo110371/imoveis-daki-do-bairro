@@ -4,7 +4,6 @@ import Link from "next/link";
 import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3 } from "lucide-react";
 import { AdminMobileNav } from "@/components/AdminMobileNav";
 import { AdminSidebarNav } from "@/components/AdminSidebarNav";
-import { AdminMobileNav } from "@/components/AdminMobileNav";
 
 export default async function AdminLayout({
   children,
@@ -31,6 +30,24 @@ export default async function AdminLayout({
     redirect("/");
   }
 
+  const now = new Date();
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  const { count: pendingProperties } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "pending");
+
+  const { count: recentLeads } = await supabase
+    .from("analytics_events")
+    .select("*", { count: "exact", head: true })
+    .in("event_type", ["lead_contact"])
+    .gte("created_at", sevenDaysAgo);
+
+  const { count: usersTotal } = await supabase
+    .from("profiles")
+    .select("*", { count: "exact", head: true });
+
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
@@ -41,13 +58,13 @@ export default async function AdminLayout({
         </div>
 
         <nav className="p-4 space-y-2">
-          <AdminSidebarNav />
+          <AdminSidebarNav counts={{ pendingProperties, recentLeads, users: usersTotal }} />
         </nav>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-8">
-        <AdminMobileNav />
+        <AdminMobileNav counts={{ pendingProperties, recentLeads, users: usersTotal }} />
         {children}
       </main>
     </div>
