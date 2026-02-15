@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
+import { HeaderCta } from '@/components/HeaderCta';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
@@ -253,12 +254,15 @@ function MinhaContaContent() {
                       >
                         Ver Perfil Público
                       </Link>
-                      <Link
-                        href="/anunciar"
-                        className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
-                      >
-                        Gerenciar Anúncios
-                      </Link>
+                      {/* CTA padronizado para /anunciar */}
+                      <div className="block w-full">
+                        <HeaderCta
+                          variant="light"
+                          className="w-full justify-center bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 border-transparent"
+                          labelFull="Gerenciar Anúncios"
+                          labelShort="Anúncios"
+                        />
+                      </div>
                     </div>
                   ) : (
                     <Link

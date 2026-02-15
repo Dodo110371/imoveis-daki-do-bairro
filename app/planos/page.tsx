@@ -125,9 +125,12 @@ export default function PlanosPage() {
                     <span>Sem fidelidade, cancele quando quiser</span>
                   </li>
                 </ul>
-                <Link href="/anunciar" className="w-full py-3 px-4 bg-white border-2 border-blue-600 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors text-center">
-                  Escolher Mensal
-                </Link>
+                <HeaderCta
+                  variant="light"
+                  className="w-full py-3 px-4 bg-white border-2 border-blue-600 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors text-center"
+                  labelFull="Escolher Mensal"
+                  labelShort="Mensal"
+                />
               </div>
             </div>
 
@@ -195,9 +198,12 @@ export default function PlanosPage() {
                     <span>Relatório mensal de visitas</span>
                   </li>
                 </ul>
-                <Link href="/anunciar" className="w-full py-3 px-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors text-center shadow-lg shadow-orange-200">
-                  Escolher Semestral
-                </Link>
+                <HeaderCta
+                  variant="light"
+                  className="w-full py-3 px-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors text-center shadow-lg shadow-orange-200"
+                  labelFull="Escolher Semestral"
+                  labelShort="Semestral"
+                />
               </div>
             </div>
 
