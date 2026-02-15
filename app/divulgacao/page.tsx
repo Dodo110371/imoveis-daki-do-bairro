@@ -54,7 +54,7 @@ export default function FlyerPage() {
       <style jsx global>{`
         @page {
           size: A4;
-          margin: 0;
+          margin: 10mm;
         }
         @media print {
           html, body {
@@ -75,10 +75,10 @@ export default function FlyerPage() {
             margin: 0 !important;
           }
           .flyer-a4 {
-            width: 210mm !important;
-            height: 297mm !important;
-            min-height: 297mm !important;
-            max-height: 297mm !important;
+            width: 100% !important;
+            height: calc(297mm - 20mm) !important;
+            min-height: calc(297mm - 20mm) !important;
+            max-height: calc(297mm - 20mm) !important;
             margin: 0 !important;
             padding: 0 !important;
             page-break-inside: avoid;
@@ -122,10 +122,10 @@ export default function FlyerPage() {
       </div>
 
       {/* Flyer Content - A4 Ratio Aspect */}
-      <div className="flyer-a4 w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:w-[210mm] print:h-[297mm] print:min-h-[297mm] print:max-h-[297mm] print:m-0 print:rounded-none relative">
+      <div className="flyer-a4 w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:m-0 print:rounded-none relative">
 
         {/* Header Section */}
-        <div className="flyer-header bg-slate-900 text-white p-12 text-center relative overflow-hidden">
+        <div className="flyer-header bg-slate-900 text-white p-12 print:p-8 text-center relative overflow-hidden">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -168,7 +168,7 @@ export default function FlyerPage() {
         </div>
 
         {/* Main Body */}
-        <div className="p-12 space-y-12">
+        <div className="p-12 print:p-8 space-y-12">
 
           {/* Value Proposition Grid */}
           <div className="grid grid-cols-2 gap-8">
