@@ -114,3 +114,8 @@ export function hasAnalyticsConsent(): boolean {
   const { prefs } = readConsentCookie();
   return !!prefs?.analytics;
 }
+
+export function hasMarketingConsent(): boolean {
+  const { prefs } = readConsentCookie();
+  return !!prefs?.marketing;
+}

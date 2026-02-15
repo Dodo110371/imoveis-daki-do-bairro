@@ -7,6 +7,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { AdSenseAd } from "@/components/AdSenseAd";
 
 // HomePage Component
 export default async function HomePage() {
@@ -173,6 +174,10 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="container mx-auto px-4">
+        <AdSenseAd slot="0000000000" />
       </section>
 
       {/* New Releases Section */}

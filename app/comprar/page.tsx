@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { AdSenseAd } from "@/components/AdSenseAd";
 
 interface ComprarPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -143,6 +144,10 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Encontre a casa ou apartamento dos seus sonhos no bairro mais charmoso da cidade.
           </p>
+        </div>
+
+        <div className="mb-10">
+          <AdSenseAd slot="1111111111" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
