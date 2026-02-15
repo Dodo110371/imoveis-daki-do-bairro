@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3 } from "lucide-react";
 import { AdminMobileNav } from "@/components/AdminMobileNav";
+import { AdminSidebarNav } from "@/components/AdminSidebarNav";
+import { AdminMobileNav } from "@/components/AdminMobileNav";
 
 export default async function AdminLayout({
   children,
@@ -39,26 +41,7 @@ export default async function AdminLayout({
         </div>
 
         <nav className="p-4 space-y-2">
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-            <LayoutDashboard className="w-5 h-5" />
-            Dashboard
-          </Link>
-          <Link href="/admin/imoveis" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-            <Building2 className="w-5 h-5" />
-            Moderação de Imóveis
-          </Link>
-          <Link href="/admin/leads" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-            <BarChart3 className="w-5 h-5" />
-            Gestão de Leads
-          </Link>
-          <Link href="/admin/usuarios" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-            <Users className="w-5 h-5" />
-            Usuários
-          </Link>
-          <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors mt-8">
-            <Home className="w-5 h-5" />
-            Voltar ao Site
-          </Link>
+          <AdminSidebarNav />
         </nav>
       </aside>
 
