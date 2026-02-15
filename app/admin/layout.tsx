@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3 } from "lucide-react";
+import { LayoutDashboard, Building2, LogOut, Home, Users, BarChart3, Calendar } from "lucide-react";
 import { AdminMobileNav } from "@/components/AdminMobileNav";
 import { AdminSidebarNav } from "@/components/AdminSidebarNav";
 
@@ -72,6 +72,10 @@ export default async function AdminLayout({
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-8">
         <AdminMobileNav counts={counts} />
+        <div className="mb-6 flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg border border-blue-100">
+          <Calendar className="w-4 h-4" />
+          <span className="text-sm font-medium">Período: últimos 7 dias</span>
+        </div>
         {children}
       </main>
     </div>
