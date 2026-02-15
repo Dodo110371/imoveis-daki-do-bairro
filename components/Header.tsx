@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, User, Heart, LogOut, Shield, Megaphone } from 'lucide-react';
+import { Menu, X, User, Heart, LogOut, Shield } from 'lucide-react';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useAuth } from '@/context/AuthContext';
+import { HeaderCta } from '@/components/HeaderCta';
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,15 +51,7 @@ export function Header() {
 
                     {/* Actions - Right */}
                     <div className="flex-1 flex items-center justify-end gap-3 md:gap-4">
-                        <Link
-                            href="/anunciar"
-                            className="hidden md:inline-flex items-center gap-2 h-10 px-4 text-sm font-semibold text-white bg-white/10 rounded-full border border-white/15 backdrop-blur-sm hover:bg-white/20 hover:border-white/25 transition-colors shadow-sm"
-                            title="Anuncie seu Imóvel"
-                        >
-                            <Megaphone className="h-4 w-4" />
-                            <span className="hidden lg:inline">Anuncie seu Imóvel</span>
-                            <span className="lg:hidden">Anunciar</span>
-                        </Link>
+                        <HeaderCta variant="dark" className="hidden md:inline-flex" />
 
                         {isAuthenticated ? (
                             <div className="flex items-center gap-2">
@@ -137,14 +130,7 @@ export function Header() {
 
                         <nav className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
                             <div className="mb-6 pb-6 border-b border-slate-100 space-y-2">
-                                <Link
-                                    href="/anunciar"
-                                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-semibold text-blue-700 bg-white rounded-full border border-slate-200 hover:bg-blue-50 transition-colors shadow-sm"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    <Megaphone className="h-4 w-4" />
-                                    Anuncie seu Imóvel
-                                </Link>
+                                <HeaderCta variant="light" className="w-full" onClick={() => setIsMenuOpen(false)} />
                                 <Link
                                     href="/favoritos"
                                     className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
