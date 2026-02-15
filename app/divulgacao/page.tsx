@@ -125,7 +125,7 @@ export default function FlyerPage() {
       <div className="flyer-a4 w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:m-0 print:rounded-none relative">
 
         {/* Header Section */}
-        <div className="flyer-header bg-slate-900 text-white p-12 print:p-8 text-center relative overflow-hidden">
+        <div className="flyer-header bg-slate-900 text-white p-12 print:p-6 text-center relative overflow-hidden">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -140,8 +140,8 @@ export default function FlyerPage() {
           </div>
 
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-8 mb-10">
-              <div className="relative w-48 h-48 bg-white/10 rounded-3xl p-4 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
+            <div className="flex items-center justify-center gap-8 print:gap-6 mb-10 print:mb-6">
+              <div className="relative w-48 h-48 print:w-40 print:h-40 bg-white/10 rounded-3xl p-4 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
                 <Image
                   src="/Logo_imoveis_daki_do_bairro.png"
                   alt="Logo Imóveis daki do Bairro"
@@ -151,24 +151,24 @@ export default function FlyerPage() {
                 />
               </div>
               <h1 className="flex flex-col items-start text-left">
-                <span className="font-sans font-extrabold text-6xl tracking-tight mb-2 leading-none drop-shadow-md">Imóveis</span>
-                <span className="font-sans font-medium text-3xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
+                <span className="font-sans font-extrabold text-6xl print:text-5xl tracking-tight mb-2 leading-none drop-shadow-md">Imóveis</span>
+                <span className="font-sans font-medium text-3xl print:text-2xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
               </h1>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+            <h2 className="text-3xl md:text-4xl print:text-2xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
               Conectando você ao seu <br />
               próximo imóvel ideal
             </h2>
 
-            <p className="text-blue-100 text-lg max-w-lg mx-auto">
+            <p className="text-blue-100 text-lg print:text-base max-w-lg mx-auto">
               A plataforma imobiliária mais completa, rápida e segura da região.
             </p>
           </div>
         </div>
 
         {/* Main Body */}
-        <div className="p-12 print:p-8 space-y-12">
+        <div className="p-12 print:p-6 space-y-12 print:space-y-6">
 
           {/* Value Proposition Grid */}
           <div className="grid grid-cols-2 gap-8">
@@ -266,7 +266,7 @@ export default function FlyerPage() {
             </div>
 
             {/* Social Media & WhatsApp */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-4 pt-4 border-t border-slate-200">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 print:gap-3 mt-4 print:mt-2 pt-4 print:pt-2 border-t border-slate-200 print:border-t-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-slate-600">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
@@ -287,12 +287,12 @@ export default function FlyerPage() {
                 </a>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 print:gap-1">
                 <a
                   href={wa1}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-green-600"
+                  className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 print:px-3 print:py-1 rounded-full font-bold shadow-md hover:bg-green-600"
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span>{siteConfig.contact.phone} • WhatsApp</span>
@@ -302,7 +302,7 @@ export default function FlyerPage() {
                     href={wa2}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-green-600"
+                    className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 print:px-3 print:py-1 rounded-full font-bold shadow-md hover:bg-green-600"
                   >
                     <MessageCircle className="w-5 h-5" />
                     <span>{siteConfig.contact.phone2} • WhatsApp</span>
@@ -312,14 +312,14 @@ export default function FlyerPage() {
             </div>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-10 no-print">
             <AdSenseAd placement="divulgacao_body" />
           </div>
 
         </div>
 
         {/* Footer / CTA Section */}
-        <div className="mt-auto bg-slate-900 text-white p-8 flex flex-col md:flex-row items-center justify-between gap-6 print:bg-slate-900 print:text-white print:p-6">
+        <div className="mt-auto bg-slate-900 text-white p-8 flex flex-col md:flex-row items-center justify-between gap-6 print:bg-slate-900 print:text-white print:p-5 print:gap-4">
           <div className="text-center md:text-left">
             <h3 className="text-2xl font-bold mb-2">Comece agora mesmo!</h3>
             <p className="text-blue-200 mb-4">Acesse nosso site ou aponte a câmera para o QR Code.</p>
@@ -333,25 +333,25 @@ export default function FlyerPage() {
             </a>
           </div>
 
-          <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-lg">
-            <div className="w-24 h-24 bg-slate-100 flex items-center justify-center rounded-lg border-2 border-slate-200 overflow-hidden">
+          <div className="flex items-center gap-4 print:gap-3 bg-white p-4 print:p-3 rounded-xl shadow-lg">
+            <div className="w-24 h-24 print:w-20 print:h-20 bg-slate-100 flex items-center justify-center rounded-lg border-2 border-slate-200 overflow-hidden">
               <img
                 src={qrSrc}
                 width={96}
                 height={96}
                 alt="QR code do site"
-                className="w-24 h-24 object-contain"
+                className="w-24 h-24 print:w-20 print:h-20 object-contain"
               />
             </div>
             <div className="text-left text-slate-900">
-              <div className="font-bold text-sm uppercase tracking-wider text-slate-500 mb-1">Escaneie</div>
-              <div className="font-bold text-lg leading-tight">Para acessar<br />o site agora</div>
+              <div className="font-bold text-sm print:text-[11px] uppercase tracking-wider text-slate-500 mb-1">Escaneie</div>
+              <div className="font-bold text-lg print:text-base leading-tight">Para acessar<br />o site agora</div>
             </div>
           </div>
         </div>
 
         {/* Bottom Strip */}
-        <div className="bg-blue-600 text-white text-center py-2 text-xs font-medium print:bg-blue-600">
+        <div className="bg-blue-600 text-white text-center py-2 print:py-1 text-xs print:text-[10px] font-medium print:bg-blue-600">
           Imóveis daki do Bairro © 2026 - Todos os direitos reservados
         </div>
 
