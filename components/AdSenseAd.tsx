@@ -20,6 +20,15 @@ export function AdSenseAd({
   const allowMarketing = hasMarketingConsent();
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      if (!clientId) {
+        console.info('[AdSenseAd] NEXT_PUBLIC_ADSENSE_CLIENT_ID ausente; anúncio não será renderizado.');
+      }
+      if (!allowMarketing) {
+        console.info('[AdSenseAd] Consentimento de marketing indisponível; anúncio não será carregado.');
+      }
+    }
+
     if (!clientId) return;
     if (!allowMarketing) return;
 

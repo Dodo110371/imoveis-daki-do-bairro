@@ -19,6 +19,7 @@ import {
   Instagram,
   MessageCircle
 } from 'lucide-react';
+import { AdSenseAd } from '@/components/AdSenseAd';
 
 export default function FlyerPage() {
   const handlePrint = () => {
@@ -255,6 +256,10 @@ export default function FlyerPage() {
                 <span>(11) 99999-9999</span>
               </div>
             </div>
+          </div>
+
+          <div className="mt-10">
+            <AdSenseAd slot="4444444444" />
           </div>
 
         </div>

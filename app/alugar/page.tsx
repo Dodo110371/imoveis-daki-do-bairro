@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { AdSenseAd } from "@/components/AdSenseAd";
 
 interface AlugarPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -143,6 +144,10 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             A liberdade de morar onde você quiser. Confira as melhores opções de locação.
           </p>
+        </div>
+
+        <div className="mb-10">
+          <AdSenseAd slot="2222222222" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
