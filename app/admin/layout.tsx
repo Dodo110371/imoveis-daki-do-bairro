@@ -44,9 +44,16 @@ export default async function AdminLayout({
     .in("event_type", ["lead_contact"])
     .gte("created_at", sevenDaysAgo);
 
-  const { count: usersTotal } = await supabase
+  const { count: users7d } = await supabase
     .from("profiles")
-    .select("*", { count: "exact", head: true });
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", sevenDaysAgo);
+
+  const counts = {
+    pendingProperties: pendingProperties ?? 0,
+    recentLeads: recentLeads ?? 0,
+    users: users7d ?? 0,
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -58,13 +65,13 @@ export default async function AdminLayout({
         </div>
 
         <nav className="p-4 space-y-2">
-          <AdminSidebarNav counts={{ pendingProperties, recentLeads, users: usersTotal }} />
+          <AdminSidebarNav counts={counts} />
         </nav>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-8">
-        <AdminMobileNav counts={{ pendingProperties, recentLeads, users: usersTotal }} />
+        <AdminMobileNav counts={counts} />
         {children}
       </main>
     </div>
