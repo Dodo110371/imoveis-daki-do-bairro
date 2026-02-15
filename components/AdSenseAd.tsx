@@ -23,13 +23,12 @@ export function AdSenseAd({
     if (!clientId) return;
     if (!allowMarketing) return;
 
-    const existingScript = document.querySelector<HTMLScriptElement>('script[data-adsbygoogle-setup="true"]');
+    const existingScript = document.querySelector<HTMLScriptElement>('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]');
     if (!existingScript) {
       const script = document.createElement('script');
       script.async = true;
       script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`;
       script.crossOrigin = 'anonymous';
-      script.setAttribute('data-adsbygoogle-setup', 'true');
       document.head.appendChild(script);
     }
 
@@ -56,4 +55,3 @@ export function AdSenseAd({
     </div>
   );
 }
-

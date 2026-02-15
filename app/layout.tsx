@@ -27,6 +27,11 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <script src="/trusted-security-policy.js" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2306267959705956"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
         <CookieConsentProvider>
