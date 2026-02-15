@@ -4,7 +4,7 @@ export const siteConfig = {
   contact: {
     email: "dsdodo18@hotmail.com",
     phone: "(98) 98856-7987",
-    phone2: "(98) 99123-4567",
+    phone2: "(98) 98147-0668",
     address: "",
     cityState: "",
     mapsLink: ""
