@@ -52,7 +52,16 @@ export default function FlyerPage() {
     <div className="min-h-screen bg-slate-100 py-10 px-4 print:p-0 print:bg-white">
       {/* Print Styles */}
       <style jsx global>{`
+        @page {
+          size: A4;
+          margin: 0;
+        }
         @media print {
+          html, body {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 !important;
+          }
           header, footer, nav, aside, .no-print {
             display: none !important;
           }
@@ -64,6 +73,20 @@ export default function FlyerPage() {
           main {
             padding: 0 !important;
             margin: 0 !important;
+          }
+          .flyer-a4 {
+            width: 210mm !important;
+            height: 297mm !important;
+            min-height: 297mm !important;
+            max-height: 297mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            overflow: visible !important;
+          }
+          .flyer-header {
+            overflow: visible !important;
           }
         }
       `}</style>
@@ -99,10 +122,10 @@ export default function FlyerPage() {
       </div>
 
       {/* Flyer Content - A4 Ratio Aspect */}
-      <div className="w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:w-[210mm] print:h-[297mm] print:min-h-[297mm] print:max-h-[297mm] print:m-0 print:rounded-none relative">
+      <div className="flyer-a4 w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:w-[210mm] print:h-[297mm] print:min-h-[297mm] print:max-h-[297mm] print:m-0 print:rounded-none relative">
 
         {/* Header Section */}
-        <div className="bg-slate-900 text-white p-12 text-center relative overflow-hidden">
+        <div className="flyer-header bg-slate-900 text-white p-12 text-center relative overflow-hidden">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
