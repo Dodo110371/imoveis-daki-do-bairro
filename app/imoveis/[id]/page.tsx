@@ -200,7 +200,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            <AdSenseAd slot="3333333333" />
+            <AdSenseAd placement="property_top" />
             {/* Key Features */}
             <div className="grid grid-cols-3 gap-4 rounded-xl bg-white p-6 shadow-sm border border-slate-100">
               <div className="flex flex-col items-center justify-center gap-2 border-r border-slate-100 last:border-0">

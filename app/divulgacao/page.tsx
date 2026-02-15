@@ -72,7 +72,10 @@ export default function FlyerPage() {
           <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
           Voltar para o site
         </Link>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <div className="hidden md:block">
+            <AdSenseAd placement="divulgacao_body" />
+          </div>
           <button
             onClick={handleShare}
             className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 rounded-lg shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors font-medium"
@@ -259,7 +262,7 @@ export default function FlyerPage() {
           </div>
 
           <div className="mt-10">
-            <AdSenseAd slot="4444444444" />
+            <AdSenseAd placement="divulgacao_body" />
           </div>
 
         </div>

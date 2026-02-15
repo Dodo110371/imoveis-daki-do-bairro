@@ -147,7 +147,7 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
         </div>
 
         <div className="mb-10">
-          <AdSenseAd slot="2222222222" />
+          <AdSenseAd placement="alugar_top" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">

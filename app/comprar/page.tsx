@@ -147,7 +147,7 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
         </div>
 
         <div className="mb-10">
-          <AdSenseAd slot="1111111111" />
+          <AdSenseAd placement="comprar_top" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">

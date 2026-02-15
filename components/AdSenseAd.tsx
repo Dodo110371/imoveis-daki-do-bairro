@@ -3,21 +3,37 @@ import { useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { hasMarketingConsent } from '@/context/CookieConsentContext';
 
+type AdPlacement =
+  | 'home_below_featured'
+  | 'comprar_top'
+  | 'alugar_top'
+  | 'property_top'
+  | 'divulgacao_body';
+
+const ADSENSE_SLOTS: Record<AdPlacement, string> = {
+  home_below_featured: '0000000000',
+  comprar_top: '1111111111',
+  alugar_top: '2222222222',
+  property_top: '3333333333',
+  divulgacao_body: '4444444444',
+};
+
 type AdSenseAdProps = {
-  slot: string;
+  placement: AdPlacement;
   format?: string;
   responsive?: boolean;
   className?: string;
 };
 
 export function AdSenseAd({
-  slot,
+  placement,
   format = 'auto',
   responsive = true,
   className,
 }: AdSenseAdProps) {
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
   const allowMarketing = hasMarketingConsent();
+  const slot = ADSENSE_SLOTS[placement];
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -30,6 +46,7 @@ export function AdSenseAd({
     }
 
     if (!clientId) return;
+    if (!slot) return;
     if (!allowMarketing) return;
 
     const existingScript = document.querySelector<HTMLScriptElement>('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]');
@@ -49,6 +66,7 @@ export function AdSenseAd({
   }, [clientId, slot, allowMarketing]);
 
   if (!clientId) return null;
+  if (!slot) return null;
   if (!allowMarketing) return null;
 
   return (

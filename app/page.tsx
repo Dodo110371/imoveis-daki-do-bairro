@@ -177,7 +177,7 @@ export default async function HomePage() {
       </section>
 
       <section className="container mx-auto px-4">
-        <AdSenseAd slot="0000000000" />
+        <AdSenseAd placement="home_below_featured" />
       </section>
 
       {/* New Releases Section */}
