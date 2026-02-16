@@ -64,18 +64,18 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/50 to-transparent pointer-events-none" />
-        
-        <div className="absolute bottom-4 right-4 z-20">
-            <button 
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all font-medium border border-white/20"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    openLightbox(0);
-                }}
-            >
-                <Maximize2 size={18} />
-                Ver Fotos ({displayImages.length})
-            </button>
+
+        <div className="absolute top-3 right-3 md:top-auto md:bottom-4 md:right-4 z-20">
+          <button
+            className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-lg flex items-center gap-2 transition-all font-medium border border-white/20"
+            onClick={(e) => {
+              e.stopPropagation();
+              openLightbox(0);
+            }}
+          >
+            <Maximize2 size={18} />
+            Ver Fotos ({displayImages.length})
+          </button>
         </div>
       </div>
 
