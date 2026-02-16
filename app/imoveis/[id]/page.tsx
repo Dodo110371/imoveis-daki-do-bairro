@@ -206,7 +206,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         </div>
       </div>
 
-      <div className="container mx-auto mt-8 px-4">
+      <div className="container mx-auto mt-8 md:mt-24 lg:mt-28 px-4">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
