@@ -133,64 +133,74 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           Or simply position the overlay content absolute ON TOP of the ImageGallery component here in the page.
       */}
 
-      <div className="relative -mt-[210px] sm:-mt-[230px] md:-mt-[260px] z-10 pointer-events-none">
+      <div className="relative mt-4 md:-mt-[260px] z-10 pointer-events-none">
         <div className="container mx-auto px-4 pb-8">
-          <div className="flex justify-between items-center mb-4">
-            <Link
-              href="/"
-              className="inline-flex items-center text-sm font-medium text-white/80 hover:text-white pointer-events-auto"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar para Home
-            </Link>
-
-            {isOwner && (
+          <div className="bg-white/95 rounded-2xl shadow-lg p-4 md:bg-transparent md:shadow-none md:rounded-none md:p-0 pointer-events-auto">
+            <div className="flex justify-between items-center mb-4">
               <Link
-                href={`/imoveis/${property.id}/editar`}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-bold transition-colors pointer-events-auto shadow-lg"
+                href="/"
+                className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 md:text-white/80 md:hover:text-white"
               >
-                <FileEdit className="h-4 w-4" />
-                Editar Anúncio
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar para Home
               </Link>
-            )}
-          </div>
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="pointer-events-auto">
-              <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
-                {property.type}
-              </span>
-              <div className="flex items-center gap-4 flex-wrap group">
-                <h1 className="text-3xl font-bold text-white md:text-5xl">{property.title}</h1>
-                {agency?.isPartner && (
-                  <>
-                    <span className="md:hidden">
-                      <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
-                    </span>
-                    <span className="hidden md:inline-flex">
-                      <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
-                    </span>
-                  </>
-                )}
-                {realtor?.isPartner && (
-                  <>
-                    <span className="md:hidden">
-                      <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
-                    </span>
-                    <span className="hidden md:inline-flex">
-                      <PartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
-                    </span>
-                  </>
-                )}
-                <FavoriteButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
-                <CompareButton propertyId={property.id} className="bg-white/10 hover:bg-white/20 text-white" iconSize={28} />
-              </div>
-              <div className="mt-2 flex items-center text-slate-200">
-                <MapPin className="mr-2 h-5 w-5" />
-                {property.location}
-              </div>
+
+              {isOwner && (
+                <Link
+                  href={`/imoveis/${property.id}/editar`}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-bold transition-colors shadow-lg"
+                >
+                  <FileEdit className="h-4 w-4" />
+                  Editar Anúncio
+                </Link>
+              )}
             </div>
-            <div className="text-3xl font-bold text-white md:text-4xl pointer-events-auto">
-              {property.price}
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <span className="mb-2 inline-block rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
+                  {property.type}
+                </span>
+                <div className="flex items-center gap-4 flex-wrap group">
+                  <h1 className="text-2xl md:text-5xl font-bold text-slate-900 md:text-white">{property.title}</h1>
+                  {agency?.isPartner && (
+                    <>
+                      <span className="md:hidden">
+                        <AgencyPartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
+                      </span>
+                      <span className="hidden md:inline-flex">
+                        <AgencyPartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
+                      </span>
+                    </>
+                  )}
+                  {realtor?.isPartner && (
+                    <>
+                      <span className="md:hidden">
+                        <PartnerBadge size="sm" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
+                      </span>
+                      <span className="hidden md:inline-flex">
+                        <PartnerBadge size="md" className="opacity-95 transition-opacity duration-150 md:duration-200 group-hover:opacity-100" />
+                      </span>
+                    </>
+                  )}
+                  <FavoriteButton
+                    propertyId={property.id}
+                    className="bg-slate-900 text-white hover:bg-slate-800 md:bg-white/10 md:hover:bg-white/20"
+                    iconSize={28}
+                  />
+                  <CompareButton
+                    propertyId={property.id}
+                    className="bg-slate-900 text-white hover:bg-slate-800 md:bg-white/10 md:hover:bg-white/20"
+                    iconSize={28}
+                  />
+                </div>
+                <div className="mt-2 flex items-center text-slate-600 md:text-slate-200">
+                  <MapPin className="mr-2 h-5 w-5" />
+                  {property.location}
+                </div>
+              </div>
+              <div className="text-2xl md:text-4xl font-bold text-slate-900 md:text-white">
+                {property.price}
+              </div>
             </div>
           </div>
         </div>
