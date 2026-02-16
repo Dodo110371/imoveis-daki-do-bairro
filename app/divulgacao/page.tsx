@@ -125,9 +125,9 @@
        <div className="flyer-a4 w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl overflow-hidden flex flex-col print:shadow-none print:m-0 print:rounded-none relative">
  
          {/* Header Section */}
-         <div className="flyer-header bg-slate-900 text-white p-12 print:p-4 text-center relative overflow-hidden">
+        <div className="flyer-header bg-slate-900 text-white p-12 print:p-4 print:bg-white print:text-slate-900 text-center relative overflow-hidden">
            {/* Background Image with Overlay */}
-           <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 print:hidden">
              <Image
                src="/chaveiro.jpg"
                alt="Background Chaveiro"
@@ -136,27 +136,28 @@
                priority
              />
              {/* Dark overlay to ensure text readability */}
-             <div className="absolute inset-0 bg-slate-900/85" />
+            <div className="absolute inset-0 bg-slate-900/85" />
            </div>
  
            <div className="relative z-10">
              <div className="flex items-center justify-center gap-8 print:gap-6 mb-10 print:mb-6">
-               <div className="relative w-48 h-48 print:w-40 print:h-40 bg-white/10 rounded-3xl p-4 backdrop-blur-sm border border-white/20 shadow-2xl shrink-0">
-                 <Image
-                   src="/Logo_imoveis_daki_do_bairro.png"
-                   alt="Logo Imóveis daki do Bairro"
-                   fill
-                   className="object-contain p-2"
-                   priority
-                 />
+              <div className="relative w-48 h-48 print:w-40 print:h-40 bg-white/10 rounded-3xl p-4 backdrop-blur-sm border border-white/20 print:border-slate-300 shadow-2xl shrink-0">
+                <Image
+                  src="/Logo_imoveis_daki_do_bairro.png"
+                  alt="Logo Imóveis daki do Bairro"
+                  width={160}
+                  height={160}
+                  className="object-contain p-2 w-full h-full"
+                  priority
+                />
                </div>
                <h1 className="flex flex-col items-start text-left">
-                 <span className="font-sans font-extrabold text-6xl print:text-5xl tracking-tight mb-2 leading-none drop-shadow-md">Imóveis</span>
-                 <span className="font-sans font-medium text-3xl print:text-2xl text-blue-200 tracking-wide leading-none">daki do Bairro</span>
+                <span className="font-sans font-extrabold text-6xl print:text-5xl tracking-tight mb-2 leading-none drop-shadow-md print:text-slate-900">Imóveis</span>
+                <span className="font-sans font-medium text-3xl print:text-2xl text-blue-200 tracking-wide leading-none print:text-slate-700">daki do Bairro</span>
                </h1>
              </div>
  
-             <h2 className="text-3xl md:text-4xl print:text-2xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+            <h2 className="text-3xl md:text-4xl print:text-2xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white print:!text-slate-900">
                Conectando você ao seu <br />
                próximo imóvel ideal
              </h2>
