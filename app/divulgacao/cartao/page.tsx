@@ -49,8 +49,8 @@ export default function BusinessCardPage() {
 
       <div className="business-card w-[360px] aspect-[90/50] bg-slate-50 rounded-2xl shadow-2xl overflow-hidden flex">
         {/* Área branca: logo + texto abaixo */}
-        <div className="flex-1 bg-white flex flex-col items-center justify-center p-3">
-          <div className="relative w-full h-full max-w-[130px] max-h-[130px]">
+        <div className="flex-1 bg-white flex flex-col items-center justify-center px-2 py-1">
+          <div className="relative w-full h-[120px]">
             <Image
               src="/Logo_imoveis_daki_do_bairro.png"
               alt="Logo Imóveis daki do Bairro"
@@ -87,7 +87,7 @@ export default function BusinessCardPage() {
               <span className="truncate">{siteConfig.contact.email}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Phone className="w-3 h-3 text-yellow-300" />
+              <MessageCircle className="w-3 h-3 text-green-300" />
               <span>{siteConfig.contact.phone}</span>
             </div>
             <div className="flex items-center gap-2">
