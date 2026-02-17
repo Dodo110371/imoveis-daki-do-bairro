@@ -6,6 +6,9 @@ import { Mail, Phone, MessageCircle } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
 
 export default function BusinessCardPage() {
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
+    siteConfig.url
+  )}`;
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center py-10 px-4 print:bg-white print:py-0">
       <style jsx global>{`
@@ -45,8 +48,9 @@ export default function BusinessCardPage() {
       </div>
 
       <div className="business-card w-[360px] aspect-[90/50] bg-slate-50 rounded-2xl shadow-2xl overflow-hidden flex">
-        <div className="flex-1 bg-white flex items-center justify-center p-4">
-          <div className="relative w-full h-full max-w-[140px] max-h-[140px]">
+        {/* Área branca: logo + texto abaixo */}
+        <div className="flex-1 bg-white flex flex-col items-center justify-center p-3">
+          <div className="relative w-full h-full max-w-[130px] max-h-[130px]">
             <Image
               src="/Logo_imoveis_daki_do_bairro.png"
               alt="Logo Imóveis daki do Bairro"
@@ -55,20 +59,32 @@ export default function BusinessCardPage() {
               priority
             />
           </div>
-        </div>
-        <div className="flex-[1.2] bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 text-white p-4 flex flex-col justify-between">
-          <div>
-            <p className="text-xs font-semibold text-yellow-300">
+          <div className="mt-2 text-center px-1">
+            <p className="text-[10px] font-semibold text-slate-800 leading-snug">
               Divulgue seus imóveis para milhares de compradores!
             </p>
-            <p className="text-xs mt-1">
+            <p className="text-[10px] text-slate-600 leading-snug">
               Anuncie conosco e aumente suas vendas no seu bairro.
             </p>
           </div>
-          <div className="mt-2 space-y-1.5 text-[11px]">
+        </div>
+        {/* Área azul: QR code + contatos */}
+        <div className="flex-[1.2] bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 text-white p-3 flex flex-col justify-between">
+          <div className="flex items-center justify-end">
+            <div className="bg-white rounded-md p-1.5 shadow/20 shadow-black/30">
+              <img
+                src={qrSrc}
+                alt="QR Code do site"
+                width={56}
+                height={56}
+                style={{ width: 56, height: 56 }}
+              />
+            </div>
+          </div>
+          <div className="mt-1 space-y-1 text-[10.5px]">
             <div className="flex items-center gap-2">
               <Mail className="w-3 h-3 text-yellow-300" />
-              <span>{siteConfig.contact.email}</span>
+              <span className="truncate">{siteConfig.contact.email}</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3 h-3 text-yellow-300" />
@@ -78,7 +94,7 @@ export default function BusinessCardPage() {
               <MessageCircle className="w-3 h-3 text-green-300" />
               <span>{siteConfig.contact.phone2}</span>
             </div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-0.5">
               <span className="text-[10px] font-semibold text-yellow-300">
                 {siteConfig.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
               </span>
@@ -89,4 +105,3 @@ export default function BusinessCardPage() {
     </div>
   );
 }
-
