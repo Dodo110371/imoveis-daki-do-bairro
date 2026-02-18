@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog version="1.0">
+  <company>
+    <name>Imóveis daki do Bairro</name>
+    <website>https://imoveisdakidobairro.com.br/</website>
+    <email>dsdodo18@hotmail.com</email>
+    <phones>
+      <phone type="whatsapp">(98) 98856-7987</phone>
+      <phone type="whatsapp">(98) 98147-0668</phone>
+    </phones>
+    <description>Plataforma imobiliária focada em divulgação de imóveis do bairro, oferecendo serviços de publicação, visibilidade e geração de leads para proprietários, imobiliárias e corretores.</description>
+  </company>
+
+  <notes>
+    <nature>Serviços digitais de publicidade e divulgação de imóveis (não são bens físicos).</nature>
+    <regions>Brasil (atuação local/regional conforme cadastro).</regions>
+    <requirements>Cadastro no site, aceite dos termos e políticas, conformidade com regras de moderação de anúncios.</requirements>
+  </notes>
+
+  <items>
+    <item>
+      <id>PLAN-MENSAL</id>
+      <name>Plano de Anúncio Mensal</name>
+      <category>Serviços &gt; Publicidade Online</category>
+      <duration>30 dias</duration>
+      <availability>ativo</availability>
+      <link>https://imoveisdakidobairro.com.br/planos</link>
+      <description>Publicação do imóvel no portal com ficha completa; galeria de fotos; mapa/bairro; características (quartos, banheiros, área); contato via formulário e WhatsApp; visibilidade em listagens (comprar, alugar, município/bairro); suporte básico.</description>
+      <price unit="BRL">conforme tabela comercial vigente</price>
+    </item>
+
+    <item>
+      <id>PLAN-TRIMESTRAL</id>
+      <name>Plano de Anúncio Trimestral</name>
+      <category>Serviços &gt; Publicidade Online</category>
+      <duration>90 dias</duration>
+      <availability>ativo</availability>
+      <link>https://imoveisdakidobairro.com.br/planos</link>
+      <description>Inclui todos os recursos do Plano Mensal com economia por período estendido e renovação simples ao término.</description>
+      <price unit="BRL">conforme tabela comercial vigente</price>
+    </item>
+
+    <item>
+      <id>PLAN-ATE-VENDER</id>
+      <name>Plano Até Vender</name>
+      <category>Serviços &gt; Publicidade Online</category>
+      <duration>até a venda/retirada do anúncio</duration>
+      <availability>ativo</availability>
+      <link>https://imoveisdakidobairro.com.br/planos</link>
+      <description>Inclui todos os recursos do Plano Mensal; permanência sem data de término (com regras de moderação e atualizações periódicas); indicado para proprietários e imobiliárias com estoque recorrente.</description>
+      <price unit="BRL">conforme tabela comercial vigente</price>
+    </item>
+
+    <item>
+      <id>ADD-DESTAQUE</id>
+      <name>Destaque de Anúncio (add-on)</name>
+      <category>Serviços &gt; Publicidade Online</category>
+      <duration>acompanha o plano principal</duration>
+      <availability>ativo</availability>
+      <link>https://imoveisdakidobairro.com.br/planos</link>
+      <description>Maior evidência nas listagens (cards destacados) e prioridade de exibição em áreas de destaque do site.</description>
+      <price unit="BRL">conforme tabela comercial vigente</price>
+    </item>
+  </items>
+
+  <policies>
+    <moderation>Alterações feitas pelo anunciante podem colocar o anúncio em “pendente” até revalidação pela equipe.</moderation>
+    <prohibited>Informações falsas, ilegais ou que violem políticas do site são removidas.</prohibited>
+    <support>Suporte via e‑mail e WhatsApp.</support>
+    <refunds>Cancelamento e reembolsos conforme política comercial vigente e legislação aplicável.</refunds>
+  </policies>
+
+  <identification>
+    <brand>Imóveis daki do Bairro</brand>
+    <item_type>Serviço digital (publicidade)</item_type>
+    <condition>novo</condition>
+    <stock>disponível</stock>
+    <contacts>
+      <email>dsdodo18@hotmail.com</email>
+      <whatsapp>(98) 98856-7987</whatsapp>
+      <whatsapp>(98) 98147-0668</whatsapp>
+    </contacts>
+  </identification>
+
+  <updates>
+    <prices>Preços e condições podem ser atualizados de acordo com promoções, sazonalidade e ajustes comerciais.</prices>
+  </updates>
+</catalog>
