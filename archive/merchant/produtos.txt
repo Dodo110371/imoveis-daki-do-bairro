@@ -1,0 +1,81 @@
+Imóveis daki do Bairro — Catálogo de Produtos e Serviços (Google Merchant Center Next)
+Versão: 1.0
+
+Informações da empresa
+- Nome: Imóveis daki do Bairro
+- Site: https://imoveisdakidobairro.com.br/
+- Contato: dsdodo18@hotmail.com
+- Telefones: (98) 98856-7987 • WhatsApp | (98) 98147-0668 • WhatsApp
+- Descrição geral: Plataforma imobiliária focada em divulgação de imóveis do bairro, oferecendo serviços de publicação, visibilidade e geração de leads (contatos) para proprietários, imobiliárias e corretores.
+
+Observação importante
+- Natureza dos itens: serviços digitais de publicidade e divulgação de imóveis (não são bens físicos).
+- Regiões atendidas: Brasil (prioridade em atuação local/regional conforme cadastro).
+- Requisitos: cadastro no site, aceite dos termos e políticas, conformidade com regras de moderação de anúncios.
+
+Produtos/Serviços comercializados
+
+1) Plano de Anúncio Mensal
+- ID: PLAN-MENSAL
+- Categoria: Serviços > Publicidade Online
+- Duração: 30 dias
+- Conteúdo do serviço:
+  - Publicação do imóvel no portal com ficha completa
+  - Galeria de fotos, mapa/bairro, características (quartos, banheiros, área, etc.)
+  - Canal de contato via formulário e WhatsApp
+  - Visibilidade em páginas de listagem (comprar, alugar, município/bairro)
+  - Suporte básico (conteúdo e organização do anúncio)
+- Disponibilidade: ativo
+- Preço: conforme tabela comercial vigente
+- Link informativo: https://imoveisdakidobairro.com.br/planos
+
+2) Plano de Anúncio Trimestral
+- ID: PLAN-TRIMESTRAL
+- Categoria: Serviços > Publicidade Online
+- Duração: 90 dias
+- Conteúdo do serviço:
+  - Todos os itens do Plano Mensal
+  - Economia por período estendido
+  - Renovação simples ao término
+- Disponibilidade: ativo
+- Preço: conforme tabela comercial vigente
+- Link informativo: https://imoveisdakidobairro.com.br/planos
+
+3) Plano Até Vender
+- ID: PLAN-ATE-VENDER
+- Categoria: Serviços > Publicidade Online
+- Duração: até a venda/retirada do anúncio
+- Conteúdo do serviço:
+  - Todos os itens do Plano Mensal
+  - Permanência sem data de término (com regras de moderação e atualizações periódicas)
+  - Indicado para proprietários e imobiliárias com estoque recorrente
+- Disponibilidade: ativo
+- Preço: conforme tabela comercial vigente
+- Link informativo: https://imoveisdakidobairro.com.br/planos
+
+4) Destaque de Anúncio (add-on)
+- ID: ADD-DESTAQUE
+- Categoria: Serviços > Publicidade Online
+- Duração: acompanha o plano principal
+- Conteúdo do serviço:
+  - Maior evidência nas listagens (cards destacados)
+  - Prioridade de exibição em áreas de destaque do site
+- Disponibilidade: ativo
+- Preço: conforme tabela comercial vigente
+- Link informativo: https://imoveisdakidobairro.com.br/planos
+
+Políticas e observações
+- Moderação de anúncios: alterações feitas pelo anunciante podem colocar o anúncio em “pendente” até revalidação pela equipe.
+- Conteúdos proibidos: anúncios com informações falsas, ilegais ou que violem políticas do site são removidos.
+- Suporte: via e‑mail e WhatsApp informados acima.
+- Cancelamento e reembolsos: conforme política comercial vigente e legislação aplicável.
+
+Dados de identificação (para referência)
+- Marca: Imóveis daki do Bairro
+- Tipo de item: serviço digital (publicidade)
+- Condição: novo
+- Disponibilidade: em estoque (serviço disponível)
+- Contato: dsdodo18@hotmail.com | WhatsApp (98) 98856-7987 / (98) 98147-0668
+
+Atualizações futuras
+- Os preços e condições podem ser atualizados de acordo com promoções, sazonalidade e ajustes comerciais.
