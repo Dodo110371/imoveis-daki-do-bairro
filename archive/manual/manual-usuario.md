@@ -51,13 +51,13 @@ Versão 1.0 • Público-alvo: usuários, proprietários, imobiliárias e corret
 - Mostrar/ocultar senha: ícone olho. [Figura: Toggle Mostrar Senha]
 - Esqueceu a senha? Clique em "Recuperar Senha", informe e‑mail e siga o link enviado. [Figura: Fluxo de Recuperação]
   
-![Login](../manual/img/login.svg)
+![Login](../manual/img/login.png)
 
 ## 2) Minha Conta
 - Após login, acesse "Minha Conta" para visualizar seus dados e anúncios. [Figura: Minha Conta]
 - Atualize informações pessoais quando necessário.
   
-![Minha Conta](../manual/img/minha-conta.svg)
+![Minha Conta](../manual/img/minha-conta.png)
 
 ## 3) Anunciar Imóvel
 - Clique em "Anunciar" para iniciar o cadastro. [Figura: Início do Anúncio]
@@ -70,53 +70,53 @@ Versão 1.0 • Público-alvo: usuários, proprietários, imobiliárias e corret
   - As imagens são organizadas em galeria para o anúncio. [Figura: Upload/Galeria]
 - Salve para enviar à moderação (anúncios novos ficam "pendentes" até aprovação). [Figura: Status Pendente]
   
-![Anunciar](../manual/img/anunciar.svg)
+![Anunciar](../manual/img/anunciar.png)
 
 ## 4) Edição de Imóvel
 - Na sua listagem de anúncios, clique em "Editar".
 - Ao editar, o status retorna para "pendente" para nova revisão pela equipe. [Figura: Edição + Pendente]
 - Ajuste preço, texto, fotos e contatos conforme necessário e salve.
   
-![Edição](../manual/img/edicao.svg)
+![Edição](../manual/img/edicao.png)
 
 ## 5) Visualização do Imóvel (Página de Detalhe)
 - A galeria exibe as fotos com botão "Ver Fotos". [Figura: Galeria + Ver Fotos]
 - Em dispositivos móveis, título/valor ficam legíveis fora da imagem. [Figura: Layout Mobile]
 - Informação de localização e características aparecem abaixo. [Figura: Bloco de Informações]
   
-![Galeria](../manual/img/galeria.svg)
+![Galeria](../manual/img/galeria.png)
 
 ## 6) Busca, Filtros e Mapa
 - Use "Comprar" ou "Alugar" para navegar. [Figura: Listas]
 - Filtros por bairro, preço e características. [Figura: Filtros]
 - Visualização por município/bairro quando disponível. [Figura: Mapa/Região]
   
-![Filtros](../manual/img/filtros.svg)
+![Filtros](../manual/img/filtros.png)
 
 ## 7) Favoritos e Comparar
 - Em cada card, marque o imóvel como favorito para acessar depois. [Figura: Favoritar]
 - Use a página "Comparar" para avaliar imóveis lado a lado. [Figura: Comparar]
   
-![Comparar](../manual/img/comparar.svg)
+![Comparar](../manual/img/comparar.png)
 
 ## 8) Imobiliárias e Corretores
 - Páginas dedicadas listam imobiliárias/corretores com perfil e anúncios. [Figura: Listagem]
 - Cadastros específicos: "Cadastro Imobiliária" e "Cadastro Corretor". [Figura: Formulários]
 - Usuários que escolhem "Imobiliária" no fluxo de anúncio são direcionados ao cadastro apropriado.
   
-![Imobiliárias/Corretores](../manual/img/listagens.svg)
+![Imobiliárias/Corretores](../manual/img/corretores.png)
 
 ## 9) Planos e Pagamento
 - Consulte "Planos" para ver opções (Mensal, Trimestral, Até Vender) e add‑on de Destaque. [Figura: Planos]
 - Pagamento: siga instruções na página "Pagamento" quando disponível. [Figura: Pagamento]
   
-![Planos](../manual/img/planos.svg)
+![Planos](../manual/img/planos.png)
 
 ## 10) Contato e Leads
 - Interessados podem enviar mensagem pelo formulário ou WhatsApp configurado no anúncio. [Figura: Contato no Anúncio]
 - Acesse "Leads" (quando disponível) para acompanhar contatos recebidos. [Figura: Leads]
   
-![Leads](../manual/img/leads.svg)
+![Leads](../manual/img/leads.png)
 
 ## 11) Área Administrativa (Equipe/Administradores)
 - Acesse "/admin" com perfil autorizado. [Figura: Admin Dashboard]
@@ -124,7 +124,7 @@ Versão 1.0 • Público-alvo: usuários, proprietários, imobiliárias e corret
 - Usuários: listar e, se necessário, excluir (remove usuário, arquivos e dados relacionados). [Figura: Usuários]
 - Logs e contagens: "Admin > Contadores" e "Leads". [Figura: Admin Itens]
   
-![Admin](../manual/img/admin.svg)
+![Admin](../manual/img/admin.png)
 
 ## 12) Políticas e Segurança
 - Políticas: Privacidade, Cookies, Qualidade e Termos de Uso. [Figura: Políticas]
