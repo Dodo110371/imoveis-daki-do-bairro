@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450">
+  <rect width="100%" height="100%" fill="#f8fbff"/>
+  <rect x="50" y="50" width="700" height="350" fill="#ffffff" stroke="#0b5fa5" stroke-width="2"/>
+  <text x="60" y="80" font-family="Segoe UI, Arial" font-size="18" fill="#0b5fa5">Login</text>
+  <rect x="90" y="110" width="620" height="40" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="100" y="135" font-family="Segoe UI, Arial" font-size="14" fill="#333">Email</text>
+  <rect x="90" y="170" width="620" height="40" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="100" y="195" font-family="Segoe UI, Arial" font-size="14" fill="#333">Senha</text>
+  <rect x="90" y="230" width="140" height="36" fill="#0b5fa5"/>
+  <text x="100" y="253" font-family="Segoe UI, Arial" font-size="14" fill="#fff">Entrar</text>
+  <text x="250" y="253" font-family="Segoe UI, Arial" font-size="13" fill="#0b5fa5">Recuperar Senha</text>
+  <text x="60" y="330" font-family="Segoe UI, Arial" font-size="12" fill="#666">Dica: use o ícone olho para mostrar/ocultar senha</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450">
+  <rect width="100%" height="100%" fill="#f8fbff"/>
+  <rect x="40" y="40" width="720" height="360" fill="#ffffff" stroke="#0b5fa5" stroke-width="2"/>
+  <text x="52" y="70" font-family="Segoe UI, Arial" font-size="18" fill="#0b5fa5">Minha Conta</text>
+  <rect x="60" y="90" width="300" height="260" fill="#dde7f3" stroke="#c9def5"/>
+  <text x="70" y="110" font-family="Segoe UI, Arial" font-size="14" fill="#333">Dados Pessoais</text>
+  <rect x="380" y="90" width="360" height="260" fill="#dde7f3" stroke="#c9def5"/>
+  <text x="390" y="110" font-family="Segoe UI, Arial" font-size="14" fill="#333">Meus Anúncios</text>
+</svg>

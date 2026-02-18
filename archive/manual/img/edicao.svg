@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450">
+  <rect width="100%" height="100%" fill="#f8fbff"/>
+  <rect x="40" y="40" width="720" height="360" fill="#ffffff" stroke="#0b5fa5" stroke-width="2"/>
+  <text x="52" y="70" font-family="Segoe UI, Arial" font-size="18" fill="#0b5fa5">Edição de Anúncio</text>
+  <rect x="60" y="90" width="680" height="34" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="70" y="112" font-family="Segoe UI, Arial" font-size="14" fill="#333">Título</text>
+  <rect x="60" y="140" width="680" height="70" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="70" y="172" font-family="Segoe UI, Arial" font-size="14" fill="#333">Descrição</text>
+  <rect x="60" y="230" width="220" height="34" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="70" y="252" font-family="Segoe UI, Arial" font-size="14" fill="#333">Valor</text>
+  <rect x="300" y="230" width="220" height="34" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="310" y="252" font-family="Segoe UI, Arial" font-size="14" fill="#333">Quartos</text>
+  <rect x="540" y="230" width="200" height="34" fill="#eef5fc" stroke="#c9def5"/>
+  <text x="550" y="252" font-family="Segoe UI, Arial" font-size="14" fill="#333">Banheiros</text>
+  <rect x="540" y="300" width="200" height="36" fill="#0b5fa5"/>
+  <text x="550" y="323" font-family="Segoe UI, Arial" font-size="14" fill="#fff">Salvar</text>
+  <text x="60" y="330" font-family="Segoe UI, Arial" font-size="12" fill="#0b5fa5">Status após edição: pendente</text>
+</svg>

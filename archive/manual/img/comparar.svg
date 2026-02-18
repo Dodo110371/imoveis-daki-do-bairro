@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450">
+  <rect width="100%" height="100%" fill="#f8fbff"/>
+  <text x="52" y="60" font-family="Segoe UI, Arial" font-size="18" fill="#0b5fa5">Comparar Imóveis</text>
+  <rect x="40" y="80" width="340" height="320" fill="#ffffff" stroke="#0b5fa5" stroke-width="2"/>
+  <rect x="420" y="80" width="340" height="320" fill="#ffffff" stroke="#0b5fa5" stroke-width="2"/>
+  <text x="52" y="100" font-family="Segoe UI, Arial" font-size="14" fill="#333">Imóvel A</text>
+  <text x="432" y="100" font-family="Segoe UI, Arial" font-size="14" fill="#333">Imóvel B</text>
+  <rect x="60" y="120" width="300" height="120" fill="#dde7f3" stroke="#c9def5"/>
+  <rect x="440" y="120" width="300" height="120" fill="#dde7f3" stroke="#c9def5"/>
+  <text x="60" y="260" font-family="Segoe UI, Arial" font-size="13" fill="#333">Quartos, Banheiros, Área, Preço</text>
+  <text x="440" y="260" font-family="Segoe UI, Arial" font-size="13" fill="#333">Quartos, Banheiros, Área, Preço</text>
+</svg>
