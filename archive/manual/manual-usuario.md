@@ -1,3 +1,10 @@
+---
+dest: archive/manual/manual-usuario.pdf
+pdf_options:
+  format: A4
+  margin: 12mm
+  printBackground: true
+---
 # Manual do Usuário — Imóveis daki do Bairro
 Versão 1.0 • Público-alvo: usuários, proprietários, imobiliárias e corretores
 
