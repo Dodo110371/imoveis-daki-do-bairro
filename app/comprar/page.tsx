@@ -2,6 +2,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { CITIES } from "@/lib/cities";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
@@ -13,6 +14,7 @@ interface ComprarPageProps {
 
 export default async function ComprarPage({ searchParams }: ComprarPageProps) {
   const params = await searchParams;
+  const city = typeof params.city === 'string' ? params.city : undefined;
   const supabase = await createClient();
 
   // Start building the query
@@ -62,6 +64,18 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
 
   if (params.maxArea) {
     query = query.lte('area', parseFloat(params.maxArea as string));
+  }
+
+  if (city) {
+    const cityData = CITIES.find(c => c.slug === city);
+    const cityName = cityData?.name;
+    const citySlug = city;
+    const ors: string[] = [];
+    if (cityName) ors.push(`location.ilike.%${cityName}%`);
+    if (citySlug) ors.push(`location.ilike.%${citySlug}%`);
+    if (ors.length > 0) {
+      query = query.or(ors.join(','));
+    }
   }
 
   const { data: propertiesData } = await query;
