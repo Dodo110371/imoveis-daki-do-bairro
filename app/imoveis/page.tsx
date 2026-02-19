@@ -54,8 +54,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   if (city) {
     const cityName = cityData?.name;
-    if (cityName) {
-      query = query.ilike('location', `%${cityName}%`);
+    const citySlug = city;
+    const ors: string[] = [];
+    if (cityName) ors.push(`location.ilike.%${cityName}%`);
+    if (citySlug) ors.push(`location.ilike.%${citySlug}%`);
+    if (ors.length > 0) {
+      query = query.or(ors.join(','));
     }
   }
 
