@@ -8,12 +8,44 @@ pdf_options:
   format: A4
   margin: 12mm
   printBackground: true
+  displayHeaderFooter: true
   headerTemplate: |
-    <div style="font-size:10px;padding-left:10mm;color:#555;">
-      Imóveis daki do Bairro — Manual do Usuário
+    <style>
+      .header-wrap {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        font-size: 9px;
+        color: #155189;
+        padding: 4px 12mm;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+      }
+      .header-wrap img {
+        height: 18px;
+        margin-right: 8px;
+      }
+      .header-title {
+        font-weight: 600;
+      }
+    </style>
+    <div class="header-wrap">
+      <img src="https://imoveisdakidobairro.com.br/Logo_imoveis_daki_do_bairro.png" />
+      <span class="header-title">Imóveis daki do Bairro — Manual do Usuário</span>
     </div>
   footerTemplate: |
-    <div style="font-size:10px;width:100%;padding:0 10mm;color:#555;display:flex;justify-content:space-between;">
+    <style>
+      .footer-wrap {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        font-size: 9px;
+        color: #555;
+        width: 100%;
+        padding: 4px 12mm;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(0,0,0,0.05);
+      }
+    </style>
+    <div class="footer-wrap">
       <div>https://imoveisdakidobairro.com.br/</div>
       <div>Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>
     </div>
