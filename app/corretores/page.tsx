@@ -19,7 +19,7 @@ type RealtorRow = {
   partner?: boolean | null;
   is_partner?: boolean | null;
   whatsapp?: string | null;
-  profiles?: RealtorProfile | null;
+  profiles?: RealtorProfile[] | null;
 };
 
 type RealtorCard = {
@@ -52,19 +52,23 @@ export default async function CorretoresPage() {
       )
     `);
 
-  const realtors: RealtorCard[] = (realtorsData || []).map((r: RealtorRow) => ({
-    id: r.id,
-    name: r.profiles?.full_name || "Corretor",
-    creci: r.creci,
-    photo:
-      r.profiles?.avatar_url ||
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop",
-    bio: r.bio || "Corretor parceiro Imóveis daki do Bairro.",
-    regions: r.regions || [],
-    whatsapp: r.whatsapp || undefined,
-    isPartner: !!(r.partner ?? r.is_partner),
-    propertiesCount: 0,
-  }));
+  const realtors: RealtorCard[] = (realtorsData || []).map((r: RealtorRow) => {
+    const profile = r.profiles?.[0];
+
+    return {
+      id: r.id,
+      name: profile?.full_name || "Corretor",
+      creci: r.creci,
+      photo:
+        profile?.avatar_url ||
+        "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop",
+      bio: r.bio || "Corretor parceiro Imóveis daki do Bairro.",
+      regions: r.regions || [],
+      whatsapp: r.whatsapp || undefined,
+      isPartner: !!(r.partner ?? r.is_partner),
+      propertiesCount: 0,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">

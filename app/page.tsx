@@ -101,15 +101,21 @@ export default async function HomePage() {
     });
   }
 
+  const getAgencyPartner = (agencyId?: number) =>
+    agencyId != null ? homeAgenciesMap.get(agencyId) ?? false : false;
+
+  const getRealtorPartner = (ownerId?: string) =>
+    ownerId ? homeRealtorsMap.get(ownerId) ?? false : false;
+
   const featuredProperties = (featuredData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
-    agencyPartner: (p.agency_id != null ? homeAgenciesMap.get(p.agency_id) : false) || false,
-    realtorPartner: (p.owner_id ? homeRealtorsMap.get(p.owner_id) : false) || false,
+    agencyPartner: getAgencyPartner(p.agency_id),
+    realtorPartner: getRealtorPartner(p.owner_id),
   }));
   const newProperties = (newData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
-    agencyPartner: (p.agency_id != null ? homeAgenciesMap.get(p.agency_id) : false) || false,
-    realtorPartner: (p.owner_id ? homeRealtorsMap.get(p.owner_id) : false) || false,
+    agencyPartner: getAgencyPartner(p.agency_id),
+    realtorPartner: getRealtorPartner(p.owner_id),
   }));
 
   return (
