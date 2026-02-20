@@ -29,12 +29,15 @@ export default function PlanosPage() {
             Escolha o plano ideal e destaque sua propriedade agora mesmo.
           </p>
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <HeaderCta
-              variant="light"
-              className="px-8 py-4 text-base font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 border-transparent"
-              labelFull="Criar meu anúncio agora"
-              labelShort="Anunciar"
-            />
+            <Link
+              href="/anunciar"
+              className="inline-flex items-center justify-center px-8 py-4 text-base font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 border border-transparent transition-all"
+              title="Criar meu anúncio agora"
+            >
+              <Megaphone className="w-5 h-5 mr-2" />
+              <span className="hidden sm:inline">Criar meu anúncio agora</span>
+              <span className="sm:hidden">Anunciar</span>
+            </Link>
             <a
               href="#planos"
               className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-slate-800 border border-slate-700 rounded-xl hover:bg-slate-700 active:scale-95"
