@@ -180,6 +180,28 @@ export default async function HomePage() {
         <AdSenseAd placement="home_below_featured" />
       </section>
 
+      <section className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 py-10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-3xl px-6 sm:px-10 py-8 sm:py-10 text-center text-white shadow-xl backdrop-blur">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-200 mb-3">
+              Condições especiais
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+              Promoções para quem anuncia e para quem busca um imóvel
+            </h2>
+            <div className="space-y-3 text-base sm:text-lg text-blue-50 mb-6">
+              <p>Cadastros sem cobrança de taxas de adesão.</p>
+              <p>Ache seu imóvel sem custos.</p>
+              <p>Anuncie nas melhores condições de mercado.</p>
+              <p>Seu anúncio será publicado também no Instagram do site sem custos extras.</p>
+            </div>
+            <p className="text-xl sm:text-2xl font-extrabold tracking-wide text-yellow-300">
+              Venha e veja!!
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* New Releases Section */}
       <section className="bg-slate-50 py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] pointer-events-none" />
