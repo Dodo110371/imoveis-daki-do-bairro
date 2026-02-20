@@ -103,13 +103,13 @@ export default async function HomePage() {
 
   const featuredProperties = (featuredData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
-    agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
-    realtorPartner: homeRealtorsMap.get(p.owner_id) || false,
+    agencyPartner: (p.agency_id != null ? homeAgenciesMap.get(p.agency_id) : false) || false,
+    realtorPartner: (p.owner_id ? homeRealtorsMap.get(p.owner_id) : false) || false,
   }));
   const newProperties = (newData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
-    agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
-    realtorPartner: homeRealtorsMap.get(p.owner_id) || false,
+    agencyPartner: (p.agency_id != null ? homeAgenciesMap.get(p.agency_id) : false) || false,
+    realtorPartner: (p.owner_id ? homeRealtorsMap.get(p.owner_id) : false) || false,
   }));
 
   return (
