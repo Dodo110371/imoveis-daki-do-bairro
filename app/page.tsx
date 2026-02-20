@@ -29,8 +29,25 @@ export default async function HomePage() {
     .order('created_at', { ascending: false })
     .limit(3);
 
+  type DbProperty = {
+    id: string;
+    title: string;
+    price: number;
+    type: 'Venda' | 'Aluguel';
+    location: string;
+    bedrooms: number;
+    bathrooms: number;
+    area: number;
+    images?: string[];
+    contact_whatsapp?: string;
+    contact_phone?: string;
+    contact_email?: string;
+    agency_id?: number;
+    owner_id?: string;
+  };
+
   // Helper to map DB to Card Props
-  const mapProperty = (p: any) => ({
+  const mapProperty = (p: DbProperty) => ({
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel'
@@ -49,10 +66,10 @@ export default async function HomePage() {
   });
 
   // Fetch partner status for agencies referenced by Home properties (to display badge on cards)
-  const homeAgencyIds = Array.from(
+  const homeAgencyIds: number[] = Array.from(
     new Set([...(featuredData || []), ...(newData || [])]
-      .map((p: any) => p.agency_id)
-      .filter((id: any) => id != null))
+      .map((p: DbProperty) => p.agency_id)
+      .filter((id): id is number => typeof id === 'number'))
   );
   let homeAgenciesMap = new Map<number, boolean>();
   if (homeAgencyIds.length > 0) {
@@ -60,17 +77,17 @@ export default async function HomePage() {
       .from('agencies')
       .select('id, partner, is_partner')
       .in('id', homeAgencyIds);
-    (agenciesData || []).forEach((a: any) => {
+    (agenciesData || []).forEach((a: { id: number; partner?: boolean; is_partner?: boolean }) => {
       const isPartner = !!(a.partner ?? a.is_partner);
       homeAgenciesMap.set(a.id, isPartner);
     });
   }
 
   // Fetch partner status for realtors (owners) referenced by Home properties
-  const homeOwnerIds = Array.from(
+  const homeOwnerIds: string[] = Array.from(
     new Set([...(featuredData || []), ...(newData || [])]
-      .map((p: any) => p.owner_id)
-      .filter((id: any) => id != null))
+      .map((p: DbProperty) => p.owner_id)
+      .filter((id): id is string => typeof id === 'string' && !!id))
   );
   let homeRealtorsMap = new Map<string, boolean>();
   if (homeOwnerIds.length > 0) {
@@ -78,18 +95,18 @@ export default async function HomePage() {
       .from('realtors')
       .select('id, partner, is_partner')
       .in('id', homeOwnerIds);
-    (realtorsData || []).forEach((r: any) => {
+    (realtorsData || []).forEach((r: { id: string; partner?: boolean; is_partner?: boolean }) => {
       const isPartner = !!(r.partner ?? r.is_partner);
       homeRealtorsMap.set(r.id, isPartner);
     });
   }
 
-  const featuredProperties = (featuredData || []).map((p: any) => ({
+  const featuredProperties = (featuredData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
     agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
     realtorPartner: homeRealtorsMap.get(p.owner_id) || false,
   }));
-  const newProperties = (newData || []).map((p: any) => ({
+  const newProperties = (newData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
     agencyPartner: homeAgenciesMap.get(p.agency_id) || false,
     realtorPartner: homeRealtorsMap.get(p.owner_id) || false,

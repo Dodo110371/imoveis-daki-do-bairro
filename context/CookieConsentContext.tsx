@@ -50,15 +50,10 @@ function writeConsentCookie(preferences: ConsentCategories, decided = true) {
 }
 
 export function CookieConsentProvider({ children }: { children: React.ReactNode }) {
-  const [consent, setConsent] = useState<ConsentCategories | null>(null);
-  const [decided, setDecided] = useState(false);
+  const initial = readConsentCookie();
+  const [consent, setConsent] = useState<ConsentCategories | null>(initial.prefs);
+  const [decided, setDecided] = useState(initial.decided);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-
-  useEffect(() => {
-    const { prefs, decided } = readConsentCookie();
-    setConsent(prefs);
-    setDecided(decided);
-  }, []);
 
   const acceptAll = () => {
     const prefs = { analytics: true, marketing: true, functional: true };

@@ -14,29 +14,20 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load favorites from localStorage on mount
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      try {
-        setFavorites(JSON.parse(savedFavorites));
-      } catch (e) {
-        console.error('Failed to parse favorites:', e);
-        setFavorites([]);
-      }
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('favorites') : null;
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-    setIsLoading(false);
-  }, []);
+  });
+  const [isLoading] = useState(false);
 
   // Save to localStorage whenever favorites change
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-    }
-  }, [favorites, isLoading]);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
 
   const addFavorite = (id: string) => {
     setFavorites((prev) => {

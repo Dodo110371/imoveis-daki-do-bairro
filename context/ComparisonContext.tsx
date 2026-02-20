@@ -15,29 +15,20 @@ interface ComparisonContextType {
 const ComparisonContext = createContext<ComparisonContextType | undefined>(undefined);
 
 export function ComparisonProvider({ children }: { children: ReactNode }) {
-  const [comparisonIds, setComparisonIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('comparison_ids');
-    if (saved) {
-      try {
-        setComparisonIds(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse comparison list:', e);
-        setComparisonIds([]);
-      }
+  const [comparisonIds, setComparisonIds] = useState<string[]>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('comparison_ids') : null;
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-    setIsLoading(false);
-  }, []);
+  });
+  const [isLoading] = useState(false);
 
   // Save to localStorage whenever list changes
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('comparison_ids', JSON.stringify(comparisonIds));
-    }
-  }, [comparisonIds, isLoading]);
+    localStorage.setItem('comparison_ids', JSON.stringify(comparisonIds));
+  }, [comparisonIds]);
 
   const addToComparison = (id: string) => {
     setComparisonIds((prev) => {
