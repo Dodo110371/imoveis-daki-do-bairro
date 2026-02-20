@@ -6,6 +6,34 @@ import { PageViewTracker } from '@/components/PageViewTracker';
 import { ContactEventLink } from '@/components/ContactEventLink';
 import { PartnerBadge } from '@/components/PartnerBadge';
 
+type RealtorProfile = {
+  full_name?: string | null;
+  avatar_url?: string | null;
+};
+
+type RealtorRow = {
+  id: string;
+  creci: string;
+  bio?: string | null;
+  regions?: string[] | null;
+  partner?: boolean | null;
+  is_partner?: boolean | null;
+  whatsapp?: string | null;
+  profiles?: RealtorProfile | null;
+};
+
+type RealtorCard = {
+  id: string;
+  name: string;
+  creci: string;
+  photo: string;
+  bio: string;
+  regions: string[];
+  whatsapp?: string;
+  isPartner: boolean;
+  propertiesCount: number;
+};
+
 export default async function CorretoresPage() {
   const supabase = await createClient();
 
@@ -24,18 +52,19 @@ export default async function CorretoresPage() {
       )
     `);
 
-  // Transform data to match UI needs
-  const realtors = realtorsData?.map((r: any) => ({
+  const realtors: RealtorCard[] = (realtorsData || []).map((r: RealtorRow) => ({
     id: r.id,
-    name: r.profiles?.full_name || 'Corretor',
+    name: r.profiles?.full_name || "Corretor",
     creci: r.creci,
-    photo: r.profiles?.avatar_url || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop', // Fallback image
-    bio: r.bio || 'Corretor parceiro Imóveis do Bairro.',
+    photo:
+      r.profiles?.avatar_url ||
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop",
+    bio: r.bio || "Corretor parceiro Imóveis daki do Bairro.",
     regions: r.regions || [],
-    whatsapp: r.whatsapp,
+    whatsapp: r.whatsapp || undefined,
     isPartner: !!(r.partner ?? r.is_partner),
-    propertiesCount: 0 // Placeholder until we implement count query
-  })) || [];
+    propertiesCount: 0,
+  }));
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">

@@ -328,7 +328,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <div className="space-y-4">
                 {(agency?.whatsapp || realtor?.whatsapp || property.contact_whatsapp || agency?.phone || realtor?.phone || property.contact_phone) && (
                   <ContactEventLink
-                    href={`https://wa.me/55${(agency?.whatsapp || realtor?.whatsapp || property.contact_whatsapp || agency?.phone || realtor?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis do Bairro e gostaria de mais informações.`}
+                    href={`https://wa.me/55${(agency?.whatsapp || realtor?.whatsapp || property.contact_whatsapp || agency?.phone || realtor?.phone || property.contact_phone || '').replace(/\D/g, '')}?text=Olá, vi seu imóvel ${property.title} no site Imóveis daki do Bairro e gostaria de mais informações.`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-green-700"

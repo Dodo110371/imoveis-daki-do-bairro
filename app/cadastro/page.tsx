@@ -23,7 +23,7 @@ function CadastroContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Registration error:', error);
-      alert(error.message || 'Erro ao criar conta. Tente novamente.');
+      alert(error.message || 'Não foi possível criar sua conta. Confira os dados informados e tente novamente.');
     }
   };
 
@@ -33,7 +33,7 @@ function CadastroContent() {
       if (error) throw error;
     } catch (error: any) {
       console.error('Google auth error:', error);
-      alert('Erro ao conectar com Google.');
+      alert('Não foi possível conectar com o Google. Tente novamente em alguns instantes.');
     }
   };
 

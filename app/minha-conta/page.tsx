@@ -91,7 +91,7 @@ function MinhaContaContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Authentication error:', error);
-      alert(error.message || 'Ocorreu um erro ao tentar autenticar. Tente novamente.');
+      alert(error.message || 'Não foi possível acessar sua conta. Confira os dados informados e tente novamente.');
     }
   };
 
@@ -101,7 +101,7 @@ function MinhaContaContent() {
       if (error) throw error;
     } catch (error: any) {
       console.error('Google auth error:', error);
-      alert('Erro ao conectar com Google.');
+      alert('Não foi possível conectar com o Google. Tente novamente em alguns instantes.');
     }
   };
 
@@ -111,10 +111,10 @@ function MinhaContaContent() {
       const { error } = await updateProfile(formData);
       if (error) throw error;
       setIsEditing(false);
-      alert('Perfil atualizado com sucesso!');
+      alert('Perfil atualizado com sucesso.');
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      alert('Erro ao atualizar perfil.');
+      alert('Não foi possível atualizar seu perfil. Tente novamente.');
     }
   };
 
@@ -143,7 +143,7 @@ function MinhaContaContent() {
       await updateProfile({ avatar_url: publicUrl });
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      alert('Erro ao fazer upload da imagem.');
+      alert('Não foi possível enviar sua foto. Tente novamente.');
     } finally {
       setIsUploading(false);
     }
@@ -156,7 +156,7 @@ function MinhaContaContent() {
       alert('Sua conta foi excluída permanentemente.');
     } catch (error: any) {
       console.error('Error deleting account:', error);
-      alert('Erro ao excluir conta. Tente novamente.');
+      alert('Não foi possível excluir sua conta. Tente novamente.');
     }
   };
 

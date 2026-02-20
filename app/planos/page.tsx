@@ -25,8 +25,8 @@ export default function PlanosPage() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-            Milhares de compradores e inquilinos visitam o Imóveis do Bairro todos os dias.
-            Escolha o plano ideal e destaque sua propriedade agora mesmo.
+            Milhares de compradores e inquilinos visitam o Imóveis daki do Bairro todos os dias.
+            Escolha o plano ideal e destaque seu imóvel agora mesmo.
           </p>
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -52,7 +52,7 @@ export default function PlanosPage() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Por que anunciar no Imóveis do Bairro?</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Por que anunciar no Imóveis daki do Bairro?</h2>
             <p className="text-slate-600 max-w-2xl mx-auto">
               Somos a plataforma que mais cresce na região, conectando proprietários a clientes qualificados de forma simples e direta.
             </p>

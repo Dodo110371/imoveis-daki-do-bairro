@@ -7,9 +7,55 @@ import { PropertyCard } from '@/components/PropertyCard';
 import { ContactEventLink } from '@/components/ContactEventLink';
 import { PartnerBadge } from '@/components/PartnerBadge';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
+interface RealtorProfilePageParams {
+  id: string;
 }
+
+interface PageProps {
+  params: Promise<RealtorProfilePageParams>;
+}
+
+type RealtorProfileRow = {
+  id: string;
+  creci: string;
+  bio?: string | null;
+  regions?: string[] | null;
+  whatsapp?: string | null;
+  partner?: boolean | null;
+  is_partner?: boolean | null;
+  profiles?: {
+    full_name?: string | null;
+    avatar_url?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  } | null;
+};
+
+type RealtorPropertyRow = {
+  id: string;
+  title: string;
+  price: number;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  images?: string[];
+  type: "Venda" | "Aluguel";
+};
+
+type RealtorPropertyCard = {
+  id: string;
+  title: string;
+  price: string;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  imageUrl: string;
+  images: string[];
+  type: "Venda" | "Aluguel";
+  realtorPartner: boolean;
+};
 
 export default async function RealtorProfilePage({ params }: PageProps) {
   // Await params correctly in Next.js 15+
@@ -24,7 +70,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
       profiles (full_name, avatar_url, email, phone)
     `)
     .eq('id', id)
-    .single();
+    .single<RealtorProfileRow>();
 
   if (!realtorData) {
     notFound();
@@ -49,20 +95,22 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     .select('*')
     .eq('owner_id', id);
 
-  // Map properties to PropertyCard props
-  const properties = propertiesData?.map((p: any) => ({
-    id: p.id,
-    title: p.title,
-    price: `R$ ${p.price.toLocaleString('pt-BR')}`,
-    location: p.location,
-    bedrooms: p.bedrooms,
-    bathrooms: p.bathrooms,
-    area: p.area,
-    imageUrl: p.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600&auto=format&fit=crop',
-    images: p.images || [],
-    type: p.type,
-    realtorPartner: realtor.isPartner
-  })) || [];
+  const properties: RealtorPropertyCard[] =
+    (propertiesData || []).map((p: RealtorPropertyRow) => ({
+      id: p.id,
+      title: p.title,
+      price: `R$ ${p.price.toLocaleString('pt-BR')}`,
+      location: p.location,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      area: p.area,
+      imageUrl:
+        p.images?.[0] ||
+        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600&auto=format&fit=crop',
+      images: p.images || [],
+      type: p.type,
+      realtorPartner: realtor.isPartner,
+    })) || [];
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -179,7 +227,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
 
               {properties.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {properties.map((property: any) => (
+                  {properties.map((property) => (
                     <div key={property.id} className="space-y-2">
                       <PropertyCard {...property} />
                       {realtor.whatsapp && (

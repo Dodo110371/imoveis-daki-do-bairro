@@ -5,25 +5,47 @@ import { createClient } from '@/lib/supabase/server';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { AgencyPartnerBadge } from '@/components/AgencyPartnerBadge';
 
+type AgencyPropertiesCount = {
+  count: number;
+};
+
+type AgencyRow = {
+  id: number;
+  name: string;
+  logo_url?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  partner?: boolean | null;
+  is_partner?: boolean | null;
+  properties?: AgencyPropertiesCount[] | null;
+};
+
+type AgencyCard = {
+  id: number;
+  name: string;
+  logo: string;
+  address: string;
+  phone: string;
+  propertiesCount: number;
+  isPartner: boolean;
+};
+
 export default async function ImobiliariasPage() {
   const supabase = await createClient();
 
-  // Fetch agencies with property count
-  // Note: 'properties(count)' might return count object depending on setup, 
-  // but let's try standard approach or just fetch agencies first.
-  // To keep it robust, we'll fetch agencies and then maybe count properties if needed,
-  // or just use a placeholder if count is complex.
-  // Actually, Supabase select with count:
   const { data: agenciesData } = await supabase
     .from('agencies')
     .select('*, properties(count)');
 
-  const agencies = agenciesData?.map((agency: any) => ({
-    ...agency,
-    logo: agency.logo_url,
-    propertiesCount: agency.properties?.[0]?.count || 0,
-    isPartner: !!(agency.partner ?? agency.is_partner)
-  })) || [];
+  const agencies: AgencyCard[] = (agenciesData || []).map((agency: AgencyRow) => ({
+    id: agency.id,
+    name: agency.name,
+    logo: agency.logo_url || '',
+    address: agency.address || '',
+    phone: agency.phone || '',
+    propertiesCount: agency.properties?.[0]?.count ?? 0,
+    isPartner: !!(agency.partner ?? agency.is_partner),
+  }));
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">

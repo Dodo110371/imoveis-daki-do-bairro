@@ -7,20 +7,51 @@ import { CITIES } from "@/lib/cities";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
 
-interface SearchPageProps {
-  searchParams: Promise<{
-    city?: string;
-    neighborhood?: string;
-    street?: string;
-    type?: string;
-    view?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    bedrooms?: string;
-    bathrooms?: string;
-    minArea?: string;
-  }>;
+interface ImoveisSearchParams {
+  city?: string;
+  neighborhood?: string;
+  street?: string;
+  type?: string;
+  view?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  bedrooms?: string;
+  bathrooms?: string;
+  minArea?: string;
 }
+
+interface SearchPageProps {
+  searchParams: Promise<ImoveisSearchParams>;
+}
+
+type ImoveisDbProperty = {
+  id: string;
+  title: string;
+  price: number;
+  type: "Venda" | "Aluguel";
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  images?: string[];
+  contact_whatsapp?: string;
+  contact_phone?: string;
+  contact_email?: string;
+  agency_id?: number;
+  owner_id?: string;
+};
+
+type AgencyRow = {
+  id: number;
+  partner?: boolean;
+  is_partner?: boolean;
+};
+
+type RealtorRow = {
+  id: string;
+  partner?: boolean;
+  is_partner?: boolean;
+};
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
@@ -83,8 +114,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const { data: propertiesData } = await query;
 
-  // Helper to map DB to Card Props (same as HomePage)
-  const mapProperty = (p: any) => ({
+  const mapProperty = (p: ImoveisDbProperty) => ({
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel'
@@ -103,47 +133,47 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   });
 
   // Fetch partner status for agencies referenced by properties (to display badge on cards)
-  const agencyIds = Array.from(
+  const agencyIds: number[] = Array.from(
     new Set((propertiesData || [])
-      .map((p: any) => p.agency_id)
-      .filter((id: any) => id != null))
+      .map((p: ImoveisDbProperty) => p.agency_id)
+      .filter((id): id is number => typeof id === "number"))
   );
-  let agenciesMap = new Map<number, boolean>();
+  const agenciesMap = new Map<number, boolean>();
   if (agencyIds.length > 0) {
     const { data: agenciesData } = await supabase
       .from('agencies')
-      .select('id, partner, is_partner')
-      .in('id', agencyIds);
-    (agenciesData || []).forEach((a: any) => {
+      .select("id, partner, is_partner")
+      .in("id", agencyIds);
+    (agenciesData || []).forEach((a: AgencyRow) => {
       const isPartner = !!(a.partner ?? a.is_partner);
       agenciesMap.set(a.id, isPartner);
     });
   }
 
   // Fetch partner status for realtors (owners) referenced by properties
-  const ownerIds = Array.from(
+  const ownerIds: string[] = Array.from(
     new Set((propertiesData || [])
-      .map((p: any) => p.owner_id)
-      .filter((id: any) => id != null))
+      .map((p: ImoveisDbProperty) => p.owner_id)
+      .filter((id): id is string => typeof id === "string" && !!id))
   );
-  let realtorsMap = new Map<string, boolean>();
+  const realtorsMap = new Map<string, boolean>();
   if (ownerIds.length > 0) {
     const { data: realtorsData } = await supabase
       .from('realtors')
-      .select('id, partner, is_partner')
-      .in('id', ownerIds);
-    (realtorsData || []).forEach((r: any) => {
+      .select("id, partner, is_partner")
+      .in("id", ownerIds);
+    (realtorsData || []).forEach((r: RealtorRow) => {
       const isPartner = !!(r.partner ?? r.is_partner);
       realtorsMap.set(r.id, isPartner);
     });
   }
 
-  const filteredProperties = (propertiesData || []).map((p: any) => {
+  const filteredProperties = (propertiesData || []).map((p: ImoveisDbProperty) => {
     const base = mapProperty(p);
     return {
       ...base,
-      agencyPartner: agenciesMap.get(p.agency_id) || false,
-      realtorPartner: realtorsMap.get(p.owner_id) || false,
+      agencyPartner: (p.agency_id != null ? agenciesMap.get(p.agency_id) : false) || false,
+      realtorPartner: (p.owner_id ? realtorsMap.get(p.owner_id) : false) || false,
     };
   });
 

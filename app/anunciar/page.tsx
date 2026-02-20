@@ -241,13 +241,12 @@ export default function AdvertisePage() {
 
     try {
       for (const file of files) {
-        // Validation: Size < 5MB, Type Image
         if (file.size > 5 * 1024 * 1024) {
-          alert(`Arquivo ${file.name} é muito grande (máx 5MB).`);
+          alert(`O arquivo ${file.name} é muito grande. Tamanho máximo permitido: 5MB.`);
           continue;
         }
         if (!file.type.startsWith('image/')) {
-          alert(`Arquivo ${file.name} não é uma imagem.`);
+          alert(`O arquivo ${file.name} não parece ser uma imagem válida.`);
           continue;
         }
 
@@ -274,7 +273,7 @@ export default function AdvertisePage() {
 
     } catch (error: any) {
       console.error('Error uploading photos:', error);
-      alert('Erro ao fazer upload das imagens.');
+      alert('Não foi possível enviar as imagens. Tente novamente.');
     } finally {
       setIsUploadingImages(false);
       // Reset input
@@ -290,7 +289,6 @@ export default function AdvertisePage() {
   };
 
   const nextStep = () => {
-    // Validation for Step 1
     if (currentStep === 1 && !formData.advertiserType) {
       alert('Por favor, selecione uma opção de identificação para continuar.');
       return;
@@ -329,7 +327,7 @@ export default function AdvertisePage() {
 
     try {
       if (!user) {
-        alert('Você precisa estar logado para anunciar.');
+        alert('Você precisa estar logado para anunciar seu imóvel.');
         setIsSubmitting(false);
         return;
       }
@@ -368,7 +366,7 @@ export default function AdvertisePage() {
 
       if (error) {
         console.error('Error creating property:', error);
-        alert('Erro ao criar anúncio: ' + error.message);
+        alert('Não foi possível criar seu anúncio. Revise os dados informados e tente novamente.');
         setIsSubmitting(false);
         return;
       }
@@ -379,7 +377,7 @@ export default function AdvertisePage() {
 
     } catch (error) {
       console.error('Unexpected error:', error);
-      alert('Ocorreu um erro inesperado.');
+      alert('Ocorreu um erro inesperado ao criar seu anúncio. Tente novamente em alguns instantes.');
       setIsSubmitting(false);
     }
   };

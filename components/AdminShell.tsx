@@ -64,7 +64,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <aside className="w-64 bg-slate-900 text-white min-h-screen fixed left-0 top-0 bottom-0 z-50 hidden md:block">
         <div className="p-6 border-b border-slate-800">
           <h1 className="text-xl font-bold">Admin Panel</h1>
-          <p className="text-xs text-slate-400 mt-1">Imóveis do Bairro</p>
+          <p className="text-xs text-slate-400 mt-1">Imóveis daki do Bairro</p>
         </div>
         <nav className="p-4 space-y-2">
           <AdminSidebarNav counts={counts} />
