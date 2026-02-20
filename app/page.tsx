@@ -133,16 +133,24 @@ export default async function HomePage() {
           <div className="mt-6 w-full max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-700">
             <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-white/5 px-4 sm:px-6 py-4 sm:py-5 shadow-xl shadow-black/25 backdrop-blur-md">
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-emerald-500/10" />
-              <div className="relative flex flex-col gap-3 sm:gap-2 items-center sm:items-start text-left">
+              <div className="relative flex flex-col gap-3 sm:gap-3 items-center sm:items-start text-left">
                 <div className="inline-flex items-center gap-2 rounded-full bg-black/30 border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
                   <Sparkles className="h-3 w-3 text-yellow-300" />
                   <span>Condições especiais</span>
                 </div>
-                <div className="grid gap-2 text-sm sm:text-base text-blue-50 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-1">
-                  <p>Cadastros sem cobrança de taxas de adesão.</p>
-                  <p>Ache seu imóvel sem custos.</p>
-                  <p>Anuncie nas melhores condições de mercado.</p>
-                  <p>Seu anúncio será publicado também no Instagram do site sem custos extras.</p>
+                <div className="flex flex-col sm:flex-row items-center justify-center text-sm sm:text-base text-blue-50 divide-y divide-white/20 sm:divide-y-0 sm:divide-x">
+                  <div className="px-2 sm:px-4 py-1 sm:py-0 text-center sm:text-left">
+                    Cadastros sem cobrança de taxas de adesão.
+                  </div>
+                  <div className="px-2 sm:px-4 py-1 sm:py-0 text-center sm:text-left">
+                    Ache seu imóvel sem custos.
+                  </div>
+                  <div className="px-2 sm:px-4 py-1 sm:py-0 text-center sm:text-left">
+                    Anuncie nas melhores condições de mercado.
+                  </div>
+                  <div className="px-2 sm:px-4 py-1 sm:py-0 text-center sm:text-left">
+                    Seu anúncio será publicado também no Instagram do site sem custos extras.
+                  </div>
                 </div>
                 <p className="mt-2 text-lg sm:text-xl font-extrabold tracking-wide text-yellow-300 text-center sm:text-left">
                   Venha e veja!!
