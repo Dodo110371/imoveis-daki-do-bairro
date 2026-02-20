@@ -120,15 +120,36 @@ export default async function HomePage() {
               priority
             />
           </div>
-          <h1 className="text-3xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg px-2">
+          <h1 className="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg px-2">
             Viva o melhor do seu Bairro
           </h1>
-          <p className="text-lg md:text-xl text-slate-100 mb-8 max-w-2xl drop-shadow-md px-4">
+          <p className="text-lg md:text-xl text-slate-100 mb-6 md:mb-8 max-w-2xl drop-shadow-md px-4">
             Conhecemos cada rua, cada praça e cada oportunidade. Encontre seu novo lar com quem entende do assunto.
           </p>
 
           {/* Enhanced Search Card */}
           <SearchForm />
+
+          <div className="mt-6 w-full max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-700">
+            <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-white/5 px-4 sm:px-6 py-4 sm:py-5 shadow-xl shadow-black/25 backdrop-blur-md">
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-emerald-500/10" />
+              <div className="relative flex flex-col gap-3 sm:gap-2 items-center sm:items-start text-left">
+                <div className="inline-flex items-center gap-2 rounded-full bg-black/30 border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
+                  <Sparkles className="h-3 w-3 text-yellow-300" />
+                  <span>Condições especiais</span>
+                </div>
+                <div className="grid gap-2 text-sm sm:text-base text-blue-50 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-1">
+                  <p>Cadastros sem cobrança de taxas de adesão.</p>
+                  <p>Ache seu imóvel sem custos.</p>
+                  <p>Anuncie nas melhores condições de mercado.</p>
+                  <p>Seu anúncio será publicado também no Instagram do site sem custos extras.</p>
+                </div>
+                <p className="mt-2 text-lg sm:text-xl font-extrabold tracking-wide text-yellow-300 text-center sm:text-left">
+                  Venha e veja!!
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -178,28 +199,6 @@ export default async function HomePage() {
 
       <section className="container mx-auto px-4">
         <AdSenseAd placement="home_below_featured" />
-      </section>
-
-      <section className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 py-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-3xl px-6 sm:px-10 py-8 sm:py-10 text-center text-white shadow-xl backdrop-blur">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-200 mb-3">
-              Condições especiais
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-              Promoções para quem anuncia e para quem busca um imóvel
-            </h2>
-            <div className="space-y-3 text-base sm:text-lg text-blue-50 mb-6">
-              <p>Cadastros sem cobrança de taxas de adesão.</p>
-              <p>Ache seu imóvel sem custos.</p>
-              <p>Anuncie nas melhores condições de mercado.</p>
-              <p>Seu anúncio será publicado também no Instagram do site sem custos extras.</p>
-            </div>
-            <p className="text-xl sm:text-2xl font-extrabold tracking-wide text-yellow-300">
-              Venha e veja!!
-            </p>
-          </div>
-        </div>
       </section>
 
       {/* New Releases Section */}
