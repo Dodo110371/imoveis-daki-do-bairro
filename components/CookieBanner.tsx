@@ -21,6 +21,15 @@ export function CookieBanner() {
     functional: consent?.functional ?? true,
   });
 
+  const handleOpenPreferences = () => {
+    setPrefs({
+      analytics: consent?.analytics ?? false,
+      marketing: consent?.marketing ?? false,
+      functional: consent?.functional ?? true,
+    });
+    openPreferences();
+  };
+
   if (decided && !isPreferencesOpen) return null;
 
   return (
@@ -43,7 +52,7 @@ export function CookieBanner() {
                   Recusar
                 </button>
                 <button
-                  onClick={openPreferences}
+                  onClick={handleOpenPreferences}
                   className="px-3 py-1 rounded-md border border-blue-300/40 text-blue-100 text-xs hover:bg-blue-300/10"
                 >
                   Personalizar
