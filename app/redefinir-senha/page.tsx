@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { userMessages } from '@/lib/user-messages';
 
 function RedefinirSenhaContent() {
   const [password, setPassword] = useState('');
@@ -17,29 +18,19 @@ function RedefinirSenhaContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (password !== confirmPassword) {
-      alert('As senhas não coincidem.');
-      return;
-    }
-
-    if (password.length < 6) {
-      alert('A senha deve ter pelo menos 6 caracteres.');
-      return;
-    }
-
     setIsSubmitting(true);
     
     try {
       const { error } = await updatePassword(password);
       if (error) throw error;
       setIsSuccess(true);
-      // Redirect after 3 seconds
+      alert(userMessages.password.updateSuccess);
       setTimeout(() => {
         router.push('/minha-conta');
       }, 3000);
     } catch (error: any) {
       console.error('Error updating password:', error);
-      alert('Erro ao redefinir senha. Tente novamente.');
+      alert(userMessages.password.updateError);
     } finally {
       setIsSubmitting(false);
     }

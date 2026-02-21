@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Check, Building2, BadgeCheck, FileText, Upload, Shield, TrendingUp, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { registerAgency } from './actions';
+import { userMessages } from '@/lib/user-messages';
 
 const PLANS = [
   {
@@ -110,7 +111,7 @@ export default function CadastroImobiliariaPage() {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Ocorreu um erro ao processar seu cadastro. Tente novamente.');
+      alert(userMessages.advertise.unexpectedError);
       setIsSubmitting(false);
     }
   };

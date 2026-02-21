@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { userMessages } from '@/lib/user-messages';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -19,9 +20,10 @@ export default function ForgotPasswordPage() {
       const { error } = await resetPasswordForEmail(email);
       if (error) throw error;
       setIsSuccess(true);
+      alert(userMessages.password.resetRequestSuccess);
     } catch (error: any) {
       console.error('Error sending reset email:', error);
-      alert('Erro ao enviar email de recuperação. Verifique se o email está correto.');
+      alert(userMessages.password.resetRequestError);
     } finally {
       setIsSubmitting(false);
     }

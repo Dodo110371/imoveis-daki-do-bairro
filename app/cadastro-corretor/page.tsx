@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 import { ShieldCheck, MapPin, Phone, FileText } from 'lucide-react';
+import { userMessages } from '@/lib/user-messages';
 
 export default function CadastroCorretorPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -58,7 +59,7 @@ export default function CadastroCorretorPage() {
       router.push('/anunciar');
     } catch (error: any) {
       console.error('Error registering realtor:', error);
-      alert('Erro ao cadastrar: ' + error.message);
+      alert(userMessages.advertise.unexpectedError);
     } finally {
       setIsSubmitting(false);
     }
