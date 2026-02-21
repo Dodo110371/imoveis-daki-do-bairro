@@ -18,18 +18,20 @@ export interface User {
   role?: 'user' | 'admin';
 }
 
+type AuthError = { message?: string } | null;
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password?: string) => Promise<{ error: any }>;
-  signInWithGoogle: (redirectUrl?: string) => Promise<{ error: any }>;
+  login: (email: string, password?: string) => Promise<{ error: AuthError }>;
+  signInWithGoogle: (redirectUrl?: string) => Promise<{ error: AuthError }>;
   logout: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<{ error: any }>;
-  updateProfile: (data: Partial<User>) => Promise<{ error: any }>;
-  deleteAccount: () => Promise<{ error: any }>;
-  resetPasswordForEmail: (email: string) => Promise<{ error: any }>;
-  updatePassword: (password: string) => Promise<{ error: any }>;
+  register: (email: string, password: string, name: string) => Promise<{ error: AuthError }>;
+  updateProfile: (data: Partial<User>) => Promise<{ error: AuthError }>;
+  deleteAccount: () => Promise<{ error: AuthError }>;
+  resetPasswordForEmail: (email: string) => Promise<{ error: AuthError }>;
+  updatePassword: (password: string) => Promise<{ error: AuthError }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -105,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase]);
 
   const login = async (email: string, password?: string) => {
     setIsLoading(true);
@@ -181,7 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser((prev) => prev ? { ...prev, ...data } : null);
       return { error: null };
     } catch (error) {
-      return { error };
+      return { error: error as AuthError };
     }
   };
 
@@ -193,7 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: null };
     } catch (error) {
       console.error("Error deleting account:", error);
-      return { error };
+      return { error: error as AuthError };
     }
   };
 
@@ -204,7 +206,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       return { error };
     } catch (error) {
-      return { error };
+      return { error: error as AuthError };
     }
   };
 
@@ -213,7 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.updateUser({ password });
       return { error };
     } catch (error) {
-      return { error };
+      return { error: error as AuthError };
     }
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Calculator, DollarSign, Percent, Calendar } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Calculator, Percent, Calendar } from 'lucide-react';
 
 interface MortgageCalculatorProps {
   propertyPrice: number;
@@ -13,27 +13,18 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
   const [interestRate, setInterestRate] = useState(10.5); // 10.5% default annual
   const [years, setYears] = useState(30); // 30 years default
 
-  const [monthlyPayment, setMonthlyPayment] = useState(0);
-
-  useEffect(() => {
-    // Principal loan amount
+  const monthlyPayment = useMemo(() => {
     const principal = value - downPayment;
-    
-    // Monthly interest rate
     const monthlyRate = interestRate / 100 / 12;
-    
-    // Total number of payments
     const numberOfPayments = years * 12;
 
-    // Amortization calculation (Price Table - standard for simplicity here)
-    // PMT = P * (r * (1 + r)^n) / ((1 + r)^n - 1)
-    
     if (principal > 0 && monthlyRate > 0) {
-      const pmt = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-      setMonthlyPayment(pmt);
-    } else {
-      setMonthlyPayment(0);
+      const numerator = monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments);
+      const denominator = Math.pow(1 + monthlyRate, numberOfPayments) - 1;
+      return principal * (numerator / denominator);
     }
+
+    return 0;
   }, [value, downPayment, interestRate, years]);
 
   const formatCurrency = (val: number) => {

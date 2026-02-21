@@ -9,6 +9,7 @@ import {
   ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle, Eye, EyeOff, FileEdit
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { userMessages } from '@/lib/user-messages';
 import { createClient } from '@/lib/supabase/client';
 import { HeaderCta } from '@/components/HeaderCta';
 
@@ -91,7 +92,7 @@ function MinhaContaContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Authentication error:', error);
-      alert(error.message || 'Não foi possível acessar sua conta. Confira os dados informados e tente novamente.');
+      alert(userMessages.auth.loginError(error));
     }
   };
 
@@ -101,7 +102,7 @@ function MinhaContaContent() {
       if (error) throw error;
     } catch (error: any) {
       console.error('Google auth error:', error);
-      alert('Não foi possível conectar com o Google. Tente novamente em alguns instantes.');
+      alert(userMessages.auth.googleError);
     }
   };
 
@@ -111,10 +112,10 @@ function MinhaContaContent() {
       const { error } = await updateProfile(formData);
       if (error) throw error;
       setIsEditing(false);
-      alert('Perfil atualizado com sucesso.');
+      alert(userMessages.auth.profileUpdateSuccess);
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      alert('Não foi possível atualizar seu perfil. Tente novamente.');
+      alert(userMessages.auth.profileUpdateError);
     }
   };
 
@@ -143,7 +144,7 @@ function MinhaContaContent() {
       await updateProfile({ avatar_url: publicUrl });
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      alert('Não foi possível enviar sua foto. Tente novamente.');
+      alert(userMessages.auth.avatarUploadError);
     } finally {
       setIsUploading(false);
     }
@@ -153,10 +154,10 @@ function MinhaContaContent() {
     try {
       const { error } = await deleteAccount();
       if (error) throw error;
-      alert('Sua conta foi excluída permanentemente.');
+      alert(userMessages.auth.deleteAccountSuccess);
     } catch (error: any) {
       console.error('Error deleting account:', error);
-      alert('Não foi possível excluir sua conta. Tente novamente.');
+      alert(userMessages.auth.deleteAccountError);
     }
   };
 

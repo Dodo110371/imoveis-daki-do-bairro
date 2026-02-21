@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 async function capture(urlPath, outPath, page) {
   const url = `http://localhost:3000${urlPath}`;

@@ -5,6 +5,7 @@ import { User, Mail, Lock, Phone, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { userMessages } from '@/lib/user-messages';
 
 function CadastroContent() {
   const [name, setName] = useState('');
@@ -23,7 +24,7 @@ function CadastroContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Registration error:', error);
-      alert(error.message || 'Não foi possível criar sua conta. Confira os dados informados e tente novamente.');
+      alert(userMessages.auth.registerError(error));
     }
   };
 
@@ -33,7 +34,7 @@ function CadastroContent() {
       if (error) throw error;
     } catch (error: any) {
       console.error('Google auth error:', error);
-      alert('Não foi possível conectar com o Google. Tente novamente em alguns instantes.');
+      alert(userMessages.auth.googleError);
     }
   };
 

@@ -59,8 +59,9 @@ export function AdSenseAd({
     }
 
     try {
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
+      const w = window as unknown as { adsbygoogle?: unknown[] };
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
     } catch {
     }
   }, [clientId, slot, allowMarketing]);

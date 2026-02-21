@@ -27,6 +27,7 @@ import {
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
+import { userMessages } from '@/lib/user-messages';
 import { useEffect } from 'react';
 import { PageViewTracker } from '@/components/PageViewTracker';
 
@@ -242,11 +243,11 @@ export default function AdvertisePage() {
     try {
       for (const file of files) {
         if (file.size > 5 * 1024 * 1024) {
-          alert(`O arquivo ${file.name} é muito grande. Tamanho máximo permitido: 5MB.`);
+          alert(userMessages.advertise.fileTooLarge(file.name));
           continue;
         }
         if (!file.type.startsWith('image/')) {
-          alert(`O arquivo ${file.name} não parece ser uma imagem válida.`);
+          alert(userMessages.advertise.fileNotImage(file.name));
           continue;
         }
 
@@ -273,7 +274,7 @@ export default function AdvertisePage() {
 
     } catch (error: any) {
       console.error('Error uploading photos:', error);
-      alert('Não foi possível enviar as imagens. Tente novamente.');
+      alert(userMessages.advertise.uploadError);
     } finally {
       setIsUploadingImages(false);
       // Reset input
@@ -327,7 +328,7 @@ export default function AdvertisePage() {
 
     try {
       if (!user) {
-        alert('Você precisa estar logado para anunciar seu imóvel.');
+        alert(userMessages.auth.mustBeLoggedInToAdvertise);
         setIsSubmitting(false);
         return;
       }
@@ -366,7 +367,7 @@ export default function AdvertisePage() {
 
       if (error) {
         console.error('Error creating property:', error);
-        alert('Não foi possível criar seu anúncio. Revise os dados informados e tente novamente.');
+        alert(userMessages.advertise.createAdError);
         setIsSubmitting(false);
         return;
       }
@@ -377,7 +378,7 @@ export default function AdvertisePage() {
 
     } catch (error) {
       console.error('Unexpected error:', error);
-      alert('Ocorreu um erro inesperado ao criar seu anúncio. Tente novamente em alguns instantes.');
+      alert(userMessages.advertise.unexpectedError);
       setIsSubmitting(false);
     }
   };

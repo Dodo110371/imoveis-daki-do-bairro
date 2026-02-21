@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Building2,
@@ -35,32 +35,17 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false); // Mobile state
 
-  const [filters, setFilters] = useState<FilterState>({
-    category: '',
-    bedrooms: '',
-    bathrooms: '',
-    parking: '',
-    minPrice: '',
-    maxPrice: '',
-    minArea: '',
-    maxArea: '',
-    type: type
-  });
-
-  // Sync state with URL params on mount/update
-  useEffect(() => {
-    setFilters({
-      category: searchParams.get('category') || '',
-      bedrooms: searchParams.get('bedrooms') || '',
-      bathrooms: searchParams.get('bathrooms') || '',
-      parking: searchParams.get('parking') || '',
-      minPrice: searchParams.get('minPrice') || '',
-      maxPrice: searchParams.get('maxPrice') || '',
-      minArea: searchParams.get('minArea') || '',
-      maxArea: searchParams.get('maxArea') || '',
-      type: type
-    });
-  }, [searchParams, type]);
+  const [filters, setFilters] = useState<FilterState>(() => ({
+    category: searchParams.get('category') || '',
+    bedrooms: searchParams.get('bedrooms') || '',
+    bathrooms: searchParams.get('bathrooms') || '',
+    parking: searchParams.get('parking') || '',
+    minPrice: searchParams.get('minPrice') || '',
+    maxPrice: searchParams.get('maxPrice') || '',
+    minArea: searchParams.get('minArea') || '',
+    maxArea: searchParams.get('maxArea') || '',
+    type,
+  }));
 
   const updateFilters = (key: keyof FilterState, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));

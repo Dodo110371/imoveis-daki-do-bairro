@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCookieConsent } from '@/context/CookieConsentContext';
 import Link from 'next/link';
 
@@ -20,14 +20,6 @@ export function CookieBanner() {
     marketing: consent?.marketing ?? false,
     functional: consent?.functional ?? true,
   });
-
-  useEffect(() => {
-    setPrefs({
-      analytics: consent?.analytics ?? false,
-      marketing: consent?.marketing ?? false,
-      functional: consent?.functional ?? true,
-    });
-  }, [consent]);
 
   if (decided && !isPreferencesOpen) return null;
 

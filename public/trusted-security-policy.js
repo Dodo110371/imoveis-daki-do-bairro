@@ -6,6 +6,5 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
       createScriptURL: function(string) { return string; }
     });
   } catch (e) {
-    // Policy might already exist
   }
 }
