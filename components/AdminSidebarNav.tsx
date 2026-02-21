@@ -1,7 +1,7 @@
-"use client";
+'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Building2, BarChart3, Users, Home } from "lucide-react";
+import { LayoutDashboard, Building2, BarChart3, Users, Home, Wrench } from "lucide-react";
 
 type Counts = {
   pendingProperties?: number;
@@ -42,6 +42,10 @@ export function AdminSidebarNav({ counts }: { counts?: Counts }) {
         {counts?.users ? (
           <span className={`${badge} bg-slate-700 text-white`}>{counts.users}</span>
         ) : null}
+      </Link>
+      <Link href="/admin/ferramentas-teste" className={`${base} ${pathname === "/admin/ferramentas-teste" ? active : inactive}`}>
+        <Wrench className="w-5 h-5" />
+        Ferramentas de Teste
       </Link>
       <Link href="/" className={`${base} ${pathname === "/" ? active : inactive} mt-8`}>
         <Home className="w-5 h-5" />

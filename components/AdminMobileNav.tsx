@@ -1,8 +1,8 @@
-"use client";
+'use client';
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, LayoutDashboard, Building2, BarChart3, Users, Home } from "lucide-react";
+import { Menu, X, LayoutDashboard, Building2, BarChart3, Users, Home, Wrench } from "lucide-react";
 
 type Counts = {
   pendingProperties?: number;
@@ -70,6 +70,10 @@ export function AdminMobileNav({ counts }: { counts?: Counts }) {
                 {counts?.users ? (
                   <span className={`${badge} bg-slate-700 text-white`}>{counts.users}</span>
                 ) : null}
+              </Link>
+              <Link href="/admin/ferramentas-teste" className={`${base} ${pathname === "/admin/ferramentas-teste" ? active : inactive}`} onClick={() => setOpen(false)}>
+                <Wrench className="h-5 w-5 mr-2" />
+                Ferramentas de Teste
               </Link>
               <Link href="/" className={`${base} ${pathname === "/" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <Home className="h-5 w-5 mr-2" />
