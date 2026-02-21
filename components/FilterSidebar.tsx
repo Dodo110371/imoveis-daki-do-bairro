@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Building2,
-  MapPin,
   BedDouble,
   Bath,
   Car,

@@ -2,7 +2,7 @@
 
 import { useComparison } from '@/context/ComparisonContext';
 import Link from 'next/link';
-import { ArrowRightLeft, X } from 'lucide-react';
+import { ArrowRightLeft } from 'lucide-react';
 
 export function ComparisonBar() {
   const { comparisonIds, clearComparison } = useComparison();

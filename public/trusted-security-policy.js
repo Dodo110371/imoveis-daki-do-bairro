@@ -5,6 +5,6 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
       createScript: function(string) { return string; },
       createScriptURL: function(string) { return string; }
     });
-  } catch (e) {
+  } catch {
   }
 }

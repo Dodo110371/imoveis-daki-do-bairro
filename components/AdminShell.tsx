@@ -1,6 +1,5 @@
-"use client";
+'use client';
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
 import { AdminSidebarNav } from "@/components/AdminSidebarNav";
@@ -33,7 +32,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         router.replace(`${pathname}?${params.toString()}`);
       }
     }
-  }, []);
+  }, [searchParams, pathname, router]);
 
   useEffect(() => {
     const controller = new AbortController();

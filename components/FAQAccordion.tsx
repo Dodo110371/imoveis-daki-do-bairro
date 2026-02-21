@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FAQItem {
   question: string;
