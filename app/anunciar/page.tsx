@@ -128,6 +128,8 @@ export default function AdvertisePage() {
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const isAdmin = user?.role === 'admin';
+  const isTestModeEnabled = process.env.NODE_ENV === 'development' || isAdmin;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -496,18 +498,20 @@ export default function AdvertisePage() {
           </Link>
         </div>
 
-        {/* Bypass for demo purposes */}
-        <div className="mt-12 text-center">
-          <button
-            onClick={() => {
-              setShowLoginPrompt(false);
-              setCurrentStep(curr => curr + 1);
-            }}
-            className="text-sm text-slate-500 hover:text-slate-900 underline"
-          >
-            Continuar sem login (Modo de Teste)
-          </button>
-        </div>
+        {/* Bypass for demo purposes - restricted to test mode/admin */}
+        {isTestModeEnabled && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => {
+                setShowLoginPrompt(false);
+                setCurrentStep(curr => curr + 1);
+              }}
+              className="text-sm text-slate-500 hover:text-slate-900 underline"
+            >
+              Continuar sem login (Modo de Teste)
+            </button>
+          </div>
+        )}
 
         {/* Back Button */}
         <div className="mt-6 text-center">
