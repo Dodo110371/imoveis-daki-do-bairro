@@ -11,6 +11,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ComparisonBar } from "@/components/ComparisonBar";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
 import { CookieBanner } from "@/components/CookieBanner";
+import { CanonicalLink } from "@/components/CanonicalLink";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         <Script src="/trusted-security-policy.js" strategy="beforeInteractive" />
       </head>
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+        <CanonicalLink />
         <CookieConsentProvider>
           <AuthProvider>
             <FavoritesProvider>
