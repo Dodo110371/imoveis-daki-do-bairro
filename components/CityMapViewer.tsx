@@ -10,12 +10,6 @@ interface CityMapViewerProps {
   cityName: string;
 }
 
-// Helper to generate a consistent mock CEP based on string
-function generateMockCEP(str: string, index: number) {
-  const base = 65000 + index;
-  return `${base}-000`;
-}
-
 export function CityMapViewer({ initialMapUrl, neighborhoods, cityName }: CityMapViewerProps) {
   const [mapUrl, setMapUrl] = useState(initialMapUrl);
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
@@ -87,9 +81,6 @@ export function CityMapViewer({ initialMapUrl, neighborhoods, cityName }: CityMa
                 activeNeighborhood === neighborhood ? 'text-blue-700' : 'text-slate-900 group-hover:text-blue-600'
               }`}>
                 {neighborhood}
-              </span>
-              <span className="text-xs text-slate-400">
-                CEP: {generateMockCEP(neighborhood, index)}
               </span>
             </Link>
           ))}

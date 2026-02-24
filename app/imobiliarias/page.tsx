@@ -65,13 +65,17 @@ export default async function ImobiliariasPage() {
             <div key={imobiliaria.id} className="bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col">
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="h-16 w-16 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200">
-                    <Image
-                      src={imobiliaria.logo}
-                      alt={imobiliaria.name}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="h-16 w-16 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
+                    {imobiliaria.logo ? (
+                      <Image
+                        src={imobiliaria.logo}
+                        alt={imobiliaria.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Building2 className="w-8 h-8 text-slate-400" />
+                    )}
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 line-clamp-1">

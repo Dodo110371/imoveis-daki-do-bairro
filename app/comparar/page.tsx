@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Check, X, MapPin, Bed, Bath, Car, Move, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, X, MapPin, Bed, Bath, Car, Move, Trash2, Home } from 'lucide-react';
 
 interface Property {
   id: string;
@@ -125,13 +125,20 @@ export default function ComparisonPage() {
                     >
                       <X size={16} />
                     </button>
-                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-3">
-                      <Image
-                        src={property.images?.[0] || '/placeholder.jpg'}
-                        alt={property.title}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-3 bg-slate-100 flex items-center justify-center">
+                      {property.images?.[0] ? (
+                        <Image
+                          src={property.images[0]}
+                          alt={property.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-slate-400">
+                          <Home className="w-8 h-8 mb-1 opacity-50" />
+                          <span className="text-[10px] font-medium uppercase tracking-wide">Sem foto</span>
+                        </div>
+                      )}
                       <div className="absolute top-2 left-2 bg-slate-900/80 text-white text-xs px-2 py-1 rounded">
                         {property.type}
                       </div>

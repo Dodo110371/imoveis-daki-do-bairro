@@ -56,7 +56,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.area,
-    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type,
     agencyPartner: agency.isPartner,
@@ -78,13 +78,17 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
           </Link>
 
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="h-32 w-32 relative bg-white rounded-xl overflow-hidden shrink-0 border-4 border-white/10">
-              <Image
-                src={agency.logo}
-                alt={agency.name}
-                fill
-                className="object-cover"
-              />
+            <div className="h-32 w-32 relative bg-white rounded-xl overflow-hidden shrink-0 border-4 border-white/10 flex items-center justify-center">
+              {agency.logo ? (
+                <Image
+                  src={agency.logo}
+                  alt={agency.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <Building2 className="w-12 h-12 text-slate-400" />
+              )}
             </div>
 
             <div className="flex-grow">

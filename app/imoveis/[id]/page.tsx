@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit, MessageCircle } from "lucide-react";
+import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit, MessageCircle, User } from "lucide-react";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
@@ -62,7 +62,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const property = {
     ...propertyData,
     images: propertyData.images || [],
-    imageUrl: propertyData.images?.[0] || '/placeholder.jpg',
+    imageUrl: propertyData.images?.[0] || null,
     price: propertyData.type === 'Aluguel'
       ? `R$ ${propertyData.price}/mês`
       : `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}`,
@@ -78,7 +78,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const realtor = realtorData ? {
     ...realtorData,
     name: realtorData.profiles?.full_name || 'Corretor',
-    photo: realtorData.profiles?.avatar_url || '/placeholder.jpg',
+    photo: realtorData.profiles?.avatar_url || null,
     email: realtorData.profiles?.email,
     phone: realtorData.profiles?.phone,
     isPartner: !!(realtorData.partner ?? realtorData.is_partner)
@@ -283,13 +283,17 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 <div className="mb-6 pb-6 border-b border-slate-100">
                   <h3 className="text-sm uppercase tracking-wide text-slate-500 font-semibold mb-4">Anunciado por</h3>
                   <Link href={`/imobiliarias/${agency.id}`} className="flex items-center gap-4 group">
-                    <div className="h-12 w-12 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200">
-                      <Image
-                        src={agency.logo}
-                        alt={agency.name}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="h-12 w-12 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
+                      {agency.logo ? (
+                        <Image
+                          src={agency.logo}
+                          alt={agency.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <Building2 className="w-6 h-6 text-slate-400" />
+                      )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -304,13 +308,17 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 <div className="mb-6 pb-6 border-b border-slate-100">
                   <h3 className="text-sm uppercase tracking-wide text-slate-500 font-semibold mb-4">Anunciado por</h3>
                   <Link href={`/corretores/${realtor.id}`} className="flex items-center gap-4 group">
-                    <div className="h-12 w-12 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200">
-                      <Image
-                        src={realtor.photo}
-                        alt={realtor.name}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="h-12 w-12 relative bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
+                      {realtor.photo ? (
+                        <Image
+                          src={realtor.photo}
+                          alt={realtor.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <User className="w-6 h-6 text-slate-400" />
+                      )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">

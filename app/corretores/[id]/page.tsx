@@ -51,7 +51,7 @@ type RealtorPropertyCard = {
   bedrooms: number;
   bathrooms: number;
   area: number;
-  imageUrl: string;
+  imageUrl: string | null;
   images: string[];
   type: "Venda" | "Aluguel";
   realtorPartner: boolean;
@@ -80,7 +80,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     id: realtorData.id,
     name: realtorData.profiles?.full_name || 'Corretor',
     creci: realtorData.creci,
-    photo: realtorData.profiles?.avatar_url || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop',
+    photo: realtorData.profiles?.avatar_url || null,
     bio: realtorData.bio || '',
     regions: realtorData.regions || [],
     whatsapp: realtorData.whatsapp,
@@ -106,7 +106,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
       area: p.area,
       imageUrl:
         p.images?.[0] ||
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600&auto=format&fit=crop',
+        null,
       images: p.images || [],
       type: p.type,
       realtorPartner: realtor.isPartner,
@@ -131,13 +131,17 @@ export default async function RealtorProfilePage({ params }: PageProps) {
           </Link>
 
           <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
-            <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-4 border-white shadow-2xl shrink-0">
-              <Image
-                src={realtor.photo}
-                alt={realtor.name}
-                fill
-                className="object-cover"
-              />
+            <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-4 border-white shadow-2xl shrink-0 bg-slate-200 flex items-center justify-center">
+              {realtor.photo ? (
+                <Image
+                  src={realtor.photo}
+                  alt={realtor.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <User className="w-20 h-20 text-slate-400" />
+              )}
             </div>
             <div className="text-center md:text-left mb-2">
               <div className="flex items-center justify-center md:justify-start gap-3 mb-2">

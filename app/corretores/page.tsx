@@ -26,7 +26,7 @@ type RealtorCard = {
   id: string;
   name: string;
   creci: string;
-  photo: string;
+  photo: string | null;
   bio: string;
   regions: string[];
   whatsapp?: string;
@@ -59,9 +59,7 @@ export default async function CorretoresPage() {
       id: r.id,
       name: profile?.full_name || "Corretor",
       creci: r.creci,
-      photo:
-        profile?.avatar_url ||
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop",
+      photo: profile?.avatar_url || null,
       bio: r.bio || "Corretor parceiro Imóveis daki do Bairro.",
       regions: r.regions || [],
       whatsapp: r.whatsapp || undefined,
@@ -100,14 +98,18 @@ export default async function CorretoresPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {realtors.map((realtor) => (
               <div key={realtor.id} className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
-                <div className="relative h-48 bg-slate-100">
+                <div className="relative h-48 bg-slate-100 flex items-center justify-center">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
-                  <Image
-                    src={realtor.photo}
-                    alt={realtor.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  {realtor.photo ? (
+                    <Image
+                      src={realtor.photo}
+                      alt={realtor.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <User className="w-16 h-16 text-slate-300" />
+                  )}
                   <div className="absolute bottom-4 left-4 right-4 z-20 text-white">
                     <h3 className="text-xl font-bold">{realtor.name}</h3>
                     <div className="flex items-center gap-2 text-sm text-slate-200">

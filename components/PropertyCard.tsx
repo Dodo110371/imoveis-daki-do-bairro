@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight, Home } from 'lucide-react';
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
 import { cn } from '@/lib/utils';
@@ -18,7 +18,7 @@ interface PropertyCardProps {
   bedrooms: number;
   bathrooms: number;
   area: number;
-  imageUrl: string;
+  imageUrl?: string | null;
   images?: string[];
   type: 'Venda' | 'Aluguel';
   agencyPartner?: boolean;
@@ -40,31 +40,45 @@ export function PropertyCard({
   realtorPartner = false,
 }: PropertyCardProps) {
   // Use images array if provided and not empty, otherwise fallback to [imageUrl]
-  const displayImages = images && images.length > 0 ? images : [imageUrl];
+  // Filter out null/undefined values
+  const validImages = (images && images.length > 0 ? images : [imageUrl]).filter((img): img is string => !!img);
+  const hasImages = validImages.length > 0;
+  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+    if (hasImages) {
+      setCurrentImageIndex((prev) => (prev + 1) % validImages.length);
+    }
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
+    if (hasImages) {
+      setCurrentImageIndex((prev) => (prev - 1 + validImages.length) % validImages.length);
+    }
   };
 
   return (
     <div className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg relative">
       <Link href={`/imoveis/${id}`} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-          <Image
-            src={displayImages[currentImageIndex]}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center">
+          {hasImages ? (
+            <Image
+              src={validImages[currentImageIndex]}
+              alt={title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-slate-400">
+              <Home className="w-12 h-12 mb-2 opacity-50" />
+              <span className="text-xs font-medium uppercase tracking-wide">Sem foto</span>
+            </div>
+          )}
 
           <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white z-10">
             {type}
@@ -98,7 +112,7 @@ export function PropertyCard({
           </div>
 
           {/* Navigation Arrows */}
-          {displayImages.length > 1 && (
+          {validImages.length > 1 && (
             <>
               <button
                 onClick={prevImage}
@@ -117,7 +131,7 @@ export function PropertyCard({
 
               {/* Dots Indicator */}
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
-                {displayImages.slice(0, 5).map((_, idx) => (
+                {validImages.slice(0, 5).map((_, idx) => (
                   <div
                     key={idx}
                     className={cn(

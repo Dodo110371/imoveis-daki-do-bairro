@@ -125,7 +125,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     bathrooms: p.bathrooms,
     area: p.area,
     images: p.images || [],
-    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    imageUrl: p.images?.[0] || null,
     type: p.type,
     contactWhatsapp: p.contact_whatsapp,
     contactPhone: p.contact_phone,

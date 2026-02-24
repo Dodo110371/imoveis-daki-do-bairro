@@ -130,7 +130,7 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.area,
-    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type,
     contactWhatsapp: p.contact_whatsapp,

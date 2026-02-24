@@ -42,7 +42,7 @@ export default async function HomePage() {
     contact_whatsapp?: string;
     contact_phone?: string;
     contact_email?: string;
-    agency_id?: number;
+    agency_id?: string;
     owner_id?: string;
   };
 
@@ -57,7 +57,7 @@ export default async function HomePage() {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.area,
-    imageUrl: p.images?.[0] || '/placeholder.jpg',
+    imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type,
     contactWhatsapp: p.contact_whatsapp,
@@ -66,42 +66,44 @@ export default async function HomePage() {
   });
 
   // Fetch partner status for agencies referenced by Home properties (to display badge on cards)
-  const homeAgencyIds: number[] = Array.from(
-    new Set([...(featuredData || []), ...(newData || [])]
-      .map((p: DbProperty) => p.agency_id)
-      .filter((id): id is number => typeof id === 'number'))
-  );
-  let homeAgenciesMap = new Map<number, boolean>();
+  const homeAgencyIds = Array.from(new Set(
+    [...(featuredData || []), ...(newData || [])]
+      .map(p => p.agency_id)
+      .filter(id => !!id)
+  ));
+  
+  const homeAgenciesMap = new Map();
   if (homeAgencyIds.length > 0) {
-    const { data: agenciesData } = await supabase
-      .from('agencies')
-      .select('id, partner, is_partner')
+    const { data: homeAgencies } = await supabase
+      .from('profiles')
+      .select('id, is_partner')
       .in('id', homeAgencyIds);
-    (agenciesData || []).forEach((a: { id: number; partner?: boolean; is_partner?: boolean }) => {
-      const isPartner = !!(a.partner ?? a.is_partner);
-      homeAgenciesMap.set(a.id, isPartner);
-    });
+      
+    if (homeAgencies) {
+      homeAgencies.forEach(a => homeAgenciesMap.set(a.id, a.is_partner));
+    }
   }
 
-  // Fetch partner status for realtors (owners) referenced by Home properties
-  const homeOwnerIds: string[] = Array.from(
-    new Set([...(featuredData || []), ...(newData || [])]
-      .map((p: DbProperty) => p.owner_id)
-      .filter((id): id is string => typeof id === 'string' && !!id))
-  );
-  let homeRealtorsMap = new Map<string, boolean>();
-  if (homeOwnerIds.length > 0) {
-    const { data: realtorsData } = await supabase
-      .from('realtors')
-      .select('id, partner, is_partner')
-      .in('id', homeOwnerIds);
-    (realtorsData || []).forEach((r: { id: string; partner?: boolean; is_partner?: boolean }) => {
-      const isPartner = !!(r.partner ?? r.is_partner);
-      homeRealtorsMap.set(r.id, isPartner);
-    });
+  // Fetch partner status for realtors referenced by Home properties
+  const homeRealtorIds = Array.from(new Set(
+    [...(featuredData || []), ...(newData || [])]
+      .map(p => p.owner_id)
+      .filter(id => !!id)
+  ));
+
+  const homeRealtorsMap = new Map();
+  if (homeRealtorIds.length > 0) {
+    const { data: homeRealtors } = await supabase
+      .from('profiles')
+      .select('id, is_partner')
+      .in('id', homeRealtorIds);
+      
+    if (homeRealtors) {
+      homeRealtors.forEach(r => homeRealtorsMap.set(r.id, r.is_partner));
+    }
   }
 
-  const getAgencyPartner = (agencyId?: number) =>
+  const getAgencyPartner = (agencyId?: string) =>
     agencyId != null ? homeAgenciesMap.get(agencyId) ?? false : false;
 
   const getRealtorPartner = (ownerId?: string) =>
@@ -317,8 +319,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <Testimonials />
+      {/* Testimonials Section - Removed per user request to eliminate mock data */}
+      {/* <Testimonials /> */}
     </div>
   );
 }

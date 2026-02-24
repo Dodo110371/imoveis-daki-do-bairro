@@ -103,16 +103,17 @@ export default function AdminTestToolsPage() {
             <li>
               O atalho de anúncio <span className="font-semibold">“Continuar sem login (Modo de Teste)”</span> está disponível apenas em ambiente de desenvolvimento.
             </li>
-            <li>
-              Dados de CEP exibidos no mapa de bairros são ilustrativos para navegação e não alteram fluxos comerciais.
-            </li>
-            <li>
-              Dados de corretores fictícios em arquivos de mock não são utilizados na interface pública atual.
-            </li>
           </ul>
-          <p className="text-xs text-slate-400">
-            Caso outro fluxo de teste seja criado, ele deve ser referenciado e documentado nesta tela.
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-slate-900">Mocks e Dados Reais</h2>
+          <p className="text-sm text-slate-500">
+            Todos os dados de mock (CEPs fictícios, corretores de exemplo) foram removidos do sistema para garantir que apenas informações reais sejam exibidas aos usuários.
           </p>
+          <div className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-600">
+             Os fallbacks de imagem agora utilizam ícones genéricos em vez de fotos de banco de imagens.
+          </div>
         </div>
       </section>
     </div>
