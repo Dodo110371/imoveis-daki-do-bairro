@@ -26,7 +26,7 @@ interface AuthContextType {
   login: (email: string, password?: string) => Promise<{ error: AuthError }>;
   signInWithGoogle: (redirectUrl?: string) => Promise<{ error: AuthError }>;
   logout: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<{ error: AuthError }>;
+  register: (email: string, password: string, name: string) => Promise<{ data?: any; error: AuthError }>;
   updateProfile: (data: Partial<User>) => Promise<{ error: AuthError }>;
   deleteAccount: () => Promise<{ error: AuthError }>;
   resetPasswordForEmail: (email: string) => Promise<{ error: AuthError }>;
@@ -141,18 +141,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (email: string, password: string, name: string) => {
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
           full_name: name,
         },
       },
     });
 
+    if (error) {
+      setIsLoading(false);
+      return { data: null, error };
+    }
+
+    if (data?.session) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user!.id)
+        .single();
+
+      setUser({
+        id: data.user!.id,
+        email: data.user!.email!,
+        name: profile?.full_name || data.user!.user_metadata?.full_name || 'Usuário',
+        avatar_url: profile?.avatar_url,
+        phone: profile?.phone,
+        address: profile?.address,
+        city: profile?.city,
+        state: profile?.state,
+        zip_code: profile?.zip_code,
+        role: profile?.role,
+      });
+    }
+
     setIsLoading(false);
-    return { error };
+    return { data, error: null };
   };
 
   const logout = async () => {

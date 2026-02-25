@@ -19,8 +19,15 @@ function CadastroContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { error } = await register(email, password, name);
+      const { data, error } = await register(email, password, name);
       if (error) throw error;
+      
+      // If no session but we have a user, it means email confirmation is required
+      if (data?.user && !data.session) {
+        alert('Cadastro realizado com sucesso! Por favor, verifique seu e-mail para confirmar sua conta.');
+        return;
+      }
+      
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Registration error:', error);

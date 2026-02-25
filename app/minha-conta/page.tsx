@@ -86,8 +86,13 @@ function MinhaContaContent() {
         const { error } = await login(authEmail, authPassword);
         if (error) throw error;
       } else {
-        const { error } = await register(authEmail, authPassword, authName);
+        const { data, error } = await register(authEmail, authPassword, authName);
         if (error) throw error;
+        
+        if (data?.user && !data.session) {
+          alert('Cadastro realizado com sucesso! Por favor, verifique seu e-mail para confirmar sua conta.');
+          return;
+        }
       }
       router.push(redirectUrl);
     } catch (error: any) {
