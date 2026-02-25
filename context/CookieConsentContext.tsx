@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type ConsentCategories = {
   analytics: boolean;
@@ -16,6 +16,7 @@ type CookieConsentContextType = {
   openPreferences: () => void;
   closePreferences: () => void;
   isPreferencesOpen: boolean;
+  loaded: boolean;
 };
 
 const CookieConsentContext = createContext<CookieConsentContextType | undefined>(undefined);
@@ -50,10 +51,21 @@ function writeConsentCookie(preferences: ConsentCategories, decided = true) {
 }
 
 export function CookieConsentProvider({ children }: { children: React.ReactNode }) {
-  const initial = readConsentCookie();
-  const [consent, setConsent] = useState<ConsentCategories | null>(initial.prefs);
-  const [decided, setDecided] = useState(initial.decided);
+  const [consent, setConsent] = useState<ConsentCategories | null>(null);
+  const [decided, setDecided] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const { prefs, decided: isDecided } = readConsentCookie();
+    if (prefs) {
+      setConsent(prefs);
+    }
+    if (isDecided) {
+      setDecided(true);
+    }
+    setLoaded(true);
+  }, []);
 
   const acceptAll = () => {
     const prefs = { analytics: true, marketing: true, functional: true };
@@ -92,6 +104,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
         openPreferences,
         closePreferences,
         isPreferencesOpen,
+        loaded,
       }}
     >
       {children}

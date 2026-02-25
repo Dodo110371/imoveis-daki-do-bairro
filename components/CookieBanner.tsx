@@ -13,6 +13,7 @@ export function CookieBanner() {
     isPreferencesOpen,
     openPreferences,
     closePreferences,
+    loaded,
   } = useCookieConsent();
 
   const [prefs, setPrefs] = useState({
@@ -30,6 +31,7 @@ export function CookieBanner() {
     openPreferences();
   };
 
+  if (!loaded) return null;
   if (decided && !isPreferencesOpen) return null;
 
   return (
@@ -46,18 +48,21 @@ export function CookieBanner() {
               </p>
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={rejectNonEssential}
                   className="px-3 py-1 rounded-md border border-white/30 text-white/90 text-xs hover:bg-white/10"
                 >
                   Recusar
                 </button>
                 <button
+                  type="button"
                   onClick={handleOpenPreferences}
                   className="px-3 py-1 rounded-md border border-blue-300/40 text-blue-100 text-xs hover:bg-blue-300/10"
                 >
                   Personalizar
                 </button>
                 <button
+                  type="button"
                   onClick={acceptAll}
                   className="px-3 py-1 rounded-md bg-blue-600 text-white text-xs hover:bg-blue-700"
                 >
@@ -126,12 +131,14 @@ export function CookieBanner() {
               </div>
               <div className="mt-4 flex justify-end gap-2">
                 <button
+                  type="button"
                   onClick={closePreferences}
                   className="px-3 py-1 rounded-md border border-white/30 text-white/90 text-xs hover:bg-white/10"
                 >
                   Cancelar
                 </button>
                 <button
+                  type="button"
                   onClick={() => savePreferences(prefs)}
                   className="px-3 py-1 rounded-md bg-blue-600 text-white text-xs hover:bg-blue-700"
                 >
