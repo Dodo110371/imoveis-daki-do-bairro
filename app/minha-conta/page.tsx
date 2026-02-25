@@ -20,6 +20,7 @@ function MinhaContaContent() {
   const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
+  const [authConfirmPassword, setAuthConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   // Profile Edit State
@@ -86,6 +87,10 @@ function MinhaContaContent() {
         const { error } = await login(authEmail, authPassword);
         if (error) throw error;
       } else {
+        if (authPassword !== authConfirmPassword) {
+          alert('As senhas não coincidem!');
+          return;
+        }
         const { data, error } = await register(authEmail, authPassword, authName);
         if (error) throw error;
         
@@ -680,6 +685,25 @@ function MinhaContaContent() {
                 </button>
               </div>
             </div>
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700">Confirmar Senha</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-slate-400" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required={!isLogin}
+                    value={authConfirmPassword}
+                    onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                    className="block w-full pl-10 pr-10 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-50 hover:bg-white"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+            )}
 
             <button
               type="submit"

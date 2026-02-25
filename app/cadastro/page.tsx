@@ -11,6 +11,7 @@ function CadastroContent() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const { register, signInWithGoogle, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -18,6 +19,10 @@ function CadastroContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert('As senhas não coincidem!');
+      return;
+    }
     try {
       const { data, error } = await register(email, password, name);
       if (error) throw error;
@@ -125,6 +130,27 @@ function CadastroContent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full pl-10 rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm py-2 border"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
+                Confirmar Senha
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-slate-400" />
+                </div>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   className="block w-full pl-10 rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm py-2 border"
                 />
               </div>
