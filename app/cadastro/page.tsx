@@ -12,8 +12,7 @@ function CadastroContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isResending, setIsResending] = useState(false);
-  const { register, signInWithGoogle, isLoading, resendConfirmationEmail } = useAuth();
+  const { register, signInWithGoogle, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
@@ -28,9 +27,11 @@ function CadastroContent() {
       const { data, error } = await register(email, password, name);
       if (error) throw error;
       
-      // If no session but we have a user, it means email confirmation is required
+      // If no session but we have a user, it means email confirmation is required by Supabase
       if (data?.user && !data.session) {
-        alert('Cadastro realizado com sucesso! Por favor, verifique seu e-mail (inclusive a caixa de SPAM) para confirmar sua conta.');
+        alert('Cadastro realizado com sucesso! Se você não for redirecionado automaticamente, verifique se a confirmação de email está desativada no sistema.');
+        // Still redirect to login just in case
+        router.push('/minha-conta');
         return;
       }
       
@@ -48,25 +49,6 @@ function CadastroContent() {
     } catch (error: any) {
       console.error('Google auth error:', error);
       alert(userMessages.auth.googleError);
-    }
-  };
-
-  const handleResendEmail = async () => {
-    if (!email) {
-      alert('Por favor, informe seu e-mail no campo acima.');
-      return;
-    }
-    
-    setIsResending(true);
-    try {
-      const { error } = await resendConfirmationEmail(email);
-      if (error) throw error;
-      alert('E-mail de confirmação reenviado! Verifique sua caixa de entrada e spam.');
-    } catch (error: any) {
-      console.error('Error resending email:', error);
-      alert('Erro ao reenviar e-mail: ' + (error.message || 'Tente novamente mais tarde.'));
-    } finally {
-      setIsResending(false);
     }
   };
 
@@ -190,17 +172,6 @@ function CadastroContent() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
-              </button>
-            </div>
-            
-            <div className="text-center mt-4">
-              <button
-                type="button"
-                onClick={handleResendEmail}
-                disabled={isResending}
-                className="text-sm text-slate-500 hover:text-slate-700 underline"
-              >
-                {isResending ? 'Reenviando...' : 'Não recebeu o e-mail de confirmação? Reenviar'}
               </button>
             </div>
           </form>
