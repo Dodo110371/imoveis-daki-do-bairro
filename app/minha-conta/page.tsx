@@ -40,7 +40,8 @@ function MinhaContaContent() {
 
   const [isRealtor, setIsRealtor] = useState(false);
   const [myProperties, setMyProperties] = useState<any[]>([]);
-  const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout, updateProfile, deleteAccount } = useAuth();
+  const [isResending, setIsResending] = useState(false);
+  const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout, updateProfile, deleteAccount, resendConfirmationEmail } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
@@ -95,7 +96,7 @@ function MinhaContaContent() {
         if (error) throw error;
         
         if (data?.user && !data.session) {
-          alert('Cadastro realizado com sucesso! Por favor, verifique seu e-mail para confirmar sua conta.');
+          alert('Cadastro realizado com sucesso! Por favor, verifique seu e-mail (inclusive a caixa de SPAM) para confirmar sua conta.');
           return;
         }
       }
@@ -168,6 +169,25 @@ function MinhaContaContent() {
     } catch (error: any) {
       console.error('Error deleting account:', error);
       alert(userMessages.auth.deleteAccountError);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    if (!authEmail) {
+      alert('Por favor, informe seu e-mail no campo acima.');
+      return;
+    }
+    
+    setIsResending(true);
+    try {
+      const { error } = await resendConfirmationEmail(authEmail);
+      if (error) throw error;
+      alert('E-mail de confirmação reenviado! Verifique sua caixa de entrada e spam.');
+    } catch (error: any) {
+      console.error('Error resending email:', error);
+      alert('Erro ao reenviar e-mail: ' + (error.message || 'Tente novamente mais tarde.'));
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -719,6 +739,17 @@ function MinhaContaContent() {
                 </>
               )}
             </button>
+
+            <div className="text-center mt-4">
+              <button
+                type="button"
+                onClick={handleResendEmail}
+                disabled={isResending}
+                className="text-sm text-slate-500 hover:text-slate-700 underline"
+              >
+                {isResending ? 'Reenviando...' : 'Não recebeu o e-mail de confirmação? Reenviar'}
+              </button>
+            </div>
           </form>
 
           <div className="mt-6">
