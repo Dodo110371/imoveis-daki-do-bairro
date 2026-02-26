@@ -12,6 +12,7 @@ function CadastroContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { register, signInWithGoogle, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,10 +20,18 @@ function CadastroContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
+
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem!');
+      setErrorMsg('As senhas não coincidem!');
       return;
     }
+    
+    if (password.length < 6) {
+      setErrorMsg('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
     try {
       const { data, error } = await register(email, password, name);
       if (error) throw error;
@@ -38,7 +47,7 @@ function CadastroContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Registration error:', error);
-      alert(userMessages.auth.registerError(error));
+      setErrorMsg(userMessages.auth.registerError(error) || 'Erro ao criar conta. Tente novamente.');
     }
   };
 
@@ -74,6 +83,22 @@ function CadastroContent() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {errorMsg && (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">
+                      {errorMsg}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-700">
                 Nome completo

@@ -22,6 +22,7 @@ function MinhaContaContent() {
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirmPassword, setAuthConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Profile Edit State
   const [isEditing, setIsEditing] = useState(false);
@@ -82,15 +83,21 @@ function MinhaContaContent() {
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     try {
       if (isLogin) {
         const { error } = await login(authEmail, authPassword);
         if (error) throw error;
       } else {
         if (authPassword !== authConfirmPassword) {
-          alert('As senhas não coincidem!');
+          setErrorMsg('As senhas não coincidem!');
           return;
         }
+        if (authPassword.length < 6) {
+          setErrorMsg('A senha deve ter pelo menos 6 caracteres.');
+          return;
+        }
+
         const { data, error } = await register(authEmail, authPassword, authName);
         if (error) throw error;
         
@@ -102,7 +109,7 @@ function MinhaContaContent() {
       router.push(redirectUrl);
     } catch (error: any) {
       console.error('Authentication error:', error);
-      alert(userMessages.auth.loginError(error));
+      setErrorMsg(isLogin ? (userMessages.auth.loginError(error) || 'Erro ao entrar. Verifique suas credenciais.') : (userMessages.auth.registerError(error) || 'Erro ao criar conta. Tente novamente.'));
     }
   };
 
@@ -615,6 +622,20 @@ function MinhaContaContent() {
           </div>
 
           <form onSubmit={handleAuthSubmit} className="space-y-6">
+            {errorMsg && (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <AlertTriangle className="h-5 w-5 text-red-400" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">
+                      {errorMsg}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             {!isLogin && (
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Nome Completo</label>
