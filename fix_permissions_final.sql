@@ -1,5 +1,5 @@
--- Script Unificado para Correção de Permissões (Storage + Database)
--- Execute este script no SQL Editor do Supabase para corrigir problemas de upload e cadastro.
+-- Script Unificado para Correção de Permissões (Storage + Database) v2
+-- Execute este script COMPLETO no SQL Editor do Supabase para corrigir problemas de upload e cadastro.
 
 -- PARTE 1: PERMISSÕES DE STORAGE (Correção de Upload de Imagens)
 -- Garante que o bucket 'properties' existe e é público
@@ -7,7 +7,7 @@ insert into storage.buckets (id, name, public)
 values ('properties', 'properties', true)
 on conflict (id) do update set public = true;
 
--- Remove políticas antigas para evitar conflitos
+-- Remove políticas antigas para evitar conflitos (Lista expandida de nomes comuns)
 drop policy if exists "properties_select_policy" on storage.objects;
 drop policy if exists "properties_insert_policy" on storage.objects;
 drop policy if exists "properties_update_policy" on storage.objects;
@@ -16,6 +16,8 @@ drop policy if exists "Public Access" on storage.objects;
 drop policy if exists "Authenticated Upload" on storage.objects;
 drop policy if exists "Owner Update" on storage.objects;
 drop policy if exists "Owner Delete" on storage.objects;
+drop policy if exists "Give users access to own folder" on storage.objects;
+drop policy if exists "Allow public read access" on storage.objects;
 
 -- 1. Permitir leitura pública de todos os arquivos no bucket 'properties'
 create policy "properties_select_policy"
@@ -45,11 +47,19 @@ using ( bucket_id = 'properties' and auth.uid() = owner );
 -- Habilita RLS na tabela properties
 alter table "properties" enable row level security;
 
--- Remove políticas antigas
+-- Remove políticas antigas (Lista expandida de nomes comuns e variações)
 drop policy if exists "Users can insert their own properties" on "properties";
 drop policy if exists "Users can update their own properties" on "properties";
 drop policy if exists "Users can delete their own properties" on "properties";
 drop policy if exists "Properties are viewable by everyone" on "properties";
+drop policy if exists "Enable read access for all users" on "properties";
+drop policy if exists "Enable insert for authenticated users only" on "properties";
+drop policy if exists "Enable update for users based on email" on "properties";
+drop policy if exists "Enable delete for users based on user_id" on "properties";
+drop policy if exists "public_select" on "properties";
+drop policy if exists "auth_insert" on "properties";
+drop policy if exists "owner_update" on "properties";
+drop policy if exists "owner_delete" on "properties";
 
 -- 1. Permitir INSERT para usuários autenticados (Garante que o dono seja o usuário logado)
 create policy "Users can insert their own properties"
