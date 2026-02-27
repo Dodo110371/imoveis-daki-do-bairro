@@ -245,11 +245,11 @@ export default function AdvertisePage() {
     try {
       for (const file of files) {
         if (file.size > 5 * 1024 * 1024) {
-          alert(userMessages.advertise.fileTooLarge(file.name));
+          alert(`O arquivo ${file.name} é muito grande. O limite é de 5MB por foto.`);
           continue;
         }
         if (!file.type.startsWith('image/')) {
-          alert(userMessages.advertise.fileNotImage(file.name));
+          alert(`O arquivo ${file.name} não é uma imagem válida.`);
           continue;
         }
 
@@ -258,9 +258,15 @@ export default function AdvertisePage() {
 
         const { error: uploadError } = await supabase.storage
           .from('properties')
-          .upload(fileName, file);
+          .upload(fileName, file, {
+            upsert: false,
+            contentType: file.type
+          });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('Supabase upload error:', uploadError);
+          throw uploadError;
+        }
 
         const { data: { publicUrl } } = supabase.storage
           .from('properties')
@@ -276,11 +282,19 @@ export default function AdvertisePage() {
 
     } catch (error: any) {
       console.error('Error uploading photos:', error);
-      alert(userMessages.advertise.uploadError);
+      
+      // More specific error handling
+      if (error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+        alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
+      } else if (error.statusCode === '413' || error.message?.includes('too large')) {
+        alert('O arquivo é muito grande. O limite é de 5MB por foto.');
+      } else {
+        alert(userMessages.advertise.uploadError || 'Erro ao fazer upload da imagem. Tente novamente.');
+      }
     } finally {
       setIsUploadingImages(false);
       // Reset input
-      e.target.value = '';
+      if (e.target) e.target.value = '';
     }
   };
 

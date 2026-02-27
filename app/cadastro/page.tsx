@@ -13,6 +13,7 @@ function CadastroContent() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, signInWithGoogle, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,14 +22,17 @@ function CadastroContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setIsSubmitting(true);
 
     if (password !== confirmPassword) {
       setErrorMsg('As senhas não coincidem!');
+      setIsSubmitting(false);
       return;
     }
     
     if (password.length < 6) {
       setErrorMsg('A senha deve ter pelo menos 6 caracteres.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -48,6 +52,7 @@ function CadastroContent() {
     } catch (error: any) {
       console.error('Registration error:', error);
       setErrorMsg(userMessages.auth.registerError(error) || 'Erro ao criar conta. Tente novamente.');
+      setIsSubmitting(false);
     }
   };
 
@@ -186,10 +191,10 @@ function CadastroContent() {
             <div>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="flex w-full justify-center rounded-md border border-transparent bg-slate-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {isLoading ? (
+                {isSubmitting ? (
                   <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
