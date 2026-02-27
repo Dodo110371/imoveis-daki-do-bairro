@@ -378,7 +378,7 @@ export default function AdvertisePage() {
         contact_email: formData.email,
         contact_phone: formData.phone,
         contact_whatsapp: formData.whatsapp,
-        status: 'pending' // Default status for new ads
+        status: 'active' // Default status for new ads: active (no moderation needed)
       });
 
       if (error) {
