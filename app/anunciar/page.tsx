@@ -111,7 +111,7 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   advertiserStreet: '',
   advertiserNumber: '',
   advertiserComplement: '',
-  paymentPlan: '',
+  paymentPlan: 'mensal',
   paymentMethod: 'pix',
 };
 
@@ -383,7 +383,7 @@ export default function AdvertisePage() {
 
       if (error) {
         console.error('Error creating property:', error);
-        alert(userMessages.advertise.createAdError);
+        alert(`${userMessages.advertise.createAdError}\nDetalhes: ${error.message}`);
         setIsSubmitting(false);
         return;
       }
