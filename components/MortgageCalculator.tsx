@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Calculator, Percent, Calendar } from 'lucide-react';
 
 interface MortgageCalculatorProps {
@@ -12,6 +12,13 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
   const [downPayment, setDownPayment] = useState(propertyPrice * 0.2); // 20% default
   const [interestRate, setInterestRate] = useState(10.5); // 10.5% default annual
   const [years, setYears] = useState(30); // 30 years default
+
+  useEffect(() => {
+    if (propertyPrice > 0) {
+      setValue(propertyPrice);
+      setDownPayment(propertyPrice * 0.2);
+    }
+  }, [propertyPrice]);
 
   const monthlyPayment = useMemo(() => {
     const principal = value - downPayment;

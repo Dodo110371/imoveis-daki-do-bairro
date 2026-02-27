@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Camera,
   CheckCircle2,
+  Check,
   DollarSign,
   FileText,
   User,
@@ -37,10 +38,47 @@ const STEPS = [
   { id: 2, title: 'Tipo de Imóvel', icon: Home },
   { id: 3, title: 'Localização', icon: MapPin },
   { id: 4, title: 'Detalhes', icon: Building2 },
-  { id: 5, title: 'Valores', icon: DollarSign },
-  { id: 6, title: 'Fotos', icon: Camera },
-  { id: 7, title: 'Contato', icon: User },
-  { id: 8, title: 'Planos', icon: CreditCard },
+  { id: 5, title: 'Características', icon: Check },
+  { id: 6, title: 'Valores', icon: DollarSign },
+  { id: 7, title: 'Fotos', icon: Camera },
+  { id: 8, title: 'Contato', icon: User },
+  { id: 9, title: 'Planos', icon: CreditCard },
+];
+
+const FEATURES_OPTIONS = [
+  'Academia',
+  'Aceita Animais',
+  'Acessibilidade',
+  'Ar Condicionado',
+  'Área de Serviço',
+  'Armário Embutido',
+  'Armário na Cozinha',
+  'Churrasqueira',
+  'Cinema',
+  'Closet',
+  'Cozinha Americana',
+  'Depósito',
+  'Elevador',
+  'Escritório',
+  'Espaço Gourmet',
+  'Garagem',
+  'Gás Encanado',
+  'Interfone',
+  'Jardim',
+  'Lareira',
+  'Lavanderia',
+  'Mobiliado',
+  'Piscina',
+  'Playground',
+  'Portaria 24h',
+  'Quadra Poliesportiva',
+  'Quintal',
+  'Salão de Festas',
+  'Salão de Jogos',
+  'Sauna',
+  'Varanda',
+  'Varanda Gourmet',
+  'Vista para o Mar'
 ];
 
 interface AdvertiseFormData {
@@ -62,6 +100,7 @@ interface AdvertiseFormData {
   iptuPrice: string;
   title: string;
   description: string;
+  features: string[];
   photos: string[];
   name: string;
   email: string;
@@ -98,6 +137,7 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   iptuPrice: '',
   title: '',
   description: '',
+  features: [],
   photos: [],
   name: '',
   email: '',
@@ -370,7 +410,7 @@ export default function AdvertisePage() {
         area: area,
         type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
         category: formData.type,
-        features: [], // Can be enhanced to include selected features
+        features: formData.features,
         images: formData.photos,
         owner_id: user.id,
         featured: false,
@@ -439,6 +479,7 @@ export default function AdvertisePage() {
                 iptuPrice: '',
                 title: '',
                 description: '',
+                features: [],
                 photos: [],
                 name: '',
                 email: '',
@@ -977,8 +1018,48 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 5: VALUES */}
+          {/* STEP 5: FEATURES */}
           {currentStep === 5 && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-slate-900">O que o imóvel oferece?</h2>
+                <p className="text-slate-500 mt-2">Selecione todas as características disponíveis</p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {FEATURES_OPTIONS.map((feature) => {
+                  const isSelected = formData.features?.includes(feature);
+                  return (
+                    <button
+                      key={feature}
+                      onClick={() => {
+                        const currentFeatures = formData.features || [];
+                        const newFeatures = isSelected
+                          ? currentFeatures.filter(f => f !== feature)
+                          : [...currentFeatures, feature];
+                        handleInputChange('features', newFeatures);
+                      }}
+                      className={`p-3 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
+                        isSelected
+                          ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500'
+                          : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className={`w-5 h-5 rounded border flex items-center justify-center ${
+                        isSelected ? 'bg-blue-500 border-blue-500' : 'border-slate-300 bg-white'
+                      }`}>
+                        {isSelected && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                      {feature}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 6: VALUES */}
+          {currentStep === 6 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Valores e Descrição</h2>
@@ -1044,8 +1125,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 6: PHOTOS */}
-          {currentStep === 6 && (
+          {/* STEP 7: PHOTOS */}
+          {currentStep === 7 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Fotos do Imóvel</h2>
@@ -1111,8 +1192,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 7: CONTACT */}
-          {currentStep === 7 && (
+          {/* STEP 8: CONTACT */}
+          {currentStep === 8 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Seus Dados</h2>
@@ -1335,8 +1416,8 @@ export default function AdvertisePage() {
             </div>
           )}
 
-          {/* STEP 8: PAYMENT PLANS */}
-          {currentStep === 8 && (
+          {/* STEP 9: PAYMENT PLANS */}
+          {currentStep === 9 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Escolha o plano ideal</h2>

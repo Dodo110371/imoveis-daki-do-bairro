@@ -272,7 +272,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
             {/* Mortgage Calculator (Only for Sales) */}
             {property.type === 'Venda' && (
-              <MortgageCalculator propertyPrice={Number(property.price.replace(/[^0-9.-]+/g, ""))} />
+              <MortgageCalculator propertyPrice={Number(propertyData.price)} />
             )}
           </div>
 
