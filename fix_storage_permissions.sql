@@ -1,6 +1,3 @@
--- Enable the storage extension if not already enabled
-create extension if not exists "storage" schema "extensions";
-
 -- ---------------------------------------------------------
 -- PROPERTIES BUCKET CONFIGURATION
 -- ---------------------------------------------------------
