@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Mail, Lock, User, ArrowRight, Chrome, LogOut, Heart, ShieldCheck,
-  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle, Eye, EyeOff, FileEdit
+  ExternalLink, Camera, MapPin, Phone, Trash2, Save, AlertTriangle, Eye, EyeOff, FileEdit, Loader2
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
@@ -30,6 +30,7 @@ function MinhaContaContent() {
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
 
   // Profile Form Data
   const [formData, setFormData] = useState({
@@ -49,38 +50,101 @@ function MinhaContaContent() {
   const redirectUrl = searchParams.get('redirect') || '/';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const fetchAddressByCep = async (cep: string) => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        return {
+          street: data.logradouro,
+          city: data.localidade,
+          state: data.uf,
+          neighborhood: data.bairro,
+          complement: data.complemento,
+        };
+      }
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+    }
+    return null;
+  };
+
+  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    setIsLoadingCep(true);
+    const address = await fetchAddressByCep(cep);
+    setIsLoadingCep(false);
+
+    if (address) {
+      setFormData(prev => ({
+        ...prev,
+        address: `${address.street}${address.neighborhood ? `, ${address.neighborhood}` : ''}`,
+        city: address.city || prev.city,
+        state: address.state || prev.state,
+      }));
+    }
+  };
+
   // Initialize form data when user loads
   useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        phone: user.phone || '',
-        address: user.address || '',
-        city: user.city || '',
-        state: user.state || '',
-        zip_code: user.zip_code || ''
-      });
+    const loadUserData = async () => {
+      if (user) {
+        // First set data from AuthContext (fastest)
+        setFormData(prev => ({
+          ...prev,
+          name: user.name || '',
+          phone: user.phone || '',
+          address: user.address || '',
+          city: user.city || '',
+          state: user.state || '',
+          zip_code: user.zip_code || ''
+        }));
 
-      const checkRealtorStatus = async () => {
+        // Then fetch latest from DB to ensure accuracy (fixes potential stale data)
         const supabase = createClient();
-        const { data } = await supabase
-          .from('realtors')
-          .select('id')
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
           .eq('id', user.id)
           .single();
-        setIsRealtor(!!data);
 
-        // Fetch user properties
-        const { data: properties } = await supabase
-          .from('properties')
-          .select('*')
-          .eq('owner_id', user.id)
-          .order('created_at', { ascending: false });
+        if (profile) {
+          setFormData(prev => ({
+            ...prev,
+            name: profile.full_name || prev.name,
+            phone: profile.phone || prev.phone,
+            address: profile.address || prev.address,
+            city: profile.city || prev.city,
+            state: profile.state || prev.state,
+            zip_code: profile.zip_code || prev.zip_code
+          }));
+        }
 
-        if (properties) setMyProperties(properties);
-      };
-      checkRealtorStatus();
-    }
+        const checkRealtorStatus = async () => {
+          const { data } = await supabase
+            .from('realtors')
+            .select('id')
+            .eq('id', user.id)
+            .single();
+          setIsRealtor(!!data);
+
+          // Fetch user properties
+          const { data: properties } = await supabase
+            .from('properties')
+            .select('*')
+            .eq('owner_id', user.id)
+            .order('created_at', { ascending: false });
+
+          if (properties) setMyProperties(properties);
+        };
+        checkRealtorStatus();
+      }
+    };
+
+    loadUserData();
   }, [user]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
@@ -102,7 +166,7 @@ function MinhaContaContent() {
 
         const { data, error } = await register(authEmail, authPassword, authName);
         if (error) throw error;
-        
+
         if (data?.user && !data.session) {
           alert('Cadastro realizado com sucesso! Se você não for redirecionado automaticamente, verifique se a confirmação de email está desativada no sistema.');
           return;
@@ -450,13 +514,27 @@ function MinhaContaContent() {
                     {/* Zip Code */}
                     <div className="sm:col-span-2">
                       <label className="block text-sm font-medium text-slate-700">CEP</label>
-                      <input
-                        type="text"
-                        disabled={!isEditing}
-                        value={formData.zip_code}
-                        onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
-                        className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
-                      />
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <input
+                          type="text"
+                          disabled={!isEditing}
+                          value={formData.zip_code}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 8);
+                            const formatted = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                            setFormData({ ...formData, zip_code: formatted });
+                          }}
+                          onBlur={handleCepBlur}
+                          className="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500"
+                          placeholder="00000-000"
+                          maxLength={9}
+                        />
+                        {isLoadingCep && (
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                   </div>
