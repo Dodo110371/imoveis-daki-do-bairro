@@ -236,7 +236,7 @@ function PaymentContent() {
                             const value = plan.price / count;
                             return (
                               <option key={count} value={count}>
-                                {count}x de {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} sem juros
+                                {count}x de {formatCurrency(value)} sem juros
                               </option>
                             );
                           })}

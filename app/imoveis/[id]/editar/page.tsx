@@ -259,7 +259,9 @@ export default function EditPropertyPage() {
           
           title: property.title || '',
           description: property.description || '',
-          price: property.price?.toString() || '',
+          price: property.price ? property.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '',
+          condoPrice: property.condo_price ? property.condo_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '',
+          iptuPrice: property.iptu_price ? property.iptu_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '',
           bedrooms: property.bedrooms || 0,
           bathrooms: property.bathrooms || 0,
           parking: property.parking || 0,

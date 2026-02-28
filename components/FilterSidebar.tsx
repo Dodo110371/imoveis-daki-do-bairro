@@ -35,17 +35,26 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false); // Mobile state
 
-  const [filters, setFilters] = useState<FilterState>(() => ({
-    category: searchParams.get('category') || '',
-    bedrooms: searchParams.get('bedrooms') || '',
-    bathrooms: searchParams.get('bathrooms') || '',
-    parking: searchParams.get('parking') || '',
-    minPrice: searchParams.get('minPrice') ? formatCurrencyInput(searchParams.get('minPrice')!) : '',
-    maxPrice: searchParams.get('maxPrice') ? formatCurrencyInput(searchParams.get('maxPrice')!) : '',
-    minArea: searchParams.get('minArea') || '',
-    maxArea: searchParams.get('maxArea') || '',
-    type,
-  }));
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const formatUrlValue = (val: string) => {
+      if (!val) return '';
+      const num = Number(val);
+      if (isNaN(num)) return '';
+      return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    return {
+      category: searchParams.get('category') || '',
+      bedrooms: searchParams.get('bedrooms') || '',
+      bathrooms: searchParams.get('bathrooms') || '',
+      parking: searchParams.get('parking') || '',
+      minPrice: searchParams.get('minPrice') ? formatUrlValue(searchParams.get('minPrice')!) : '',
+      maxPrice: searchParams.get('maxPrice') ? formatUrlValue(searchParams.get('maxPrice')!) : '',
+      minArea: searchParams.get('minArea') || '',
+      maxArea: searchParams.get('maxArea') || '',
+      type,
+    };
+  });
 
   const updateFilters = (key: keyof FilterState, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));

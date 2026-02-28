@@ -61,17 +61,17 @@ export default async function AdminPropertiesPage() {
                   <div className="text-right">
                     <p className="font-bold text-lg text-blue-600">
                       {property.type === 'Aluguel'
-                        ? `${formatCurrency(property.price)}/mês`
-                        : formatCurrency(property.price)}
+                        ? `${formatCurrency(Number(property.price))}/mês`
+                        : formatCurrency(Number(property.price))}
                     </p>
                     {property.condo_price && (
                       <p className="text-xs text-slate-500">
-                        Cond.: {formatCurrency(property.condo_price)}
+                        Cond.: {formatCurrency(Number(property.condo_price))}
                       </p>
                     )}
                     {property.iptu_price && (
                       <p className="text-xs text-slate-500">
-                        IPTU: {formatCurrency(property.iptu_price)}
+                        IPTU: {formatCurrency(Number(property.iptu_price))}
                       </p>
                     )}
                     <p className="text-xs text-slate-400 capitalize mt-1">{property.type}</p>

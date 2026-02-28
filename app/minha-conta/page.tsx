@@ -518,8 +518,8 @@ function MinhaContaContent() {
                           <p className="text-sm text-slate-500 truncate">{property.location}</p>
                           <p className="text-sm font-medium text-slate-900 mt-1">
                             {property.type === 'Aluguel'
-                              ? `${formatCurrency(property.price)}/mês`
-                              : formatCurrency(property.price)}
+                              ? `${formatCurrency(Number(property.price))}/mês`
+                              : formatCurrency(Number(property.price))}
                           </p>
                         </div>
 

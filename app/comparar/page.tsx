@@ -55,7 +55,7 @@ export default function ComparisonPage() {
   }, [comparisonIds, isContextLoading]);
 
   const formatPrice = (value: number, type: string) => {
-    const formatted = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const formatted = formatCurrency(value);
     return type === 'Aluguel' ? `${formatted}/mês` : formatted;
   };
 
