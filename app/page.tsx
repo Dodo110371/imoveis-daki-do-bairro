@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
 import { AdSenseAd } from "@/components/AdSenseAd";
+import { formatCurrency } from "@/lib/utils";
 
 // HomePage Component
 export default async function HomePage() {
@@ -51,8 +52,8 @@ export default async function HomePage() {
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel'
-      ? `R$ ${p.price}/mês`
-      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+      ? `${formatCurrency(p.price)}/mês`
+      : formatCurrency(p.price),
     location: p.location,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

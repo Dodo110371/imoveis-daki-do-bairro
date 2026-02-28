@@ -517,7 +517,7 @@ function MinhaContaContent() {
                           <p className="text-sm text-slate-500 truncate">{property.location}</p>
                           <p className="text-sm font-medium text-slate-900 mt-1">
                             {property.type === 'Aluguel'
-                              ? `R$ ${property.price}/mês`
+                              ? `R$ ${Number(property.price).toLocaleString('pt-BR')}/mês`
                               : `R$ ${Number(property.price).toLocaleString('pt-BR')}`}
                           </p>
                         </div>

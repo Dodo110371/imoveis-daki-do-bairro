@@ -12,6 +12,7 @@ import {
   Filter,
   X
 } from 'lucide-react';
+import { formatCurrencyInput } from '@/lib/utils';
 
 interface FilterState {
   category: string;
@@ -60,8 +61,8 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
     if (filters.bathrooms) params.set('bathrooms', filters.bathrooms);
     if (filters.parking) params.set('parking', filters.parking);
-    if (filters.minPrice) params.set('minPrice', filters.minPrice);
-    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+    if (filters.minPrice) params.set('minPrice', filters.minPrice.replace(/\D/g, ''));
+    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice.replace(/\D/g, ''));
     if (filters.minArea) params.set('minArea', filters.minArea);
     if (filters.maxArea) params.set('maxArea', filters.maxArea);
 
@@ -216,17 +217,17 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
               <label className="block text-sm font-medium text-slate-700 mb-2">Preço (R$)</label>
               <div className="grid grid-cols-2 gap-2">
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Mínimo"
                   value={filters.minPrice}
-                  onChange={(e) => updateFilters('minPrice', e.target.value)}
+                  onChange={(e) => updateFilters('minPrice', formatCurrencyInput(e.target.value))}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Máximo"
                   value={filters.maxPrice}
-                  onChange={(e) => updateFilters('maxPrice', e.target.value)}
+                  onChange={(e) => updateFilters('maxPrice', formatCurrencyInput(e.target.value))}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

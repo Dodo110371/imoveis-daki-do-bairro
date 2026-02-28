@@ -7,6 +7,7 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
 import { AdSenseAd } from "@/components/AdSenseAd";
+import { parseCurrency } from "@/lib/utils";
 
 interface AlugarSearchParams {
   [key: string]: string | string[] | undefined;
@@ -93,11 +94,11 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
   }
 
   if (params.minPrice) {
-    query = query.gte('price', parseFloat(params.minPrice as string));
+    query = query.gte('price', parseCurrency(params.minPrice as string));
   }
 
   if (params.maxPrice) {
-    query = query.lte('price', parseFloat(params.maxPrice as string));
+    query = query.lte('price', parseCurrency(params.maxPrice as string));
   }
 
   if (params.minArea) {
@@ -125,7 +126,7 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
   const mapProperty = (p: AlugarDbProperty) => ({
     id: p.id,
     title: p.title,
-    price: `R$ ${p.price}/mês`,
+    price: `R$ ${Number(p.price).toLocaleString('pt-BR')}/mês`,
     location: p.location,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

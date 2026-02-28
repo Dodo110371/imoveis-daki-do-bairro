@@ -64,8 +64,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     images: propertyData.images || [],
     imageUrl: propertyData.images?.[0] || null,
     price: propertyData.type === 'Aluguel'
-      ? `R$ ${propertyData.price}/mês`
+      ? `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}/mês`
       : `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}`,
+    condoPrice: propertyData.condo_price ? Number(propertyData.condo_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null,
+    iptuPrice: propertyData.iptu_price ? Number(propertyData.iptu_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null,
     features: propertyData.features || [],
   };
 
@@ -198,8 +200,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   {property.location}
                 </div>
               </div>
-              <div className="text-2xl md:text-4xl font-bold text-slate-900 md:text-white">
-                {property.price}
+              <div className="flex flex-col md:items-end">
+                <div className="text-2xl md:text-4xl font-bold text-slate-900 md:text-white">
+                  {property.price}
+                </div>
+                {(property.condoPrice || property.iptuPrice) && (
+                  <div className="flex flex-col md:items-end text-sm font-medium text-slate-600 md:text-slate-200 mt-1">
+                    {property.condoPrice && <span>Condomínio: {property.condoPrice}</span>}
+                    {property.iptuPrice && <span>IPTU: {property.iptuPrice}</span>}
+                  </div>
+                )}
               </div>
             </div>
           </div>

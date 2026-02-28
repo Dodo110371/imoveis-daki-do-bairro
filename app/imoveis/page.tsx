@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CITIES } from "@/lib/cities";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
+import { parseCurrency, formatCurrency } from "@/lib/utils";
 
 interface ImoveisSearchParams {
   city?: string;
@@ -67,10 +68,37 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (neighborhood) toggleParams.set('neighborhood', neighborhood);
   if (street) toggleParams.set('street', street);
   if (type) toggleParams.set('type', type);
+  if (minPrice) toggleParams.set('minPrice', minPrice);
+  if (maxPrice) toggleParams.set('maxPrice', maxPrice);
+  if (bedrooms) toggleParams.set('bedrooms', bedrooms);
+  if (bathrooms) toggleParams.set('bathrooms', bathrooms);
+  if (minArea) toggleParams.set('minArea', minArea);
 
   let query = supabase.from('properties').select('*');
 
   // Apply filters
+  if (minPrice) {
+    const min = parseCurrency(minPrice);
+    if (min > 0) query = query.gte('price', min);
+  }
+
+  if (maxPrice) {
+    const max = parseCurrency(maxPrice);
+    if (max > 0) query = query.lte('price', max);
+  }
+
+  if (bedrooms) {
+    query = query.gte('bedrooms', parseInt(bedrooms));
+  }
+
+  if (bathrooms) {
+    query = query.gte('bathrooms', parseInt(bathrooms));
+  }
+
+  if (minArea) {
+    query = query.gte('area', parseInt(minArea));
+  }
+
   if (neighborhood) {
     // Search in location or description
     query = query.or(`location.ilike.%${neighborhood}%,description.ilike.%${neighborhood}%`);
@@ -118,8 +146,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel'
-      ? `R$ ${p.price}/mês`
-      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+      ? `${formatCurrency(p.price)}/mês`
+      : formatCurrency(p.price),
     location: p.location,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

@@ -16,21 +16,60 @@ import {
   User,
   Loader2,
   Info,
-  Trash2
+  Trash2,
+  Check
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
+import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 // Step definitions - Removing "Planos" step for editing
 const STEPS = [
   { id: 1, title: 'Tipo de Imóvel', icon: Home },
   { id: 2, title: 'Localização', icon: MapPin },
   { id: 3, title: 'Detalhes', icon: Building2 },
-  { id: 4, title: 'Valores', icon: DollarSign },
-  { id: 5, title: 'Fotos', icon: Camera },
-  { id: 6, title: 'Contato', icon: User },
+  { id: 4, title: 'Características', icon: Check },
+  { id: 5, title: 'Valores', icon: DollarSign },
+  { id: 6, title: 'Fotos', icon: Camera },
+  { id: 7, title: 'Contato', icon: User },
+];
+
+const FEATURES_OPTIONS = [
+  'Academia',
+  'Aceita Animais',
+  'Acessibilidade',
+  'Ar Condicionado',
+  'Área de Serviço',
+  'Armário Embutido',
+  'Armário na Cozinha',
+  'Churrasqueira',
+  'Cinema',
+  'Closet',
+  'Cozinha Americana',
+  'Depósito',
+  'Elevador',
+  'Escritório',
+  'Espaço Gourmet',
+  'Garagem',
+  'Gás Encanado',
+  'Interfone',
+  'Jardim',
+  'Lareira',
+  'Lavanderia',
+  'Mobiliado',
+  'Piscina',
+  'Playground',
+  'Portaria 24h',
+  'Quadra Poliesportiva',
+  'Quintal',
+  'Salão de Festas',
+  'Salão de Jogos',
+  'Sauna',
+  'Varanda',
+  'Varanda Gourmet',
+  'Vista para o Mar'
 ];
 
 interface AdvertiseFormData {
@@ -51,6 +90,7 @@ interface AdvertiseFormData {
   iptuPrice: string;
   title: string;
   description: string;
+  features: string[];
   photos: string[];
   name: string;
   email: string;
@@ -100,6 +140,7 @@ export default function EditPropertyPage() {
     iptuPrice: '',
     title: '',
     description: '',
+    features: [],
     photos: [] as string[],
     name: '',
     email: '',
@@ -221,7 +262,9 @@ export default function EditPropertyPage() {
           price: property.price?.toString() || '',
           bedrooms: property.bedrooms || 0,
           bathrooms: property.bathrooms || 0,
+          parking: property.parking || 0,
           area: property.area?.toString() || '',
+          features: property.features || [],
           photos: property.images || [],
           street,
           number,
@@ -403,11 +446,6 @@ export default function EditPropertyPage() {
 
       const supabase = createClient();
 
-      const parseCurrency = (val: string) => {
-        if (!val) return 0;
-        return parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-      };
-
       const price = parseCurrency(formData.price);
       const area = parseFloat(formData.area.replace(',', '.')) || 0;
 
@@ -417,11 +455,14 @@ export default function EditPropertyPage() {
           title: formData.title,
           description: formData.description,
           price: price,
+          condo_price: parseCurrency(formData.condoPrice),
+          iptu_price: parseCurrency(formData.iptuPrice),
           location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
           bedrooms: formData.bedrooms,
           bathrooms: formData.bathrooms,
           parking: formData.parking,
           area: area,
+          features: formData.features,
           // Keeping existing logic for type/purpose
           type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
           category: formData.type,
@@ -534,7 +575,6 @@ export default function EditPropertyPage() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-10">
-
           {/* STEP 1: TYPE */}
           {currentStep === 1 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -767,8 +807,61 @@ export default function EditPropertyPage() {
             </div>
           )}
 
-          {/* STEP 4: VALUES */}
+          {/* STEP 4: FEATURES */}
           {currentStep === 4 && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-slate-900">Características</h2>
+                <p className="text-slate-500 mt-2">Selecione as características do imóvel</p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {FEATURES_OPTIONS.map((feature) => (
+                  <label
+                    key={feature}
+                    className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
+                      formData.features.includes(feature)
+                        ? 'bg-blue-50 border-blue-200 shadow-sm'
+                        : 'bg-white border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                        formData.features.includes(feature)
+                          ? 'bg-blue-600 border-blue-600'
+                          : 'border-slate-300 bg-white'
+                      }`}
+                    >
+                      {formData.features.includes(feature) && (
+                        <Check className="w-3.5 h-3.5 text-white" />
+                      )}
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={formData.features.includes(feature)}
+                      onChange={() => {
+                        setFormData((prev) => {
+                          const newFeatures = prev.features.includes(feature)
+                            ? prev.features.filter((f) => f !== feature)
+                            : [...prev.features, feature];
+                          return { ...prev, features: newFeatures };
+                        });
+                      }}
+                    />
+                    <span className={`text-sm font-medium ${
+                      formData.features.includes(feature) ? 'text-blue-700' : 'text-slate-600'
+                    }`}>
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: VALUES */}
+          {currentStep === 5 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Valores e Descrição</h2>
@@ -784,7 +877,7 @@ export default function EditPropertyPage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.price}
-                    onChange={(e) => handleInputChange('price', e.target.value)}
+                    onChange={(e) => handleInputChange('price', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 font-bold text-lg text-slate-900"
                   />
                 </div>
@@ -794,7 +887,7 @@ export default function EditPropertyPage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.condoPrice}
-                    onChange={(e) => handleInputChange('condoPrice', e.target.value)}
+                    onChange={(e) => handleInputChange('condoPrice', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
@@ -804,7 +897,7 @@ export default function EditPropertyPage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.iptuPrice}
-                    onChange={(e) => handleInputChange('iptuPrice', e.target.value)}
+                    onChange={(e) => handleInputChange('iptuPrice', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
@@ -897,8 +990,8 @@ export default function EditPropertyPage() {
             </div>
           )}
 
-          {/* STEP 6: CONTACT */}
-          {currentStep === 6 && (
+          {/* STEP 7: CONTACT */}
+          {currentStep === 7 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Seus Dados</h2>

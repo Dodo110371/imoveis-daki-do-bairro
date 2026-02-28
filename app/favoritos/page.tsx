@@ -31,7 +31,7 @@ export default function FavoritesPage() {
         const mapped = data.map(p => ({
             id: p.id,
             title: p.title,
-            price: p.type === 'Aluguel' ? `R$ ${p.price}/mês` : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+            price: p.type === 'Aluguel' ? `R$ ${Number(p.price).toLocaleString('pt-BR')}/mês` : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
             location: p.location,
             bedrooms: p.bedrooms,
             bathrooms: p.bathrooms,

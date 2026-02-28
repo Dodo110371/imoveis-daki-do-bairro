@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Image from "next/image";
 import { Check, X, MapPin, User, Calendar } from "lucide-react";
 import { AdminPropertyActions } from "./actions";
+import { formatCurrency } from "@/lib/utils";
 
 export default async function AdminPropertiesPage() {
   const supabase = await createClient();
@@ -60,10 +61,20 @@ export default async function AdminPropertiesPage() {
                   <div className="text-right">
                     <p className="font-bold text-lg text-blue-600">
                       {property.type === 'Aluguel'
-                        ? `R$ ${property.price}/mês`
-                        : `R$ ${Number(property.price).toLocaleString('pt-BR')}`}
+                        ? `${formatCurrency(property.price)}/mês`
+                        : formatCurrency(property.price)}
                     </p>
-                    <p className="text-xs text-slate-400 capitalize">{property.type}</p>
+                    {property.condo_price && (
+                      <p className="text-xs text-slate-500">
+                        Cond.: {formatCurrency(property.condo_price)}
+                      </p>
+                    )}
+                    {property.iptu_price && (
+                      <p className="text-xs text-slate-500">
+                        IPTU: {formatCurrency(property.iptu_price)}
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-400 capitalize mt-1">{property.type}</p>
                   </div>
                 </div>
 

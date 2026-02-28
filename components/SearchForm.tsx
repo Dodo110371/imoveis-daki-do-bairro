@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Search, MapPin, Home, Navigation, Map, Building2, SlidersHorizontal, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
+import { formatCurrencyInput } from '@/lib/utils';
 
 export function SearchForm() {
   const router = useRouter();
@@ -30,8 +31,8 @@ export function SearchForm() {
     if (propertyType && propertyType !== 'todos') params.set('type', propertyType);
 
     // Advanced Filters
-    if (minPrice) params.set('minPrice', minPrice);
-    if (maxPrice) params.set('maxPrice', maxPrice);
+    if (minPrice) params.set('minPrice', minPrice.replace(/\D/g, ''));
+    if (maxPrice) params.set('maxPrice', maxPrice.replace(/\D/g, ''));
     if (bedrooms) params.set('bedrooms', bedrooms);
     if (bathrooms) params.set('bathrooms', bathrooms);
     if (minArea) params.set('minArea', minArea);
@@ -161,18 +162,18 @@ export function SearchForm() {
               <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Faixa de Preço</label>
               <div className="flex gap-2">
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Mín"
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                   value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
+                  onChange={(e) => setMinPrice(formatCurrencyInput(e.target.value))}
                 />
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Máx"
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                   value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
+                  onChange={(e) => setMaxPrice(formatCurrencyInput(e.target.value))}
                 />
               </div>
             </div>

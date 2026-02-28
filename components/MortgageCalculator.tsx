@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Calculator, Percent, Calendar } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 interface MortgageCalculatorProps {
   propertyPrice: number;
@@ -34,9 +35,7 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
     return 0;
   }, [value, downPayment, interestRate, years]);
 
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-  };
+
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 md:p-8">
@@ -60,9 +59,13 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
                 <span className="text-slate-500">R$</span>
               </div>
               <input
-                type="number"
-                value={value}
-                onChange={(e) => setValue(Number(e.target.value))}
+                type="text"
+                value={value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, '');
+                  const floatValue = rawValue ? parseFloat(rawValue) / 100 : 0;
+                  setValue(floatValue);
+                }}
                 className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-slate-900"
               />
             </div>
@@ -71,16 +74,20 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
           {/* Down Payment */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Entrada ({Math.round((downPayment / value) * 100)}%)
+              Entrada ({value > 0 ? Math.round((downPayment / value) * 100) : 0}%)
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="text-slate-500">R$</span>
               </div>
               <input
-                type="number"
-                value={downPayment}
-                onChange={(e) => setDownPayment(Number(e.target.value))}
+                type="text"
+                value={downPayment.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, '');
+                  const floatValue = rawValue ? parseFloat(rawValue) / 100 : 0;
+                  setDownPayment(floatValue);
+                }}
                 className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-slate-900"
               />
             </div>

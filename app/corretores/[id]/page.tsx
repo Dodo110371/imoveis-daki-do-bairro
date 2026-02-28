@@ -99,7 +99,9 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     (propertiesData || []).map((p: RealtorPropertyRow) => ({
       id: p.id,
       title: p.title,
-      price: `R$ ${p.price.toLocaleString('pt-BR')}`,
+      price: p.type === 'Aluguel'
+        ? `R$ ${p.price.toLocaleString('pt-BR')}/mês`
+        : `R$ ${p.price.toLocaleString('pt-BR')}`,
       location: p.location,
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,

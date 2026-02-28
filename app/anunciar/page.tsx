@@ -31,6 +31,8 @@ import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
 import { useEffect } from 'react';
 import { PageViewTracker } from '@/components/PageViewTracker';
+import { createClient } from '@/lib/supabase/client';
+import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 // Step definitions
 const STEPS = [
@@ -154,8 +156,6 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   paymentPlan: 'mensal',
   paymentMethod: 'pix',
 };
-
-import { createClient } from '@/lib/supabase/client';
 
 export default function AdvertisePage() {
   const router = useRouter();
@@ -391,11 +391,6 @@ export default function AdvertisePage() {
 
       const supabase = createClient();
 
-      const parseCurrency = (val: string) => {
-        if (!val) return 0;
-        return parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-      };
-
       const price = parseCurrency(formData.price);
       const area = parseFloat(formData.area.replace(',', '.')) || 0;
 
@@ -403,6 +398,8 @@ export default function AdvertisePage() {
         title: formData.title,
         description: formData.description,
         price: price,
+        condo_price: parseCurrency(formData.condoPrice),
+        iptu_price: parseCurrency(formData.iptuPrice),
         location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
         bedrooms: formData.bedrooms,
         bathrooms: formData.bathrooms,
@@ -1075,7 +1072,7 @@ export default function AdvertisePage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.price}
-                    onChange={(e) => handleInputChange('price', e.target.value)}
+                    onChange={(e) => handleInputChange('price', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 font-bold text-lg text-slate-900"
                   />
                 </div>
@@ -1085,7 +1082,7 @@ export default function AdvertisePage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.condoPrice}
-                    onChange={(e) => handleInputChange('condoPrice', e.target.value)}
+                    onChange={(e) => handleInputChange('condoPrice', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
@@ -1095,7 +1092,7 @@ export default function AdvertisePage() {
                     type="text"
                     placeholder="0,00"
                     value={formData.iptuPrice}
-                    onChange={(e) => handleInputChange('iptuPrice', e.target.value)}
+                    onChange={(e) => handleInputChange('iptuPrice', formatCurrencyInput(e.target.value))}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
