@@ -12,7 +12,7 @@ import {
   Filter,
   X
 } from 'lucide-react';
-import { formatCurrencyInput } from '@/lib/utils';
+import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 interface FilterState {
   category: string;
@@ -40,8 +40,8 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
     bedrooms: searchParams.get('bedrooms') || '',
     bathrooms: searchParams.get('bathrooms') || '',
     parking: searchParams.get('parking') || '',
-    minPrice: searchParams.get('minPrice') || '',
-    maxPrice: searchParams.get('maxPrice') || '',
+    minPrice: searchParams.get('minPrice') ? formatCurrencyInput(searchParams.get('minPrice')!) : '',
+    maxPrice: searchParams.get('maxPrice') ? formatCurrencyInput(searchParams.get('maxPrice')!) : '',
     minArea: searchParams.get('minArea') || '',
     maxArea: searchParams.get('maxArea') || '',
     type,
@@ -61,8 +61,8 @@ export function FilterSidebar({ type }: FilterSidebarProps) {
     if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
     if (filters.bathrooms) params.set('bathrooms', filters.bathrooms);
     if (filters.parking) params.set('parking', filters.parking);
-    if (filters.minPrice) params.set('minPrice', filters.minPrice.replace(/\D/g, ''));
-    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice.replace(/\D/g, ''));
+    if (filters.minPrice) params.set('minPrice', parseCurrency(filters.minPrice).toString());
+    if (filters.maxPrice) params.set('maxPrice', parseCurrency(filters.maxPrice).toString());
     if (filters.minArea) params.set('minArea', filters.minArea);
     if (filters.maxArea) params.set('maxArea', filters.maxArea);
 

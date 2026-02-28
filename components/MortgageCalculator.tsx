@@ -2,27 +2,27 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Calculator, Percent, Calendar } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 interface MortgageCalculatorProps {
   propertyPrice: number;
 }
 
 export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
-  const [value, setValue] = useState(propertyPrice);
-  const [downPayment, setDownPayment] = useState(propertyPrice * 0.2); // 20% default
+  const [value, setValue] = useState(formatCurrencyInput(propertyPrice.toString()));
+  const [downPayment, setDownPayment] = useState(formatCurrencyInput((propertyPrice * 0.2).toString())); // 20% default
   const [interestRate, setInterestRate] = useState(10.5); // 10.5% default annual
   const [years, setYears] = useState(30); // 30 years default
 
   useEffect(() => {
     if (propertyPrice > 0) {
-      setValue(propertyPrice);
-      setDownPayment(propertyPrice * 0.2);
+      setValue(formatCurrencyInput(propertyPrice.toString()));
+      setDownPayment(formatCurrencyInput((propertyPrice * 0.2).toString()));
     }
   }, [propertyPrice]);
 
   const monthlyPayment = useMemo(() => {
-    const principal = value - downPayment;
+    const principal = parseCurrency(value) - parseCurrency(downPayment);
     const monthlyRate = interestRate / 100 / 12;
     const numberOfPayments = years * 12;
 
@@ -34,8 +34,6 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
 
     return 0;
   }, [value, downPayment, interestRate, years]);
-
-
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 md:p-8">
@@ -60,11 +58,9 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
               </div>
               <input
                 type="text"
-                value={value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                value={value}
                 onChange={(e) => {
-                  const rawValue = e.target.value.replace(/\D/g, '');
-                  const floatValue = rawValue ? parseFloat(rawValue) / 100 : 0;
-                  setValue(floatValue);
+                  setValue(formatCurrencyInput(e.target.value));
                 }}
                 className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-slate-900"
               />
@@ -74,7 +70,7 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
           {/* Down Payment */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Entrada ({value > 0 ? Math.round((downPayment / value) * 100) : 0}%)
+              Entrada ({parseCurrency(value) > 0 ? Math.round((parseCurrency(downPayment) / parseCurrency(value)) * 100) : 0}%)
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -82,11 +78,9 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
               </div>
               <input
                 type="text"
-                value={downPayment.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                value={downPayment}
                 onChange={(e) => {
-                  const rawValue = e.target.value.replace(/\D/g, '');
-                  const floatValue = rawValue ? parseFloat(rawValue) / 100 : 0;
-                  setDownPayment(floatValue);
+                  setDownPayment(formatCurrencyInput(e.target.value));
                 }}
                 className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-slate-900"
               />
@@ -94,9 +88,9 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
             <input
               type="range"
               min={0}
-              max={value}
-              value={downPayment}
-              onChange={(e) => setDownPayment(Number(e.target.value))}
+              max={parseCurrency(value)}
+              value={parseCurrency(downPayment)}
+              onChange={(e) => setDownPayment(formatCurrencyInput(e.target.value))}
               className="w-full mt-2 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
           </div>
@@ -149,7 +143,7 @@ export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
           <div className="w-full mt-8 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-slate-600">Valor Financiado:</span>
-              <span className="font-semibold text-slate-900">{formatCurrency(value - downPayment)}</span>
+              <span className="font-semibold text-slate-900">{formatCurrency(parseCurrency(value) - parseCurrency(downPayment))}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-slate-600">Total de Meses:</span>

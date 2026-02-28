@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight, Home } from 'lucide-react';
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { AgencyPartnerBadge } from './AgencyPartnerBadge';
 import { PartnerBadge } from './PartnerBadge';
 
@@ -39,6 +39,8 @@ export function PropertyCard({
   agencyPartner = false,
   realtorPartner = false,
 }: PropertyCardProps) {
+  const formattedPrice = typeof price === 'number' ? formatCurrency(price) : price;
+
   // Use images array if provided and not empty, otherwise fallback to [imageUrl]
   // Filter out null/undefined values
   const validImages = (images && images.length > 0 ? images : [imageUrl]).filter((img): img is string => !!img);
@@ -167,7 +169,7 @@ export function PropertyCard({
               </div>
             </div>
           </div>
-          <div className="mt-4 text-xl font-bold text-slate-900">{price}</div>
+          <div className="mt-4 text-xl font-bold text-slate-900">{formattedPrice}</div>
         </div>
       </Link>
     </div>

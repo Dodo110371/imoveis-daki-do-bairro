@@ -6,6 +6,7 @@ import { PropertyCard } from '@/components/PropertyCard';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Heart, Home } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 export default function FavoritesPage() {
   const { favorites, isLoading: isContextLoading } = useFavorites();
@@ -31,7 +32,7 @@ export default function FavoritesPage() {
         const mapped = data.map(p => ({
             id: p.id,
             title: p.title,
-            price: p.type === 'Aluguel' ? `R$ ${Number(p.price).toLocaleString('pt-BR')}/mês` : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+            price: p.type === 'Aluguel' ? `${formatCurrency(p.price)}/mês` : formatCurrency(p.price),
             location: p.location,
             bedrooms: p.bedrooms,
             bathrooms: p.bathrooms,

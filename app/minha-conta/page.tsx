@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
 import { createClient } from '@/lib/supabase/client';
 import { HeaderCta } from '@/components/HeaderCta';
+import { formatCurrency } from '@/lib/utils';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
@@ -517,8 +518,8 @@ function MinhaContaContent() {
                           <p className="text-sm text-slate-500 truncate">{property.location}</p>
                           <p className="text-sm font-medium text-slate-900 mt-1">
                             {property.type === 'Aluguel'
-                              ? `R$ ${Number(property.price).toLocaleString('pt-BR')}/mês`
-                              : `R$ ${Number(property.price).toLocaleString('pt-BR')}`}
+                              ? `${formatCurrency(property.price)}/mês`
+                              : formatCurrency(property.price)}
                           </p>
                         </div>
 

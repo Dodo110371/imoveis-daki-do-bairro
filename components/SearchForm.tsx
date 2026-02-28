@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Search, MapPin, Home, Navigation, Map, Building2, SlidersHorizontal, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
-import { formatCurrencyInput } from '@/lib/utils';
+import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 export function SearchForm() {
   const router = useRouter();
@@ -31,8 +31,8 @@ export function SearchForm() {
     if (propertyType && propertyType !== 'todos') params.set('type', propertyType);
 
     // Advanced Filters
-    if (minPrice) params.set('minPrice', minPrice.replace(/\D/g, ''));
-    if (maxPrice) params.set('maxPrice', maxPrice.replace(/\D/g, ''));
+    if (minPrice) params.set('minPrice', parseCurrency(minPrice).toString());
+    if (maxPrice) params.set('maxPrice', parseCurrency(maxPrice).toString());
     if (bedrooms) params.set('bedrooms', bedrooms);
     if (bathrooms) params.set('bathrooms', bathrooms);
     if (minArea) params.set('minArea', minArea);

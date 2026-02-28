@@ -7,7 +7,7 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ContactEventLink } from "@/components/ContactEventLink";
 import { AdSenseAd } from "@/components/AdSenseAd";
-import { parseCurrency } from "@/lib/utils";
+import { parseCurrency, formatCurrency } from "@/lib/utils";
 
 interface AlugarSearchParams {
   [key: string]: string | string[] | undefined;
@@ -126,7 +126,7 @@ export default async function AlugarPage({ searchParams }: AlugarPageProps) {
   const mapProperty = (p: AlugarDbProperty) => ({
     id: p.id,
     title: p.title,
-    price: `R$ ${Number(p.price).toLocaleString('pt-BR')}/mês`,
+    price: `${formatCurrency(p.price)}/mês`,
     location: p.location,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

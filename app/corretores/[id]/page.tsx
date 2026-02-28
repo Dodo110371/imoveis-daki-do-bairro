@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { PropertyCard } from '@/components/PropertyCard';
 import { ContactEventLink } from '@/components/ContactEventLink';
 import { PartnerBadge } from '@/components/PartnerBadge';
+import { formatCurrency } from '@/lib/utils';
 
 interface RealtorProfilePageParams {
   id: string;
@@ -100,8 +101,8 @@ export default async function RealtorProfilePage({ params }: PageProps) {
       id: p.id,
       title: p.title,
       price: p.type === 'Aluguel'
-        ? `R$ ${p.price.toLocaleString('pt-BR')}/mês`
-        : `R$ ${p.price.toLocaleString('pt-BR')}`,
+        ? `${formatCurrency(p.price)}/mês`
+        : formatCurrency(p.price),
       location: p.location,
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,

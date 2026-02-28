@@ -6,6 +6,7 @@ import { MapPin, Phone, Mail, Building2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ContactEventLink } from "@/components/ContactEventLink";
 import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
+import { formatCurrency } from "@/lib/utils";
 
 interface AgencyPageProps {
   params: Promise<{
@@ -50,8 +51,8 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel' 
-      ? `R$ ${p.price}/mês` 
-      : `R$ ${Number(p.price).toLocaleString('pt-BR')}`,
+      ? `${formatCurrency(p.price)}/mês` 
+      : formatCurrency(p.price),
     location: p.location,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

@@ -927,8 +927,8 @@ export default function EditPropertyPage() {
             </div>
           )}
 
-          {/* STEP 5: PHOTOS */}
-          {currentStep === 5 && (
+          {/* STEP 6: PHOTOS */}
+          {currentStep === 6 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-slate-900">Fotos do Imóvel</h2>

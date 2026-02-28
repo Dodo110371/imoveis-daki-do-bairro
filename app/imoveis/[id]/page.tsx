@@ -12,6 +12,8 @@ import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
 import { PartnerBadge } from "@/components/PartnerBadge";
 import { AdSenseAd } from "@/components/AdSenseAd";
 
+import { formatCurrency } from "@/lib/utils";
+
 interface PropertyPageProps {
   params: Promise<{
     id: string;
@@ -64,10 +66,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     images: propertyData.images || [],
     imageUrl: propertyData.images?.[0] || null,
     price: propertyData.type === 'Aluguel'
-      ? `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}/mês`
-      : `R$ ${Number(propertyData.price).toLocaleString('pt-BR')}`,
-    condoPrice: propertyData.condo_price ? Number(propertyData.condo_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null,
-    iptuPrice: propertyData.iptu_price ? Number(propertyData.iptu_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null,
+      ? `${formatCurrency(Number(propertyData.price))}/mês`
+      : formatCurrency(Number(propertyData.price)),
+    condoPrice: propertyData.condo_price ? formatCurrency(Number(propertyData.condo_price)) : null,
+    iptuPrice: propertyData.iptu_price ? formatCurrency(Number(propertyData.iptu_price)) : null,
     features: propertyData.features || [],
   };
 
