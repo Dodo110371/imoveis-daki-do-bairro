@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Check, X, MapPin, Bed, Bath, Car, Move, Trash2, Home } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 interface Property {
   id: string;
