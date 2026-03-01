@@ -17,7 +17,8 @@ import {
   Loader2,
   Info,
   Trash2,
-  Check
+  Check,
+  Video
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
@@ -107,6 +108,7 @@ interface AdvertiseFormData {
   advertiserComplement: string;
   paymentPlan: string;
   paymentMethod: string;
+  videoUrl?: string;
 }
 
 export default function EditPropertyPage() {
@@ -262,6 +264,7 @@ export default function EditPropertyPage() {
           email: property.contact_email || user.email || '',
           phone: property.contact_phone || '',
           whatsapp: property.contact_whatsapp || '',
+          videoUrl: property.video_url || '',
         }));
 
       } catch (error) {
@@ -464,6 +467,7 @@ export default function EditPropertyPage() {
           contact_email: formData.email,
           contact_phone: formData.phone,
           contact_whatsapp: formData.whatsapp,
+          video_url: formData.videoUrl,
           status: 'pending' // Reset status to pending for moderation
         })
         .eq('id', params.id);
@@ -977,6 +981,47 @@ export default function EditPropertyPage() {
                   Nenhuma foto selecionada. Adicione pelo menos uma foto para continuar.
                 </div>
               )}
+
+              <div className="mt-8 border-t border-slate-200 pt-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
+                    <Video className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Vídeo do Imóvel</h3>
+                    <p className="text-sm text-slate-500">Adicione um vídeo para aumentar a visibilidade do seu anúncio</p>
+                  </div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Link do Vídeo (YouTube, Vimeo ou link direto)
+                  </label>
+                  <div className="relative">
+                    <Video className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input
+                      type="url"
+                      value={formData.videoUrl}
+                      onChange={(e) => handleInputChange('videoUrl', e.target.value)}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-col md:flex-row gap-4 text-sm text-slate-600">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                      <span>Duração recomendada: 1 a 3 minutos</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                      <span>Formato horizontal (16:9)</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                      <span>Mostre todos os ambientes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

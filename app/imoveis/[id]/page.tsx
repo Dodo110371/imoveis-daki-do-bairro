@@ -72,6 +72,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     condoPrice: propertyData.condo_price ? formatCurrency(Number(propertyData.condo_price)) : null,
     iptuPrice: propertyData.iptu_price ? formatCurrency(Number(propertyData.iptu_price)) : null,
     features: propertyData.features || [],
+    videoUrl: propertyData.video_url || null,
   };
 
   const agency = agencyData ? {
@@ -93,7 +94,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     <main className="min-h-screen bg-slate-50 pb-16">
       <PageViewTracker propertyId={id} />
       <div className="relative group">
-        <ImageGallery images={property.images} title={property.title} />
+        <ImageGallery images={property.images} title={property.title} videoUrl={property.videoUrl} />
         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
           {agency?.isPartner && (
             <>
