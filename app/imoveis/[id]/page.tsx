@@ -21,6 +21,7 @@ interface PropertyPageProps {
 }
 
 import { MortgageCalculator } from "@/components/MortgageCalculator";
+import { RentSummary } from "@/components/RentSummary";
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { id } = await params;
@@ -285,6 +286,15 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             {/* Mortgage Calculator (Only for Sales) */}
             {property.type === 'Venda' && (
               <MortgageCalculator propertyPrice={Number(propertyData.price)} />
+            )}
+
+            {/* Rent Summary (Only for Rent) */}
+            {property.type === 'Aluguel' && (
+              <RentSummary
+                rentPrice={Number(propertyData.price)}
+                condoPrice={Number(propertyData.condo_price || 0)}
+                iptuPrice={Number(propertyData.iptu_price || 0)}
+              />
             )}
           </div>
 
