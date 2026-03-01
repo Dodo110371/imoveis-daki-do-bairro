@@ -123,6 +123,8 @@ export default function EditPropertyPage() {
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoInputType, setVideoInputType] = useState<'link' | 'upload'>('link');
 
   // Form State
   const [formData, setFormData] = useState<AdvertiseFormData>({
@@ -404,6 +406,68 @@ export default function EditPropertyPage() {
     setFormData(prev => ({
       ...prev,
       photos: prev.photos.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0 || !user) return;
+
+    setIsUploadingVideo(true);
+    const supabase = createClient();
+    const file = e.target.files[0];
+
+    try {
+      if (file.size > 100 * 1024 * 1024) {
+        alert(`O arquivo ${file.name} é muito grande. O limite é de 100MB.`);
+        return;
+      }
+      if (!file.type.startsWith('video/')) {
+        alert(`O arquivo ${file.name} não é um vídeo válido.`);
+        return;
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}-video.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('properties')
+        .upload(fileName, file, {
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('properties')
+        .getPublicUrl(fileName);
+
+      setFormData(prev => ({
+        ...prev,
+        videoUrl: publicUrl
+      }));
+
+    } catch (error: any) {
+      console.error('Error uploading video:', error);
+      if (error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+        alert('Erro de permissão: Você não tem autorização para fazer upload de vídeo.');
+      } else if (error.statusCode === '413' || error.message?.includes('too large')) {
+        alert('O arquivo é muito grande. O limite é de 100MB.');
+      } else {
+        alert('Erro ao fazer upload do vídeo. Tente novamente.');
+      }
+    } finally {
+      setIsUploadingVideo(false);
+      if (e.target) e.target.value = '';
+    }
+  };
+
+  const removeVideo = () => {
+    setFormData(prev => ({
+      ...prev,
+      videoUrl: ''
     }));
   };
 
@@ -992,20 +1056,98 @@ export default function EditPropertyPage() {
                     <p className="text-sm text-slate-500">Adicione um vídeo para aumentar a visibilidade do seu anúncio</p>
                   </div>
                 </div>
+
                 <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Link do Vídeo (YouTube, Vimeo ou link direto)
-                  </label>
-                  <div className="relative">
-                    <Video className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                    <input
-                      type="url"
-                      value={formData.videoUrl}
-                      onChange={(e) => handleInputChange('videoUrl', e.target.value)}
-                      placeholder="https://www.youtube.com/watch?v=..."
-                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                    />
+                  {/* Tabs */}
+                  <div className="flex gap-4 mb-6 border-b border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setVideoInputType('link')}
+                      className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'link'
+                          ? 'text-blue-600 border-b-2 border-blue-600'
+                          : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                    >
+                      Link Externo (YouTube/Vimeo)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVideoInputType('upload')}
+                      className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'upload'
+                          ? 'text-blue-600 border-b-2 border-blue-600'
+                          : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                    >
+                      Upload de Arquivo
+                    </button>
                   </div>
+
+                  {videoInputType === 'link' ? (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Link do Vídeo
+                      </label>
+                      <div className="relative">
+                        <Video className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                        <input
+                          type="url"
+                          value={formData.videoUrl || ''}
+                          onChange={(e) => handleInputChange('videoUrl', e.target.value)}
+                          placeholder="https://www.youtube.com/watch?v=..."
+                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Upload de Vídeo (MP4, WebM)
+                      </label>
+
+                      <div className="w-full">
+                        <label className={`w-full h-32 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors ${isUploadingVideo ? 'opacity-50 pointer-events-none' : ''}`}>
+                          <input
+                            type="file"
+                            accept="video/mp4,video/webm,video/ogg"
+                            onChange={handleVideoUpload}
+                            className="hidden"
+                          />
+                          {isUploadingVideo ? (
+                            <div className="flex flex-col items-center">
+                              <Loader2 className="h-8 w-8 text-blue-600 animate-spin mb-2" />
+                              <span className="text-sm text-slate-500">Enviando vídeo... (isso pode demorar)</span>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center">
+                              <Video className="h-8 w-8 text-slate-400 mb-2" />
+                              <span className="text-sm text-slate-500 font-medium">Clique para selecionar o vídeo</span>
+                              <span className="text-xs text-slate-400 mt-1">MP4, WebM (Máx. 100MB)</span>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Preview / Remove Button */}
+                  {formData.videoUrl && (
+                    <div className="mt-4 p-4 bg-white rounded-lg border border-slate-200 flex items-center justify-between animate-in fade-in slide-in-from-top-2">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <div className="p-2 bg-blue-100 rounded text-blue-600 shrink-0">
+                          <Video className="h-5 w-5" />
+                        </div>
+                        <span className="text-sm text-slate-600 truncate max-w-[200px] md:max-w-md">{formData.videoUrl}</span>
+                      </div>
+                      <button
+                        onClick={removeVideo}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Remover vídeo"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                  )}
+
                   <div className="mt-4 flex flex-col md:flex-row gap-4 text-sm text-slate-600">
                     <div className="flex items-start gap-2">
                       <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
