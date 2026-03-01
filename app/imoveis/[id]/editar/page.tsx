@@ -77,6 +77,7 @@ interface AdvertiseFormData {
   type: string;
   cep: string;
   city: string;
+  state: string;
   neighborhood: string;
   street: string;
   number: string;
@@ -112,7 +113,7 @@ export default function EditPropertyPage() {
   const router = useRouter();
   const params = useParams();
   const { isAuthenticated, isLoading: isAuthLoading, user } = useAuth();
-  
+
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,6 +128,7 @@ export default function EditPropertyPage() {
     type: 'casa',
     cep: '',
     city: '',
+    state: '',
     neighborhood: '',
     street: '',
     number: '',
@@ -189,34 +191,42 @@ export default function EditPropertyPage() {
         // Let's check if we can parse it back or if we should just let user re-enter if parsing fails.
         // Actually, for editing, if we can't parse perfectly, it's better to leave blank or put the whole string in street?
         // Let's try to parse: "Rua X, 123 - Bairro Y, Cidade Z"
-        
-        let street = '', number = '', neighborhood = '', city = '';
-        if (property.location) {
+
+        let street = property.street || '';
+        let number = property.number || '';
+        let neighborhood = property.neighborhood || '';
+        let city = property.city || '';
+        let state = property.state || 'MA';
+        let complement = property.complement || '';
+        let cep = property.cep || '';
+
+        // Fallback to location parsing if new fields are empty but location exists
+        if ((!street || !city) && property.location) {
           const parts = property.location.split(' - ');
           if (parts.length >= 2) {
             const addressPart = parts[0]; // "Rua X, 123"
             const locPart = parts[1]; // "Bairro Y, Cidade Z"
-            
+
             const addressSplit = addressPart.split(', ');
             if (addressSplit.length >= 2) {
-              number = addressSplit.pop() || '';
-              street = addressSplit.join(', ');
+              if (!number) number = addressSplit.pop() || '';
+              if (!street) street = addressSplit.join(', ');
             } else {
-              street = addressPart;
+              if (!street) street = addressPart;
             }
-            
+
             const locSplit = locPart.split(', ');
             if (locSplit.length >= 2) {
-              city = locSplit.pop() || '';
-              neighborhood = locSplit.join(', ');
+              if (!city) city = locSplit.pop() || '';
+              if (!neighborhood) neighborhood = locSplit.join(', ');
             } else {
-              neighborhood = locPart;
+              if (!neighborhood) neighborhood = locPart;
             }
           }
         }
 
         // Clean up city key for select
-        let cityKey = '';
+        let cityKey = city; // Default to raw city if no match logic applied yet
         const cityName = city.toLowerCase().trim();
         if (cityName.includes('luís') || cityName.includes('luis')) cityKey = 'sao-luis';
         else if (cityName.includes('paço') || cityName.includes('paco')) cityKey = 'paco-do-lumiar';
@@ -225,38 +235,8 @@ export default function EditPropertyPage() {
         setFormData(prev => ({
           ...prev,
           purpose: property.type === 'Aluguel' ? 'aluguel' : 'venda',
-          type: 'casa', // Default, we don't have this field in DB clearly mapped in my view of INSERT (it just says type: 'Venda'/'Aluguel'?? Wait.
-          // In AdvertisePage: type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel'
-          // Wait, line 313: type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel'
-          // This means the 'type' column in DB stores 'Venda' or 'Aluguel'.
-          // WHERE IS THE PROPERTY TYPE STORED? (Casa, Apto, etc.)
-          // Looking at line 314: features: []
-          // Is it in features? Or maybe I missed a column in INSERT.
-          // Line 313: type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel'
-          // It seems the original code has a BUG or I misread it.
-          // Let's re-read the INSERT part in AdvertisePage.
-          // Line 313: type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel'
-          // So 'type' column stores the Purpose? Then where is 'Casa'/'Apto' stored?
-          // It seems it is NOT stored in the visible INSERT code I read?
-          // Let's check the core memories or DB schema if possible.
-          // Or maybe it's in the title/description?
-          // Actually, if it's not stored, we can't recover it.
-          // But wait, the user wants to edit.
-          // If the original code failed to save the property type (Casa/Apto), that's a separate issue.
-          // Let's look at the INSERT again.
-          // 305: .insert({
-          // 306:   title: formData.title,
-          // ...
-          // 313:   type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
-          // ...
-          // })
-          // It seems the 'type' field in DB is being used for Purpose (Venda/Aluguel).
-          // And the actual property type (casa/apto) is lost?
-          // This might be why the user wants to edit - to fix things? Or maybe it's a bug I should fix too?
-          // I will assume for now I should just try to infer or default it.
-          // Or maybe there is a 'category' column I missed?
-          // I'll check the DB schema if I can.
-          
+          type: property.category || 'casa', // Use category if available, default to casa
+
           title: property.title || '',
           description: property.description || '',
           price: property.price ? property.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '',
@@ -268,10 +248,14 @@ export default function EditPropertyPage() {
           area: property.area?.toString() || '',
           features: property.features || [],
           photos: property.images || [],
+          cep,
           street,
           number,
+          complement,
           neighborhood,
           city: cityKey,
+          state,
+          // Contact info
           // Contact info
           // Fix: use user.name instead of user.user_metadata.name to match User type
           name: property.contact_name || user.name || '',
@@ -460,6 +444,13 @@ export default function EditPropertyPage() {
           condo_price: parseCurrency(formData.condoPrice),
           iptu_price: parseCurrency(formData.iptuPrice),
           location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
+          cep: formData.cep,
+          street: formData.street,
+          number: formData.number,
+          complement: formData.complement,
+          neighborhood: formData.neighborhood,
+          city: formData.city,
+          state: formData.state || 'MA',
           bedrooms: formData.bedrooms,
           bathrooms: formData.bathrooms,
           parking: formData.parking,
@@ -528,7 +519,7 @@ export default function EditPropertyPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden relative">
       <div className="absolute inset-0 bg-grid-slate-900/[0.04] pointer-events-none" />
-      
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-20">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -821,18 +812,16 @@ export default function EditPropertyPage() {
                 {FEATURES_OPTIONS.map((feature) => (
                   <label
                     key={feature}
-                    className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
-                      formData.features.includes(feature)
-                        ? 'bg-blue-50 border-blue-200 shadow-sm'
-                        : 'bg-white border-slate-200 hover:border-slate-300'
-                    }`}
+                    className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${formData.features.includes(feature)
+                      ? 'bg-blue-50 border-blue-200 shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-slate-300'
+                      }`}
                   >
                     <div
-                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
-                        formData.features.includes(feature)
-                          ? 'bg-blue-600 border-blue-600'
-                          : 'border-slate-300 bg-white'
-                      }`}
+                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${formData.features.includes(feature)
+                        ? 'bg-blue-600 border-blue-600'
+                        : 'border-slate-300 bg-white'
+                        }`}
                     >
                       {formData.features.includes(feature) && (
                         <Check className="w-3.5 h-3.5 text-white" />
@@ -851,9 +840,8 @@ export default function EditPropertyPage() {
                         });
                       }}
                     />
-                    <span className={`text-sm font-medium ${
-                      formData.features.includes(feature) ? 'text-blue-700' : 'text-slate-600'
-                    }`}>
+                    <span className={`text-sm font-medium ${formData.features.includes(feature) ? 'text-blue-700' : 'text-slate-600'
+                      }`}>
                       {feature}
                     </span>
                   </label>

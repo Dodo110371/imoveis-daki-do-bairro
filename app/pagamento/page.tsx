@@ -17,6 +17,7 @@ import {
   AlertCircle,
   ChevronDown
 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 // Tipos de Plano para o Resumo
 const PLAN_DETAILS: Record<string, { title: string; price: number; period: string; features: string[] }> = {

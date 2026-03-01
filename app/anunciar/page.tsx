@@ -89,6 +89,7 @@ interface AdvertiseFormData {
   type: string;
   cep: string;
   city: string;
+  state: string;
   neighborhood: string;
   street: string;
   number: string;
@@ -126,6 +127,7 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   type: 'casa',
   cep: '',
   city: '',
+  state: 'MA',
   neighborhood: '',
   street: '',
   number: '',
@@ -322,7 +324,7 @@ export default function AdvertisePage() {
 
     } catch (error: any) {
       console.error('Error uploading photos:', error);
-      
+
       // More specific error handling
       if (error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
@@ -401,6 +403,13 @@ export default function AdvertisePage() {
         condo_price: parseCurrency(formData.condoPrice),
         iptu_price: parseCurrency(formData.iptuPrice),
         location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
+        cep: formData.cep,
+        street: formData.street,
+        number: formData.number,
+        complement: formData.complement,
+        neighborhood: formData.neighborhood,
+        city: formData.city,
+        state: formData.state || 'MA', // Default to MA if not present in form
         bedrooms: formData.bedrooms,
         bathrooms: formData.bathrooms,
         parking: formData.parking,
@@ -463,6 +472,7 @@ export default function AdvertisePage() {
                 type: 'casa',
                 cep: '',
                 city: '',
+                state: 'MA',
                 neighborhood: '',
                 street: '',
                 number: '',
@@ -1036,15 +1046,13 @@ export default function AdvertisePage() {
                           : [...currentFeatures, feature];
                         handleInputChange('features', newFeatures);
                       }}
-                      className={`p-3 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
-                        isSelected
-                          ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500'
-                          : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-slate-50'
-                      }`}
+                      className={`p-3 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${isSelected
+                        ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-slate-50'
+                        }`}
                     >
-                      <div className={`w-5 h-5 rounded border flex items-center justify-center ${
-                        isSelected ? 'bg-blue-500 border-blue-500' : 'border-slate-300 bg-white'
-                      }`}>
+                      <div className={`w-5 h-5 rounded border flex items-center justify-center ${isSelected ? 'bg-blue-500 border-blue-500' : 'border-slate-300 bg-white'
+                        }`}>
                         {isSelected && <Check className="w-3 h-3 text-white" />}
                       </div>
                       {feature}
