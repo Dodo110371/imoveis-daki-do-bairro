@@ -9,15 +9,15 @@ interface MortgageCalculatorProps {
 }
 
 export function MortgageCalculator({ propertyPrice }: MortgageCalculatorProps) {
-  const [value, setValue] = useState(formatCurrencyInput(propertyPrice.toString()));
-  const [downPayment, setDownPayment] = useState(formatCurrencyInput((propertyPrice * 0.2).toString())); // 20% default
+  const [value, setValue] = useState(propertyPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+  const [downPayment, setDownPayment] = useState((propertyPrice * 0.2).toLocaleString('pt-BR', { minimumFractionDigits: 2 })); // 20% default
   const [interestRate, setInterestRate] = useState(10.5); // 10.5% default annual
   const [years, setYears] = useState(30); // 30 years default
 
   useEffect(() => {
     if (propertyPrice > 0) {
-      setValue(formatCurrencyInput(propertyPrice.toString()));
-      setDownPayment(formatCurrencyInput((propertyPrice * 0.2).toString()));
+      setValue(propertyPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+      setDownPayment((propertyPrice * 0.2).toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
     }
   }, [propertyPrice]);
 
