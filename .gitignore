@@ -54,3 +54,6 @@ utput*
 *Trae*
 debug_git.ps1
 .git/index.lock
+
+# Supabase
+supabase/.temp/
