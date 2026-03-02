@@ -18,7 +18,8 @@ import {
   Info,
   Trash2,
   Check,
-  Video
+  Video,
+  Sparkles
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
@@ -109,6 +110,7 @@ interface AdvertiseFormData {
   paymentPlan: string;
   paymentMethod: string;
   videoUrl?: string;
+  featured: boolean;
 }
 
 export default function EditPropertyPage() {
@@ -162,6 +164,7 @@ export default function EditPropertyPage() {
     advertiserComplement: '',
     paymentPlan: '',
     paymentMethod: 'pix',
+    featured: false,
   });
 
   // Fetch property data
@@ -267,6 +270,7 @@ export default function EditPropertyPage() {
           phone: property.contact_phone || '',
           whatsapp: property.contact_whatsapp || '',
           videoUrl: property.video_url || '',
+          featured: property.featured || false,
         }));
 
       } catch (error) {
@@ -532,6 +536,7 @@ export default function EditPropertyPage() {
           contact_phone: formData.phone,
           contact_whatsapp: formData.whatsapp,
           video_url: formData.videoUrl,
+          featured: formData.featured,
           status: 'pending' // Reset status to pending for moderation
         })
         .eq('id', params.id);
@@ -982,6 +987,32 @@ export default function EditPropertyPage() {
                   className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 resize-none"
                 />
               </div>
+
+              {/* Destaque Option */}
+              <div className="mt-8 bg-amber-50 rounded-xl p-6 border border-amber-200">
+                <label className="flex items-start gap-4 cursor-pointer">
+                  <div className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${formData.featured ? 'bg-amber-500 border-amber-500' : 'bg-white border-slate-300'
+                    }`}>
+                    {formData.featured && <Check className="w-4 h-4 text-white" />}
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.featured}
+                    onChange={(e) => handleInputChange('featured', e.target.checked)}
+                    className="hidden"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel</h3>
+                      <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
+                    </div>
+                    <p className="text-slate-600 mb-2">
+                      Aumente suas chances de venda! Imóveis em destaque aparecem na página inicial e no topo das buscas.
+                    </p>
+                  </div>
+                </label>
+              </div>
             </div>
           )}
 
@@ -1064,8 +1095,8 @@ export default function EditPropertyPage() {
                       type="button"
                       onClick={() => setVideoInputType('link')}
                       className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'link'
-                          ? 'text-blue-600 border-b-2 border-blue-600'
-                          : 'text-slate-500 hover:text-slate-700'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-slate-500 hover:text-slate-700'
                         }`}
                     >
                       Link Externo (YouTube/Vimeo)
@@ -1074,8 +1105,8 @@ export default function EditPropertyPage() {
                       type="button"
                       onClick={() => setVideoInputType('upload')}
                       className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'upload'
-                          ? 'text-blue-600 border-b-2 border-blue-600'
-                          : 'text-slate-500 hover:text-slate-700'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-slate-500 hover:text-slate-700'
                         }`}
                     >
                       Upload de Arquivo

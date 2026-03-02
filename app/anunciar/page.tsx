@@ -24,7 +24,8 @@ import {
   Trash2,
   Briefcase,
   BadgeCheck,
-  Video
+  Video,
+  Sparkles
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
@@ -121,6 +122,7 @@ interface AdvertiseFormData {
   paymentPlan: string;
   paymentMethod: string;
   videoUrl: string;
+  featured: boolean;
 }
 
 const INITIAL_FORM_DATA: AdvertiseFormData = {
@@ -160,6 +162,7 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   paymentPlan: 'mensal',
   paymentMethod: 'pix',
   videoUrl: '',
+  featured: false,
 };
 
 export default function AdvertisePage() {
@@ -486,7 +489,7 @@ export default function AdvertisePage() {
         features: formData.features,
         images: formData.photos,
         owner_id: user.id,
-        featured: false,
+        featured: formData.featured,
         contact_name: formData.name,
         contact_email: formData.email,
         contact_phone: formData.phone,
@@ -1246,8 +1249,8 @@ export default function AdvertisePage() {
                       type="button"
                       onClick={() => setVideoInputType('link')}
                       className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'link'
-                          ? 'text-blue-600 border-b-2 border-blue-600'
-                          : 'text-slate-500 hover:text-slate-700'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-slate-500 hover:text-slate-700'
                         }`}
                     >
                       Link Externo (YouTube/Vimeo)
@@ -1256,8 +1259,8 @@ export default function AdvertisePage() {
                       type="button"
                       onClick={() => setVideoInputType('upload')}
                       className={`pb-2 px-1 text-sm font-medium transition-colors relative ${videoInputType === 'upload'
-                          ? 'text-blue-600 border-b-2 border-blue-600'
-                          : 'text-slate-500 hover:text-slate-700'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-slate-500 hover:text-slate-700'
                         }`}
                     >
                       Upload de Arquivo
@@ -1779,6 +1782,35 @@ export default function AdvertisePage() {
                   </div>
                 </div>
 
+              </div>
+
+              {/* Destaque Option */}
+              <div className="mt-8 bg-amber-50 rounded-xl p-6 border border-amber-200">
+                <label className="flex items-start gap-4 cursor-pointer">
+                  <div className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${formData.featured ? 'bg-amber-500 border-amber-500' : 'bg-white border-slate-300'
+                    }`}>
+                    {formData.featured && <Check className="w-4 h-4 text-white" />}
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.featured}
+                    onChange={(e) => handleInputChange('featured', e.target.checked)}
+                    className="hidden"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel</h3>
+                      <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
+                    </div>
+                    <p className="text-slate-600 mb-2">
+                      Aumente suas chances de venda! Imóveis em destaque aparecem na página inicial e no topo das buscas.
+                    </p>
+                    <div className="text-sm font-semibold text-amber-700">
+                      + R$ 50,00 (pagamento único)
+                    </div>
+                  </div>
+                </label>
               </div>
             </div>
           )}
