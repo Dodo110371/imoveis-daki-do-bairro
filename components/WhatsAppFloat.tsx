@@ -2,6 +2,7 @@
 
 import { MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { siteConfig } from '@/lib/site-config';
 
 export function WhatsAppFloat() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +16,7 @@ export function WhatsAppFloat() {
     return () => clearTimeout(timer);
   }, []);
 
-  const phoneNumber = "5598999999999"; // Substituir pelo número real
+  const phoneNumber = `55${siteConfig.contact.phone.replace(/\D/g, '')}`; 
   const message = encodeURIComponent("Olá! Vi o site Imóveis daki do Bairro e gostaria de mais informações.");
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
