@@ -20,7 +20,7 @@ export default async function HomePage() {
     .select('*')
     .eq('featured', true)
     .eq('status', 'active')
-    .order('created_at', { ascending: false })
+    .order('updated_at', { ascending: false })
     .limit(3);
 
   // Fetch new properties
