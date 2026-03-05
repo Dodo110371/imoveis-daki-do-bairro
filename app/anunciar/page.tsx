@@ -494,13 +494,20 @@ export default function AdvertisePage() {
         contact_email: formData.email,
         contact_phone: formData.phone,
         contact_whatsapp: formData.whatsapp,
-        status: 'active', // Default status for new ads: active (no moderation needed)
+        status: formData.paymentPlan === 'pending_validation' ? 'pending' : 'active', // Pending validation if skipping payment
         video_url: formData.videoUrl
       });
 
       if (error) {
         console.error('Error creating property:', error);
         alert(`${userMessages.advertise.createAdError}\nDetalhes: ${error.message}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // If pending validation, show success message immediately without redirecting to payment
+      if (formData.paymentPlan === 'pending_validation') {
+        setIsSuccess(true);
         setIsSubmitting(false);
         return;
       }
@@ -1811,6 +1818,24 @@ export default function AdvertisePage() {
                     </div>
                   </div>
                 </label>
+              </div>
+
+              {/* Opção de Pular Pagamento */}
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => handleInputChange('paymentPlan', 'pending_validation')}
+                  className={`group flex items-center gap-2 px-6 py-3 rounded-lg border-2 transition-all ${formData.paymentPlan === 'pending_validation'
+                      ? 'border-slate-400 bg-slate-50 text-slate-900'
+                      : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                    }`}
+                >
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'pending_validation' ? 'border-slate-900' : 'border-slate-300 group-hover:border-slate-400'
+                    }`}>
+                    {formData.paymentPlan === 'pending_validation' && <div className="w-2.5 h-2.5 bg-slate-900 rounded-full" />}
+                  </div>
+                  <span className="font-medium">Finalizar sem escolher plano (Aguardar validação)</span>
+                </button>
               </div>
             </div>
           )}
