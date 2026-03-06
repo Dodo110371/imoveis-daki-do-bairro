@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CheckCircle2, Megaphone, Image as ImageIcon, CreditCard, MousePointerClick, TrendingUp, Users, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Megaphone, TrendingUp, Users, ShieldCheck, DollarSign, Key, Sparkles } from 'lucide-react';
 import { HeaderCta } from '@/components/HeaderCta';
 
 export default function PlanosPage() {
@@ -19,14 +19,13 @@ export default function PlanosPage() {
             <span>A melhor vitrine para o seu imóvel</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight drop-shadow-lg">
-            Venda ou alugue seu imóvel <br className="hidden md:block" />
+            Anuncie grátis e pague <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-teal-300 to-purple-400 animate-gradient bg-[length:200%_auto]">
-              muito mais rápido
+              apenas no êxito
             </span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-            Milhares de compradores e inquilinos visitam o Imóveis daki do Bairro todos os dias.
-            Escolha o plano ideal e destaque seu imóvel agora mesmo.
+            Sem mensalidades ou taxas de adesão. Você só paga a taxa de publicidade quando vender ou alugar seu imóvel.
           </p>
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -38,12 +37,6 @@ export default function PlanosPage() {
               <span className="hidden sm:inline">Criar meu anúncio agora</span>
               <span className="sm:hidden">Anunciar</span>
             </Link>
-            <a
-              href="#planos"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all bg-slate-800 border border-slate-700 rounded-xl hover:bg-slate-700 active:scale-95"
-            >
-              Ver planos disponíveis
-            </a>
           </div>
         </div>
       </section>
@@ -90,293 +83,158 @@ export default function PlanosPage() {
         </div>
       </section>
 
-      {/* Planos Section */}
+      {/* Condições de Pagamento */}
       <section id="planos" className="py-20 px-4 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Escolha o plano ideal para você</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Transparência total para você</h2>
             <p className="text-slate-600 max-w-2xl mx-auto">
-              Opções flexíveis que se adaptam à sua necessidade, seja para uma venda rápida ou aluguel recorrente.
+              Entenda como funciona a nossa Taxa de Publicidade. Você não paga nada para anunciar.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch justify-center">
 
-            {/* Mensal */}
-            <div className="flex flex-col rounded-2xl border-2 border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all h-full bg-slate-50">
-              <div className="p-6 text-center bg-white border-b border-slate-100">
-                <h3 className="font-bold text-lg text-slate-900">Mensal</h3>
-                <div className="mt-2 text-3xl font-bold text-slate-900">R$ 200<span className="text-sm font-normal text-slate-500">/mês</span></div>
-                <p className="text-sm text-slate-500 mt-2">Para quem quer testar</p>
+            {/* Venda */}
+            <div className="flex flex-col rounded-2xl border-2 border-blue-200 overflow-hidden hover:border-blue-400 hover:shadow-xl transition-all h-full bg-gradient-to-b from-blue-50 to-white">
+              <div className="p-8 text-center border-b border-blue-100">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <DollarSign className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-bold text-2xl text-slate-900">Venda</h3>
+                <div className="mt-4 text-4xl font-bold text-blue-700">2%</div>
+                <p className="text-sm text-slate-600 mt-2 font-medium">do valor do imóvel</p>
+                <div className="mt-2 inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">
+                  PAGUE SÓ SE VENDER
+                </div>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <ul className="space-y-4 text-sm text-slate-600 mb-8 flex-1">
+              <div className="p-8 flex-1 flex flex-col">
+                <ul className="space-y-4 text-base text-slate-700 mb-8 flex-1">
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                    <span>Anúncio ativo por 30 dias</span>
+                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                    <span>Publicação ilimitada até a venda</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                    <span>Até 15 fotos de alta qualidade</span>
+                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                    <span>Fotos ilimitadas de alta qualidade</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                    <span>Renovação mensal automática</span>
+                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                    <span>Divulgação nas redes sociais</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
-                    <span>Sem fidelidade, cancele quando quiser</span>
+                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                    <span>Suporte especializado</span>
                   </li>
                 </ul>
                 <HeaderCta
-                  variant="light"
-                  className="w-full py-3 px-4 bg-white border-2 border-blue-600 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors text-center"
-                  labelFull="Escolher Mensal"
-                  labelShort="Mensal"
+                  variant="dark"
+                  className="w-full py-4 text-center justify-center"
+                  labelFull="Anunciar Venda Agora"
+                  labelShort="Anunciar Venda"
                 />
               </div>
             </div>
 
-            {/* Trimestral */}
-            <div className="relative flex flex-col rounded-2xl border-2 border-teal-500 shadow-lg overflow-hidden h-full bg-white transform md:-translate-y-4">
-              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg z-10">
-                ECONOMIA
+            {/* Aluguel */}
+            <div className="flex flex-col rounded-2xl border-2 border-teal-200 overflow-hidden hover:border-teal-400 hover:shadow-xl transition-all h-full bg-gradient-to-b from-teal-50 to-white">
+              <div className="p-8 text-center border-b border-teal-100">
+                <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Key className="w-8 h-8 text-teal-600" />
+                </div>
+                <h3 className="font-bold text-2xl text-slate-900">Aluguel</h3>
+                <div className="mt-4 text-4xl font-bold text-teal-700">40%</div>
+                <p className="text-sm text-slate-600 mt-2 font-medium">do 1º aluguel</p>
+                <div className="mt-2 inline-block bg-teal-100 text-teal-800 text-xs font-bold px-2 py-1 rounded-full">
+                  PAGUE SÓ SE ALUGAR
+                </div>
               </div>
-              <div className="p-6 text-center bg-teal-50 border-b border-teal-100">
-                <h3 className="font-bold text-lg text-teal-900">Trimestral</h3>
-                <div className="mt-2 text-3xl font-bold text-teal-700">R$ 300<span className="text-sm font-normal text-teal-600">,00</span></div>
-                <div className="text-sm font-medium text-teal-600 mt-1">ou 3x R$ 120,00</div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <ul className="space-y-4 text-sm text-slate-600 mb-8 flex-1">
+              <div className="p-8 flex-1 flex flex-col">
+                <ul className="space-y-4 text-base text-slate-700 mb-8 flex-1">
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
-                    <span><strong>90 dias</strong> de visibilidade</span>
+                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                    <span>Publicação ilimitada até alugar</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
-                    <span>Até 20 fotos de alta qualidade</span>
+                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                    <span>Fotos ilimitadas de alta qualidade</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
-                    <span>Destaque na busca por 7 dias</span>
+                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                    <span>Divulgação nas redes sociais</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
-                    <span>Suporte prioritário via chat</span>
-                  </li>
-                </ul>
-                <Link href="/pagamento?plano=trimestral" className="w-full py-3 px-4 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors text-center shadow-lg shadow-teal-200">
-                  Escolher Trimestral
-                </Link>
-              </div>
-            </div>
-
-            {/* Semestral */}
-            <div className="relative flex flex-col rounded-2xl border-2 border-orange-500 shadow-lg overflow-hidden h-full bg-white transform md:-translate-y-4">
-              <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg z-10">
-                MELHOR VALOR
-              </div>
-              <div className="p-6 text-center bg-orange-50 border-b border-orange-100">
-                <h3 className="font-bold text-lg text-orange-900">Semestral</h3>
-                <div className="mt-2 text-3xl font-bold text-orange-700">R$ 600<span className="text-sm font-normal text-orange-600">,00</span></div>
-                <div className="text-sm font-medium text-orange-600 mt-1">ou 6x R$ 110,00</div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <ul className="space-y-4 text-sm text-slate-600 mb-8 flex-1">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-orange-500 shrink-0" />
-                    <span><strong>180 dias</strong> de visibilidade</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-orange-500 shrink-0" />
-                    <span>Até 30 fotos de alta qualidade</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-orange-500 shrink-0" />
-                    <span>Destaque na busca por 15 dias</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-orange-500 shrink-0" />
-                    <span>Relatório mensal de visitas</span>
+                    <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                    <span>Suporte especializado</span>
                   </li>
                 </ul>
                 <HeaderCta
-                  variant="light"
-                  className="w-full py-3 px-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors text-center shadow-lg shadow-orange-200"
-                  labelFull="Escolher Semestral"
-                  labelShort="Semestral"
+                  variant="dark"
+                  className="w-full py-4 text-center justify-center bg-teal-600 hover:bg-teal-700 border-transparent"
+                  labelFull="Anunciar Aluguel Agora"
+                  labelShort="Anunciar Aluguel"
                 />
               </div>
             </div>
 
-            {/* Até Vender */}
-            <div className="relative flex flex-col rounded-2xl border-2 border-purple-600 shadow-xl overflow-hidden h-full bg-white scale-105 z-10">
-              <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold py-1 text-center z-10">
-                MAIS VENDIDO
+            {/* Turbo */}
+            <div className="flex flex-col rounded-2xl border-2 border-amber-200 overflow-hidden hover:border-amber-400 hover:shadow-xl transition-all h-full bg-gradient-to-b from-amber-50 to-white relative">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg z-10">
+                 OPCIONAL
               </div>
-              <div className="p-6 pt-10 text-center bg-purple-50 border-b border-purple-100">
-                <h3 className="font-bold text-lg text-purple-900">Até Vender</h3>
-                <div className="mt-2 text-3xl font-bold text-purple-700">R$ 1.000<span className="text-sm font-normal text-purple-600">,00</span></div>
-                <div className="text-sm font-medium text-purple-600 mt-1">ou 10x R$ 110,00</div>
+              <div className="p-8 text-center border-b border-amber-100">
+                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-amber-600" />
+                </div>
+                <h3 className="font-bold text-2xl text-slate-900">Destaque Turbo</h3>
+                <div className="mt-4 text-4xl font-bold text-amber-700">R$ 50</div>
+                <p className="text-sm text-slate-600 mt-2 font-medium">pagamento único</p>
+                <div className="mt-2 inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full">
+                  MAIS VISIBILIDADE
+                </div>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <ul className="space-y-4 text-sm text-slate-600 mb-8 flex-1">
+              <div className="p-8 flex-1 flex flex-col">
+                <ul className="space-y-4 text-base text-slate-700 mb-8 flex-1">
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0" />
-                    <span><strong>Sem prazo de validade</strong></span>
+                    <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <span>Topo das buscas no site</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0" />
-                    <span>Fotos ilimitadas + Vídeo Tour</span>
+                    <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <span>Destaque visual no anúncio</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0" />
-                    <span>Destaque Premium Permanente</span>
+                    <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <span>Venda/Alugue muito mais rápido</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0" />
-                    <span>Impulsionamento nas redes sociais</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0" />
-                    <span>Consultoria de preço de mercado</span>
+                    <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <span>Pagamento via PIX</span>
                   </li>
                 </ul>
-                <Link href="/pagamento?plano=ate_vender" className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all text-center shadow-lg shadow-purple-300 transform hover:-translate-y-1">
-                  Quero Vender Rápido
-                </Link>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Na Mira! Option */}
-          <div className="mt-16 max-w-4xl mx-auto">
-            <div className="relative bg-gradient-to-r from-red-600 to-rose-600 rounded-2xl p-1 shadow-xl transform hover:scale-[1.01] transition-transform duration-300">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-red-600 px-6 py-1 rounded-full font-bold shadow-md border-2 border-red-100 flex items-center gap-2 whitespace-nowrap z-20">
-                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                OPÇÃO TURBO
-                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              </div>
-              <div className="bg-white rounded-xl p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                <div className="flex-1 text-center md:text-left relative z-10">
-                  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-                    <h3 className="text-3xl font-extrabold text-slate-900">Na Mira!</h3>
-                    <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Destaque</span>
-                  </div>
-                  <p className="text-slate-600 mb-6 text-lg">
-                    Coloque seu imóvel no <strong>topo das buscas</strong> e multiplique suas chances de fechar negócio.
-                    Ideal para quem tem pressa.
-                  </p>
-                  <ul className="space-y-3 mb-2 inline-block text-left bg-slate-50 p-4 rounded-lg border border-slate-100 w-full">
-                    <li className="flex items-center gap-3 text-slate-700">
-                      <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
-                      <span className="font-medium">Apareça antes dos outros anúncios</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-slate-700">
-                      <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
-                      <span className="font-medium">Tag exclusiva "Na Mira" no card</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col items-center gap-4 relative z-10 min-w-[260px] border-l-0 md:border-l border-slate-100 md:pl-8">
-                  <div className="text-center">
-                    <div className="text-sm text-slate-500 font-medium mb-1">Investimento Único</div>
-                    <div className="text-6xl font-black text-slate-900 tracking-tight flex items-start justify-center">
-                      <span className="text-2xl mt-2 mr-1 font-bold text-slate-400">R$</span>
-                      50
-                      <span className="text-2xl mt-2 font-bold text-slate-400">,00</span>
-                    </div>
-                  </div>
-                  <Link
-                    href="/pagamento?plano=na_mira"
-                    className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg rounded-xl hover:bg-red-700 hover:shadow-lg hover:shadow-red-200 transition-all text-center flex items-center justify-center gap-2 group"
-                  >
-                    Contratar Agora
-                    <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <p className="text-xs text-slate-400 text-center">Válido por 15 dias de destaque</p>
+                <div className="mt-auto pt-4 text-center text-sm text-slate-500 italic">
+                  * Adicione esta opção ao criar seu anúncio
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Passo a Passo */}
-      <section className="py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Como anunciar seu imóvel</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              É muito simples publicar sua propriedade no nosso site. Em poucos minutos seu anúncio estará no ar.
-            </p>
-          </div>
-
-          <div className="relative">
-            {/* Connecting Line (Desktop) */}
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
-
-              {/* Step 1 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white border-4 border-blue-500 text-blue-600 flex items-center justify-center text-2xl font-bold shadow-sm mb-6">
-                  <MousePointerClick className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">1. Inicie</h3>
-                <p className="text-sm text-slate-600">
-                  Clique em "Anunciar" no topo do site e crie sua conta gratuita em segundos.
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white border-4 border-blue-500 text-blue-600 flex items-center justify-center text-2xl font-bold shadow-sm mb-6">
-                  <ImageIcon className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">2. Detalhes</h3>
-                <p className="text-sm text-slate-600">
-                  Preencha as informações do imóvel e faça upload das melhores fotos.
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white border-4 border-blue-500 text-blue-600 flex items-center justify-center text-2xl font-bold shadow-sm mb-6">
-                  <CreditCard className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">3. Plano</h3>
-                <p className="text-sm text-slate-600">
-                  Escolha o plano de divulgação que melhor se adapta aos seus objetivos.
-                </p>
-              </div>
-
-              {/* Step 4 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white border-4 border-green-500 text-green-600 flex items-center justify-center text-2xl font-bold shadow-sm mb-6">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">4. Pronto!</h3>
-                <p className="text-sm text-slate-600">
-                  Seu anúncio é revisado e publicado para milhares de compradores verem.
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <HeaderCta
-              variant="light"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-bold text-white transition-all bg-green-600 rounded-full hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/25 active:scale-95 border-transparent"
-              labelFull="Começar agora"
-              labelShort="Começar"
-              rightIcon={<TrendingUp className="w-5 h-5" />}
-            />
-          </div>
+      {/* CTA Final */}
+      <section className="py-20 px-4 bg-slate-900 text-white text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Pronto para anunciar?</h2>
+          <p className="text-lg text-slate-300 mb-8">
+            Não perca tempo. Cadastre seu imóvel agora mesmo e comece a receber propostas.
+          </p>
+          <Link
+            href="/anunciar"
+            className="inline-flex items-center justify-center px-10 py-5 text-lg font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 border border-transparent transition-all"
+          >
+            Começar Agora
+          </Link>
         </div>
       </section>
     </div>
