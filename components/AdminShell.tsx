@@ -9,10 +9,11 @@ type Counts = {
   pendingProperties: number;
   recentLeads: number;
   users: number;
+  pendingHighlights: number;
 };
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
-  const [counts, setCounts] = useState<Counts>({ pendingProperties: 0, recentLeads: 0, users: 0 });
+  const [counts, setCounts] = useState<Counts>({ pendingProperties: 0, recentLeads: 0, users: 0, pendingHighlights: 0 });
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

@@ -543,7 +543,7 @@ export default function EditPropertyPage() {
         return;
       }
 
-      router.push('/sucesso?mode=edit');
+      router.push(`/sucesso?mode=edit&id=${params.id}`);
 
     } catch (error) {
       console.error('Unexpected error:', error);

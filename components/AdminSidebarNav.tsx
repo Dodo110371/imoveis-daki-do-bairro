@@ -1,12 +1,13 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Building2, BarChart3, Users, Home, Wrench } from "lucide-react";
+import { LayoutDashboard, Building2, BarChart3, Users, Home, Wrench, Sparkles } from "lucide-react";
 
 type Counts = {
   pendingProperties?: number;
   recentLeads?: number;
   users?: number;
+  pendingHighlights?: number;
 };
 
 export function AdminSidebarNav({ counts }: { counts?: Counts }) {
@@ -27,6 +28,13 @@ export function AdminSidebarNav({ counts }: { counts?: Counts }) {
         Moderação de Imóveis
         {counts?.pendingProperties ? (
           <span className={`${badge} bg-indigo-600 text-white`}>{counts.pendingProperties}</span>
+        ) : null}
+      </Link>
+      <Link href="/admin/destaques" className={`${base} ${pathname === "/admin/destaques" ? active : inactive}`}>
+        <Sparkles className="w-5 h-5" />
+        Destaques
+        {counts?.pendingHighlights ? (
+          <span className={`${badge} bg-amber-600 text-white`}>{counts.pendingHighlights}</span>
         ) : null}
       </Link>
       <Link href="/admin/leads" className={`${base} ${pathname === "/admin/leads" ? active : inactive}`}>

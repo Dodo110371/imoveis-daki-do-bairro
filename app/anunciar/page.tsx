@@ -471,7 +471,7 @@ export default function AdvertisePage() {
       const price = parseCurrency(formData.price);
       const area = parseFloat(formData.area.replace(',', '.')) || 0;
 
-      const { error } = await supabase.from('properties').insert({
+      const { data, error } = await supabase.from('properties').insert({
         title: formData.title,
         description: formData.description,
         price: price,
@@ -501,7 +501,7 @@ export default function AdvertisePage() {
         contact_whatsapp: formData.whatsapp,
         status: 'pending', // Always pending validation per new requirement
         video_url: formData.videoUrl
-      });
+      }).select().single();
 
       if (error) {
         console.error('Error creating property:', error);
@@ -511,7 +511,11 @@ export default function AdvertisePage() {
       }
 
       // Redirect to success page which handles the upsell
-      router.push('/sucesso');
+      if (data?.id) {
+        router.push(`/sucesso?id=${data.id}`);
+      } else {
+        router.push('/sucesso');
+      }
       setIsSubmitting(false);
 
     } catch (error) {

@@ -44,9 +44,15 @@ export async function GET(request: Request) {
     .select("*", { count: "exact", head: true })
     .gte("created_at", since);
 
+  const { count: pendingHighlights } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("promotion_status", "pending");
+
   return NextResponse.json({
     pendingProperties: pendingProperties ?? 0,
     recentLeads: recentLeads ?? 0,
     users: users ?? 0,
+    pendingHighlights: pendingHighlights ?? 0,
   });
 }
