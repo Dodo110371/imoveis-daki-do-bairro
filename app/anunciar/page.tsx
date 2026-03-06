@@ -1608,7 +1608,7 @@ export default function AdvertisePage() {
                           <div className="p-3 bg-blue-100 rounded-xl">
                             <DollarSign className="w-6 h-6 text-blue-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-slate-900">Comissão sobre Venda</h3>
+                          <h3 className="text-xl font-bold text-slate-900">Taxa de Publicidade (Venda)</h3>
                         </div>
                         <p className="text-slate-700 leading-relaxed text-lg">
                           Pagamento de <strong className="text-blue-700">2% do valor do imóvel</strong>,
@@ -1624,7 +1624,7 @@ export default function AdvertisePage() {
                           <div className="p-3 bg-teal-100 rounded-xl">
                             <Key className="w-6 h-6 text-teal-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-slate-900">Comissão sobre Aluguel</h3>
+                          <h3 className="text-xl font-bold text-slate-900">Taxa de Publicidade (Aluguel)</h3>
                         </div>
                         <p className="text-slate-700 leading-relaxed text-lg">
                           Pagamento de <strong className="text-teal-700">40% do valor da primeira parcela</strong>,
@@ -1685,7 +1685,7 @@ export default function AdvertisePage() {
                     className="hidden"
                   />
                   <span className="text-slate-600 text-sm">
-                    Li e concordo com os termos de comissão citados acima e com as normas do site.
+                    Li e concordo com os termos de serviço de publicidade citados acima e com as normas do site.
                     Estou ciente que o imóvel permanecerá <span className="font-semibold text-slate-900">pendente de validação</span> pelo administrador após o cadastro.
                   </span>
                 </label>
