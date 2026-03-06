@@ -46,6 +46,7 @@ export default async function HomePage() {
     contact_email?: string;
     agency_id?: string;
     owner_id?: string;
+    featured?: boolean;
   };
 
   // Helper to map DB to Card Props
@@ -62,6 +63,7 @@ export default async function HomePage() {
     imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type,
+    featured: p.featured,
     contactWhatsapp: p.contact_whatsapp,
     contactPhone: p.contact_phone,
     contactEmail: p.contact_email,

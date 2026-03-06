@@ -41,6 +41,7 @@ type ComprarDbProperty = {
   contact_email?: string;
   agency_id?: number;
   owner_id?: string;
+  featured?: boolean;
 };
 
 type AgencyRow = {
@@ -65,7 +66,8 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
     .from('properties')
     .select('*')
     .ilike('type', 'Venda')
-    .eq('status', 'active');
+    .eq('status', 'active')
+    .order('featured', { ascending: false });
 
   // Apply filters
   if (params.category) {
@@ -134,6 +136,7 @@ export default async function ComprarPage({ searchParams }: ComprarPageProps) {
     imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type,
+    featured: p.featured,
     contactWhatsapp: p.contact_whatsapp,
     contactPhone: p.contact_phone,
     contactEmail: p.contact_email,

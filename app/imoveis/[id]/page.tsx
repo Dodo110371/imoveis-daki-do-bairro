@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit, MessageCircle, User } from "lucide-react";
+import { MapPin, Bed, Bath, Move, Check, ArrowLeft, Phone, Mail, Building2, FileEdit, MessageCircle, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
@@ -96,6 +96,12 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       <div className="relative group">
         <ImageGallery images={property.images} title={property.title} videoUrl={property.videoUrl} />
         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+          {property.featured && (
+            <div className="flex items-center gap-1.5 bg-amber-500 text-white px-3 py-1.5 rounded-full shadow-lg">
+              <Sparkles className="w-4 h-4 fill-white" />
+              <span className="text-sm font-bold tracking-wide">DESTAQUE</span>
+            </div>
+          )}
           {agency?.isPartner && (
             <>
               <span className="md:hidden">

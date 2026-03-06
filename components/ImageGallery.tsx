@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, MouseEvent, TouchEvent } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Maximize2, Play, Video } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,19 +35,47 @@ export function ImageGallery({ images, title, videoUrl }: ImageGalleryProps) {
     document.body.style.overflow = 'unset'; // Restore scrolling
   }, []);
 
-  const nextImage = useCallback((e?: React.MouseEvent) => {
+  const nextImage = useCallback((e?: MouseEvent) => {
     e?.stopPropagation();
     if (totalSlides > 1) {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
     }
   }, [totalSlides]);
 
-  const prevImage = useCallback((e?: React.MouseEvent) => {
+  const prevImage = useCallback((e?: MouseEvent) => {
     e?.stopPropagation();
     if (totalSlides > 1) {
       setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
     }
   }, [totalSlides]);
+
+  // Swipe support
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextImage();
+    }
+    if (isRightSwipe) {
+      prevImage();
+    }
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -206,8 +234,11 @@ export function ImageGallery({ images, title, videoUrl }: ImageGalleryProps) {
 
           {/* Main Image/Video Container */}
           <div
-            className="relative w-full h-full max-w-7xl max-h-[90vh] p-4 flex items-center justify-center"
+            className="relative w-full h-full max-w-7xl max-h-[90vh] p-4 flex items-center justify-center touch-pan-y"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking image area
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             <div className="relative w-full h-full flex items-center justify-center">
               {isVideoIndex(currentIndex) ? (

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, MouseEvent, TouchEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight, Home } from 'lucide-react';
+import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight, Home, Sparkles } from 'lucide-react';
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
 import { cn, formatCurrency } from '@/lib/utils';
@@ -21,6 +21,7 @@ interface PropertyCardProps {
   imageUrl?: string | null;
   images?: string[];
   type: 'Venda' | 'Aluguel';
+  featured?: boolean;
   agencyPartner?: boolean;
   realtorPartner?: boolean;
 }
@@ -36,6 +37,7 @@ export function PropertyCard({
   imageUrl,
   images = [],
   type,
+  featured = false,
   agencyPartner = false,
   realtorPartner = false,
 }: PropertyCardProps) {
@@ -45,10 +47,40 @@ export function PropertyCard({
   // Filter out null/undefined values
   const validImages = (images && images.length > 0 ? images : [imageUrl]).filter((img): img is string => !!img);
   const hasImages = validImages.length > 0;
-  
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const nextImage = (e: React.MouseEvent) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && hasImages) {
+      setCurrentImageIndex((prev) => (prev + 1) % validImages.length);
+    }
+
+    if (isRightSwipe && hasImages) {
+      setCurrentImageIndex((prev) => (prev - 1 + validImages.length) % validImages.length);
+    }
+  };
+
+  const nextImage = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (hasImages) {
@@ -56,7 +88,7 @@ export function PropertyCard({
     }
   };
 
-  const prevImage = (e: React.MouseEvent) => {
+  const prevImage = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (hasImages) {
@@ -67,7 +99,12 @@ export function PropertyCard({
   return (
     <div className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg relative">
       <Link href={`/imoveis/${id}`} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center">
+        <div
+          className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center touch-pan-y"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           {hasImages ? (
             <Image
               src={validImages[currentImageIndex]}
@@ -82,8 +119,16 @@ export function PropertyCard({
             </div>
           )}
 
-          <div className="absolute top-2 left-2 rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white z-10">
-            {type}
+          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start">
+            {featured && (
+              <div className="rounded-md bg-amber-500 px-2 py-1 text-xs font-bold text-white flex items-center gap-1 shadow-sm">
+                <Sparkles className="w-3 h-3 fill-white" />
+                DESTAQUE
+              </div>
+            )}
+            <div className="rounded-md bg-slate-900/90 px-2 py-1 text-xs font-semibold text-white shadow-sm">
+              {type}
+            </div>
           </div>
 
           {agencyPartner && (
@@ -118,14 +163,14 @@ export function PropertyCard({
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-white z-20"
                 aria-label="Imagem anterior"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 text-slate-800 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-white z-20"
                 aria-label="Próxima imagem"
               >
                 <ChevronRight className="h-4 w-4" />

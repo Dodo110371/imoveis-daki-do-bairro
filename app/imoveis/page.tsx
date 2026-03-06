@@ -40,6 +40,7 @@ type ImoveisDbProperty = {
   contact_email?: string;
   agency_id?: number;
   owner_id?: string;
+  featured?: boolean;
 };
 
 type AgencyRow = {
@@ -109,7 +110,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   // Filter only active properties
-  query = query.eq('status', 'active');
+  query = query.eq('status', 'active').order('featured', { ascending: false });
 
   if (city) {
     const cityName = cityData?.name;
@@ -155,6 +156,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     images: p.images || [],
     imageUrl: p.images?.[0] || null,
     type: p.type,
+    featured: p.featured,
     contactWhatsapp: p.contact_whatsapp,
     contactPhone: p.contact_phone,
     contactEmail: p.contact_email,
