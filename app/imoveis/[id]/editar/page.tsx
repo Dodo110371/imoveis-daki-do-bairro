@@ -110,7 +110,6 @@ interface AdvertiseFormData {
   paymentPlan: string;
   paymentMethod: string;
   videoUrl?: string;
-  featured: boolean;
 }
 
 export default function EditPropertyPage() {
@@ -123,7 +122,6 @@ export default function EditPropertyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoInputType, setVideoInputType] = useState<'link' | 'upload'>('link');
@@ -164,7 +162,6 @@ export default function EditPropertyPage() {
     advertiserComplement: '',
     paymentPlan: '',
     paymentMethod: 'pix',
-    featured: false,
   });
 
   // Fetch property data
@@ -270,7 +267,6 @@ export default function EditPropertyPage() {
           phone: property.contact_phone || '',
           whatsapp: property.contact_whatsapp || '',
           videoUrl: property.video_url || '',
-          featured: property.featured || false,
         }));
 
       } catch (error) {
@@ -536,7 +532,6 @@ export default function EditPropertyPage() {
           contact_phone: formData.phone,
           contact_whatsapp: formData.whatsapp,
           video_url: formData.videoUrl,
-          featured: formData.featured,
           status: 'pending' // Reset status to pending for moderation
         })
         .eq('id', params.id);
@@ -548,7 +543,7 @@ export default function EditPropertyPage() {
         return;
       }
 
-      setIsSuccess(true);
+      router.push('/sucesso?mode=edit');
 
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -561,28 +556,6 @@ export default function EditPropertyPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
-  if (isSuccess) {
-    return (
-      <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center text-center max-w-lg">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-          <CheckCircle2 className="w-10 h-10 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Anúncio Atualizado!</h2>
-        <p className="text-slate-600 mb-8">
-          As alterações foram salvas e seu imóvel está pendente de aprovação novamente.
-        </p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => router.push('/minha-conta')}
-            className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
-          >
-            Voltar para Meus Anúncios
-          </button>
-        </div>
       </div>
     );
   }
@@ -988,31 +961,7 @@ export default function EditPropertyPage() {
                 />
               </div>
 
-              {/* Destaque Option */}
-              <div className="mt-8 bg-amber-50 rounded-xl p-6 border border-amber-200">
-                <label className="flex items-start gap-4 cursor-pointer">
-                  <div className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${formData.featured ? 'bg-amber-500 border-amber-500' : 'bg-white border-slate-300'
-                    }`}>
-                    {formData.featured && <Check className="w-4 h-4 text-white" />}
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => handleInputChange('featured', e.target.checked)}
-                    className="hidden"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
-                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel</h3>
-                      <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
-                    </div>
-                    <p className="text-slate-600 mb-2">
-                      Aumente suas chances de venda! Imóveis em destaque aparecem na página inicial e no topo das buscas.
-                    </p>
-                  </div>
-                </label>
-              </div>
+
             </div>
           )}
 

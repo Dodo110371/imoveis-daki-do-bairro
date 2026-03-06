@@ -123,7 +123,6 @@ interface AdvertiseFormData {
   paymentPlan: string;
   paymentMethod: string;
   videoUrl: string;
-  featured: boolean;
 }
 
 const INITIAL_FORM_DATA: AdvertiseFormData = {
@@ -163,7 +162,6 @@ const INITIAL_FORM_DATA: AdvertiseFormData = {
   paymentPlan: 'mensal',
   paymentMethod: 'pix',
   videoUrl: '',
-  featured: false,
 };
 
 export default function AdvertisePage() {
@@ -175,7 +173,6 @@ export default function AdvertisePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoInputType, setVideoInputType] = useState<'link' | 'upload'>('link');
@@ -497,7 +494,7 @@ export default function AdvertisePage() {
         features: formData.features,
         images: formData.photos,
         owner_id: user.id,
-        featured: formData.featured,
+        featured: false,
         contact_name: formData.name,
         contact_email: formData.email,
         contact_phone: formData.phone,
@@ -513,14 +510,9 @@ export default function AdvertisePage() {
         return;
       }
 
-      // If featured, redirect to payment for Turbo option
-      if (formData.featured) {
-        router.push('/pagamento?plano=destaque');
-      } else {
-        // If not featured, show success message immediately
-        setIsSuccess(true);
-        setIsSubmitting(false);
-      }
+      // Redirect to success page which handles the upsell
+      router.push('/sucesso');
+      setIsSubmitting(false);
 
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -528,38 +520,6 @@ export default function AdvertisePage() {
       setIsSubmitting(false);
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center text-center max-w-lg">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-          <CheckCircle2 className="w-10 h-10 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Anúncio Criado com Sucesso!</h2>
-        <p className="text-slate-600 mb-8">
-          Seu imóvel foi enviado para análise e em breve estará disponível em nossa plataforma.
-        </p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => router.push('/')}
-            className="px-6 py-2 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-colors font-medium"
-          >
-            Voltar ao Início
-          </button>
-          <button
-            onClick={() => {
-              setIsSuccess(false);
-              setCurrentStep(1);
-              setFormData(INITIAL_FORM_DATA);
-            }}
-            className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
-          >
-            Criar Novo Anúncio
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   if (showLoginPrompt) {
     return (
@@ -1636,40 +1596,7 @@ export default function AdvertisePage() {
                 </div>
               </div>
 
-              {/* Destaque Option */}
-              <div className="mt-8 bg-amber-50 rounded-xl p-6 border border-amber-200">
-                <label className="flex items-start gap-4 cursor-pointer">
-                  <div className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${formData.featured ? 'bg-amber-500 border-amber-500' : 'bg-white border-slate-300'
-                    }`}>
-                    {formData.featured && <Check className="w-4 h-4 text-white" />}
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => handleInputChange('featured', e.target.checked)}
-                    className="hidden"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
-                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel (Opção Turbo)</h3>
-                      <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
-                    </div>
-                    <p className="text-slate-600 mb-2">
-                      Coloque seu anúncio no topo da lista! Aumente suas chances de negociação.
-                    </p>
-                    <div className="text-sm font-semibold text-amber-700 mb-2">
-                      + R$ 50,00 (pagamento único)
-                    </div>
-                    {formData.featured && (
-                      <div className="flex items-start gap-2 mt-3 text-sm text-amber-800 bg-amber-100/50 p-3 rounded-lg">
-                        <Info className="w-4 h-4 mt-0.5 shrink-0" />
-                        <p>O pagamento da opção turbo deverá ser feito após a aceitação dos termos da publicação, via PIX imediato.</p>
-                      </div>
-                    )}
-                  </div>
-                </label>
-              </div>
+
 
               {/* Terms Acceptance */}
               <div className="mt-8 border-t pt-6">
