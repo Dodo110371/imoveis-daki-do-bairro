@@ -36,6 +36,7 @@ export function Footer() {
             <Link href="/alugar" className="text-sm text-slate-600 hover:text-slate-900">Alugar</Link>
             <Link href="/imobiliarias" className="text-sm text-slate-600 hover:text-slate-900">Imobiliárias</Link>
             <Link href="/corretores" className="text-sm text-slate-600 hover:text-slate-900">Corretores</Link>
+            <Link href="/planos" className="text-sm text-slate-600 hover:text-slate-900">Plano de Pagamento</Link>
             <Link href="/faq" className="text-sm text-slate-600 hover:text-slate-900">Perguntas Frequentes</Link>
             <Link href="/contato" className="text-sm text-slate-600 hover:text-slate-900">Fale Conosco</Link>
           </div>

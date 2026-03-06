@@ -164,7 +164,7 @@ export function Header() {
                                 Municípios
                             </Link>
                             <Link href="/planos" className="flex items-center px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" onClick={() => setIsMenuOpen(false)}>
-                                Nossos Planos
+                                Plano de Pagamento
                             </Link>
 
                             <div className="my-2 border-t border-slate-100" />
