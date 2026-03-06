@@ -45,6 +45,12 @@ const PLAN_DETAILS: Record<string, { title: string; price: number; period: strin
     period: 'pagamento único',
     features: ['Sem prazo de validade', 'Fotos ilimitadas', 'Destaque Premium']
   },
+  destaque: {
+    title: 'Destaque Turbo',
+    price: 50,
+    period: 'pagamento único',
+    features: ['Topo das buscas', 'Destaque visual', 'Recomendado']
+  },
   na_mira: {
     title: 'Opção Na Mira!',
     price: 50,

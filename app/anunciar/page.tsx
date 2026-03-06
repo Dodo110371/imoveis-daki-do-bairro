@@ -25,7 +25,8 @@ import {
   Briefcase,
   BadgeCheck,
   Video,
-  Sparkles
+  Sparkles,
+  Key
 } from 'lucide-react';
 import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
@@ -178,6 +179,7 @@ export default function AdvertisePage() {
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoInputType, setVideoInputType] = useState<'link' | 'upload'>('link');
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
   const isAdmin = user?.role === 'admin';
   const isTestModeEnabled = process.env.NODE_ENV === 'development' || isAdmin;
 
@@ -454,6 +456,12 @@ export default function AdvertisePage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
+    if (currentStep === 9 && !hasAcceptedTerms) {
+      alert('Por favor, leia e aceite os termos e condições para prosseguir.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       if (!user) {
         alert(userMessages.auth.mustBeLoggedInToAdvertise);
@@ -494,7 +502,7 @@ export default function AdvertisePage() {
         contact_email: formData.email,
         contact_phone: formData.phone,
         contact_whatsapp: formData.whatsapp,
-        status: formData.paymentPlan === 'pending_validation' ? 'pending' : 'active', // Pending validation if skipping payment
+        status: 'pending', // Always pending validation per new requirement
         video_url: formData.videoUrl
       });
 
@@ -505,16 +513,14 @@ export default function AdvertisePage() {
         return;
       }
 
-      // If pending validation, show success message immediately without redirecting to payment
-      if (formData.paymentPlan === 'pending_validation') {
+      // If featured, redirect to payment for Turbo option
+      if (formData.featured) {
+        router.push('/pagamento?plano=destaque');
+      } else {
+        // If not featured, show success message immediately
         setIsSuccess(true);
         setIsSubmitting(false);
-        return;
       }
-
-      // Redirect to payment page with selected plan
-      const plan = formData.paymentPlan || 'mensal';
-      router.push(`/pagamento?plano=${plan}`);
 
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -1587,208 +1593,47 @@ export default function AdvertisePage() {
           {currentStep === 9 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-slate-900">Escolha o plano ideal</h2>
-                <p className="text-slate-500 mt-2">Selecione a melhor opção para anunciar seu imóvel</p>
+                <h2 className="text-2xl font-bold text-slate-900">Plano de Pagamento</h2>
+                <p className="text-slate-500 mt-2">Condições para anunciar seu imóvel</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
-                {/* Mensal */}
-                <div
-                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'mensal'
-                    ? 'border-blue-500 shadow-lg ring-1 ring-blue-500'
-                    : 'border-slate-200 hover:border-blue-300 hover:shadow-md'
-                    }`}
-                  onClick={() => {
-                    handleInputChange('paymentPlan', 'mensal');
-                    handleInputChange('paymentMethod', 'pix');
-                  }}
-                >
-                  <div className={`p-4 text-center ${formData.paymentPlan === 'mensal' ? 'bg-blue-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
-                    <h3 className="font-bold text-lg">Mensal</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 200<span className="text-sm font-normal opacity-80">/mês</span></div>
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col items-center">
-                    <ul className="space-y-3 text-sm text-slate-600 mb-6 text-center">
-                      <li className="flex items-center gap-2 justify-center">
-                        <CheckCircle2 className="w-4 h-4 text-blue-500" />
-                        Renovação mensal
-                      </li>
-                      <li className="flex items-center gap-2 justify-center">
-                        <CheckCircle2 className="w-4 h-4 text-blue-500" />
-                        Sem fidelidade
-                      </li>
-                    </ul>
-
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-auto ${formData.paymentPlan === 'mensal' ? 'border-blue-600' : 'border-slate-300'
-                      }`}>
-                      {formData.paymentPlan === 'mensal' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+              {/* Commission Terms */}
+              <div className="flex justify-center">
+                <div className="max-w-2xl w-full">
+                  {formData.purpose === 'venda' ? (
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-8 shadow-sm relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-3 bg-blue-100 rounded-xl">
+                            <DollarSign className="w-6 h-6 text-blue-600" />
+                          </div>
+                          <h3 className="text-xl font-bold text-slate-900">Comissão sobre Venda</h3>
+                        </div>
+                        <p className="text-slate-700 leading-relaxed text-lg">
+                          Pagamento de <strong className="text-blue-700">2% do valor do imóvel</strong>,
+                          após sua efetiva venda, pela publicação e divulgação na plataforma e mídias sociais.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </div>
-
-                {/* Trimestral */}
-                <div
-                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'trimestral'
-                    ? 'border-teal-500 shadow-lg ring-1 ring-teal-500'
-                    : 'border-slate-200 hover:border-teal-300 hover:shadow-md'
-                    }`}
-                  onClick={() => handleInputChange('paymentPlan', 'trimestral')}
-                >
-                  <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
-                    ECONOMIA
-                  </div>
-                  <div className={`p-4 text-center ${formData.paymentPlan === 'trimestral' ? 'bg-teal-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
-                    <h3 className="font-bold text-lg">Trimestral</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 300,00</div>
-                    <div className="text-sm font-medium opacity-90">ou 3x R$ 120,00</div>
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col">
-                    <p className="text-xs text-center text-slate-500 mb-4">Plano econômico</p>
-
-                    {formData.paymentPlan === 'trimestral' ? (
-                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
-                        <label className="flex items-center gap-2 p-2 rounded bg-teal-50 border border-teal-100 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'pix'}
-                            onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-3 h-3 text-teal-600"
-                          />
-                          <span className="text-teal-900">R$ 300,00 (à vista)</span>
-                        </label>
-                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-teal-200">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'installments'}
-                            onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-3 h-3 text-teal-600"
-                          />
-                          <span className="text-slate-700">3x R$ 120,00</span>
-                        </label>
-                      </div>
-                    ) : (
-                      <div className="flex-1 flex flex-col items-center justify-end">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'trimestral' ? 'border-teal-600' : 'border-slate-300'
-                          }`}>
-                          {formData.paymentPlan === 'trimestral' && <div className="w-3 h-3 bg-teal-600 rounded-full" />}
+                  ) : (
+                    <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border-2 border-teal-200 rounded-2xl p-8 shadow-sm relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-teal-100 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-3 bg-teal-100 rounded-xl">
+                            <Key className="w-6 h-6 text-teal-600" />
+                          </div>
+                          <h3 className="text-xl font-bold text-slate-900">Comissão sobre Aluguel</h3>
                         </div>
+                        <p className="text-slate-700 leading-relaxed text-lg">
+                          Pagamento de <strong className="text-teal-700">40% do valor da primeira parcela</strong>,
+                          após sua efetiva locação, pela publicação e divulgação na plataforma e mídias sociais.
+                        </p>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-
-                {/* Semestral */}
-                <div
-                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'semestral'
-                    ? 'border-orange-500 shadow-lg ring-1 ring-orange-500'
-                    : 'border-slate-200 hover:border-orange-300 hover:shadow-md'
-                    }`}
-                  onClick={() => handleInputChange('paymentPlan', 'semestral')}
-                >
-                  <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
-                    MELHOR VALOR
-                  </div>
-                  <div className={`p-4 text-center ${formData.paymentPlan === 'semestral' ? 'bg-orange-600 text-white' : 'bg-slate-50 text-slate-900'}`}>
-                    <h3 className="font-bold text-lg">Semestral</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 600,00</div>
-                    <div className="text-sm font-medium opacity-90">ou 6x R$ 110,00</div>
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col">
-                    <p className="text-xs text-center text-slate-500 mb-4">Melhor custo-benefício</p>
-
-                    {formData.paymentPlan === 'semestral' ? (
-                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
-                        <label className="flex items-center gap-2 p-2 rounded bg-orange-50 border border-orange-100 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'pix'}
-                            onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-3 h-3 text-orange-600"
-                          />
-                          <span className="text-orange-900">R$ 600,00 (à vista)</span>
-                        </label>
-                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-orange-200">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'installments'}
-                            onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-3 h-3 text-orange-600"
-                          />
-                          <span className="text-slate-700">6x R$ 110,00</span>
-                        </label>
-                      </div>
-                    ) : (
-                      <div className="flex-1 flex flex-col items-center justify-end">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'semestral' ? 'border-orange-600' : 'border-slate-300'
-                          }`}>
-                          {formData.paymentPlan === 'semestral' && <div className="w-3 h-3 bg-orange-600 rounded-full" />}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Até Vender */}
-                <div
-                  className={`relative flex flex-col rounded-2xl border-2 transition-all cursor-pointer overflow-hidden group ${formData.paymentPlan === 'ate_vender'
-                    ? 'border-purple-600 shadow-xl ring-1 ring-purple-600 scale-105 z-10'
-                    : 'border-slate-200 hover:border-purple-300 hover:shadow-md'
-                    }`}
-                  onClick={() => handleInputChange('paymentPlan', 'ate_vender')}
-                >
-                  <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold py-1 text-center z-10">
-                    MAIS VENDIDO
-                  </div>
-                  <div className={`p-4 pt-8 text-center ${formData.paymentPlan === 'ate_vender' ? 'bg-purple-50 text-purple-900' : 'bg-slate-50 text-slate-900'}`}>
-                    <h3 className="font-bold text-lg">Até Vender</h3>
-                    <div className="mt-1 text-2xl font-bold">R$ 1.000,00</div>
-                    <div className="text-sm font-medium opacity-90">ou 10x R$ 110,00</div>
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col">
-                    <p className="text-xs text-center text-slate-500 mb-4">Pagamento único, sem renovações</p>
-
-                    {formData.paymentPlan === 'ate_vender' ? (
-                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2 text-sm">
-                        <label className="flex items-center gap-2 p-2 rounded bg-purple-50 border border-purple-100 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'pix'}
-                            onChange={() => handleInputChange('paymentMethod', 'pix')}
-                            className="w-3 h-3 text-purple-600"
-                          />
-                          <span className="text-purple-900">R$ 1.000,00 (à vista)</span>
-                        </label>
-                        <label className="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer hover:border-purple-200">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            checked={formData.paymentMethod === 'installments'}
-                            onChange={() => handleInputChange('paymentMethod', 'installments')}
-                            className="w-3 h-3 text-purple-600"
-                          />
-                          <span className="text-slate-700">10x R$ 110,00</span>
-                        </label>
-                      </div>
-                    ) : (
-                      <div className="flex-1 flex flex-col items-center justify-end">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'ate_vender' ? 'border-purple-600' : 'border-slate-300'
-                          }`}>
-                          {formData.paymentPlan === 'ate_vender' && <div className="w-3 h-3 bg-purple-600 rounded-full" />}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
               </div>
 
               {/* Destaque Option */}
@@ -1807,36 +1652,45 @@ export default function AdvertisePage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
-                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Destacar este imóvel (Opção Turbo)</h3>
                       <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
                     </div>
                     <p className="text-slate-600 mb-2">
-                      Aumente suas chances de venda! Imóveis em destaque aparecem na página inicial e no topo das buscas.
+                      Coloque seu anúncio no topo da lista! Aumente suas chances de negociação.
                     </p>
-                    <div className="text-sm font-semibold text-amber-700">
+                    <div className="text-sm font-semibold text-amber-700 mb-2">
                       + R$ 50,00 (pagamento único)
                     </div>
+                    {formData.featured && (
+                      <div className="flex items-start gap-2 mt-3 text-sm text-amber-800 bg-amber-100/50 p-3 rounded-lg">
+                        <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                        <p>O pagamento da opção turbo deverá ser feito após a aceitação dos termos da publicação, via PIX imediato.</p>
+                      </div>
+                    )}
                   </div>
                 </label>
               </div>
 
-              {/* Opção de Pular Pagamento */}
-              <div className="mt-6 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => handleInputChange('paymentPlan', 'pending_validation')}
-                  className={`group flex items-center gap-2 px-6 py-3 rounded-lg border-2 transition-all ${formData.paymentPlan === 'pending_validation'
-                      ? 'border-slate-400 bg-slate-50 text-slate-900'
-                      : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-                    }`}
-                >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentPlan === 'pending_validation' ? 'border-slate-900' : 'border-slate-300 group-hover:border-slate-400'
+              {/* Terms Acceptance */}
+              <div className="mt-8 border-t pt-6">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <div className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${hasAcceptedTerms ? 'bg-slate-900 border-slate-900' : 'border-slate-300 group-hover:border-slate-400'
                     }`}>
-                    {formData.paymentPlan === 'pending_validation' && <div className="w-2.5 h-2.5 bg-slate-900 rounded-full" />}
+                    {hasAcceptedTerms && <Check className="w-3 h-3 text-white" />}
                   </div>
-                  <span className="font-medium">Finalizar sem escolher plano (Aguardar validação)</span>
-                </button>
+                  <input
+                    type="checkbox"
+                    checked={hasAcceptedTerms}
+                    onChange={(e) => setHasAcceptedTerms(e.target.checked)}
+                    className="hidden"
+                  />
+                  <span className="text-slate-600 text-sm">
+                    Li e concordo com os termos de comissão citados acima e com as normas do site.
+                    Estou ciente que o imóvel permanecerá <span className="font-semibold text-slate-900">pendente de validação</span> pelo administrador após o cadastro.
+                  </span>
+                </label>
               </div>
+
             </div>
           )}
 
