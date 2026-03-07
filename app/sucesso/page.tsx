@@ -191,19 +191,36 @@ function SucessoContent() {
                   </p>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
-                  <p className="text-sm text-slate-500 font-medium mb-2">Chave PIX (CNPJ)</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 bg-white p-3 rounded-lg border border-slate-200 font-mono text-slate-900">
-                      00.000.000/0001-00
-                    </code>
-                    <button
-                      onClick={() => navigator.clipboard.writeText('00.000.000/0001-00')}
-                      className="p-3 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors"
-                      title="Copiar"
-                    >
-                      <Copy className="w-5 h-5" />
-                    </button>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 text-left">
+                  <p className="text-sm text-slate-500 font-medium mb-2">Dados para Pagamento (PIX)</p>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-xs text-slate-500 block">Chave PIX (CPF)</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <code className="flex-1 bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-slate-900 text-sm font-bold">
+                          335.275.633-34
+                        </code>
+                        <button
+                          onClick={() => navigator.clipboard.writeText('335.275.633-34')}
+                          className="p-2.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors"
+                          title="Copiar chave"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2 text-sm">
+                      <div>
+                        <span className="text-xs text-slate-500 block">Beneficiário</span>
+                        <span className="font-medium text-slate-900">Doriedson de Jesus Barros Serra</span>
+                      </div>
+                      <div>
+                        <span className="text-xs text-slate-500 block">Instituição</span>
+                        <span className="font-medium text-slate-900">Banco do Brasil</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
