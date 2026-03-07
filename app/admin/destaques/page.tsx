@@ -12,7 +12,7 @@ export default async function AdminHighlightsPage() {
     .from('properties')
     .select(`
       *,
-      profiles:owner_id (full_name, phone, email)
+      profiles:owner_id (full_name, phone)
     `)
     .eq('promotion_status', 'pending')
     .order('updated_at', { ascending: false });
@@ -98,7 +98,7 @@ export default async function AdminHighlightsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-500">
-                        {property.contact_email || property.profiles?.email || 'Sem email'}
+                        {property.contact_email || 'Sem email'}
                       </span>
                     </div>
                     {property.promotion_receipt_url && (
