@@ -193,7 +193,7 @@ export default function AdvertisePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleTypeSelection = (type: AdvertiseFormData['advertiserType']) => {
+  const handleTypeSelection = async (type: AdvertiseFormData['advertiserType']) => {
     setFormData(prev => ({ ...prev, advertiserType: type }));
 
     if (type === 'imobiliaria') {
@@ -202,8 +202,22 @@ export default function AdvertisePage() {
     }
 
     if (type === 'corretor') {
-      router.push('/corretores');
-      return;
+      if (!isAuthenticated || !user) {
+        setShowLoginPrompt(true);
+        return;
+      }
+
+      const supabase = createClient();
+      const { data: realtorRow } = await supabase
+        .from('realtors')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!realtorRow) {
+        router.push('/cadastro-corretor');
+        return;
+      }
     }
 
     if (type === 'proprietario') {

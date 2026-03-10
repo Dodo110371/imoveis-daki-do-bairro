@@ -16,8 +16,6 @@ type RealtorRow = {
   creci: string;
   bio?: string | null;
   regions?: string[] | null;
-  partner?: boolean | null;
-  is_partner?: boolean | null;
   whatsapp?: string | null;
   profiles?: RealtorProfile[] | null;
 };
@@ -44,7 +42,6 @@ export default async function CorretoresPage() {
       creci,
       bio,
       regions,
-      partner,
       whatsapp,
       profiles (
         full_name,
@@ -63,7 +60,7 @@ export default async function CorretoresPage() {
       bio: r.bio || "Corretor parceiro Imóveis daki do Bairro.",
       regions: r.regions || [],
       whatsapp: r.whatsapp || undefined,
-      isPartner: !!(r.partner ?? r.is_partner),
+      isPartner: false,
       propertiesCount: 0,
     };
   });

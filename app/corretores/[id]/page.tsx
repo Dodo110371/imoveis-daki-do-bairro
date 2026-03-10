@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { MapPin, Phone, MessageCircle, User, ShieldCheck, Mail, ArrowLeft } from 'lucide-react';
+import { MapPin, Phone, MessageCircle, User, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { PropertyCard } from '@/components/PropertyCard';
 import { ContactEventLink } from '@/components/ContactEventLink';
@@ -27,7 +27,6 @@ type RealtorProfileRow = {
   profiles?: {
     full_name?: string | null;
     avatar_url?: string | null;
-    email?: string | null;
     phone?: string | null;
   } | null;
 };
@@ -68,7 +67,7 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     .from('realtors')
     .select(`
       *,
-      profiles (full_name, avatar_url, email, phone)
+      profiles (full_name, avatar_url, phone)
     `)
     .eq('id', id)
     .single<RealtorProfileRow>();
@@ -85,7 +84,6 @@ export default async function RealtorProfilePage({ params }: PageProps) {
     bio: realtorData.bio || '',
     regions: realtorData.regions || [],
     whatsapp: realtorData.whatsapp,
-    email: realtorData.profiles?.email,
     phone: realtorData.profiles?.phone,
     isPartner: !!(realtorData.partner ?? realtorData.is_partner)
   };
@@ -179,16 +177,6 @@ export default async function RealtorProfilePage({ params }: PageProps) {
                   >
                     <Phone className="w-4 h-4" />
                     Ligar
-                  </ContactEventLink>
-                )}
-                {realtor.email && (
-                  <ContactEventLink
-                    href={`mailto:${realtor.email}`}
-                    className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                    channel="email"
-                  >
-                    <Mail className="w-4 h-4" />
-                    Email
                   </ContactEventLink>
                 )}
               </div>

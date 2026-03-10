@@ -50,7 +50,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     .from('realtors')
     .select(`
       *,
-      profiles (full_name, avatar_url, email, phone)
+      profiles (full_name, avatar_url, phone)
     `)
     .eq('id', propertyData.owner_id)
     .single();
@@ -85,7 +85,6 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     ...realtorData,
     name: realtorData.profiles?.full_name || 'Corretor',
     photo: realtorData.profiles?.avatar_url || null,
-    email: realtorData.profiles?.email,
     phone: realtorData.profiles?.phone,
     isPartner: !!(realtorData.partner ?? realtorData.is_partner)
   } : null;
@@ -377,9 +376,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </ContactEventLink>
                 )}
 
-                {(agency?.email || realtor?.email || property.contact_email) && (
+                {(agency?.email || property.contact_email) && (
                   <ContactEventLink
-                    href={`mailto:${agency?.email || realtor?.email || property.contact_email}`}
+                    href={`mailto:${agency?.email || property.contact_email}`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                     propertyId={property.id}
                     channel="email"
