@@ -3,6 +3,27 @@ import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { guessMimeTypeFromFileName } from "@/lib/utils";
 
+export async function GET() {
+  if (process.env.NODE_ENV === "development") {
+    return NextResponse.json({
+      serviceRoleConfigured: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+    });
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({
+    serviceRoleConfigured: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+  });
+}
+
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
