@@ -317,7 +317,6 @@ export default function AdvertisePage() {
     const newPhotos: string[] = [];
 
     try {
-      const userId = session.user.id;
       for (const file of files) {
         if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
         if (file.size > 5 * 1024 * 1024) {
@@ -334,37 +333,50 @@ export default function AdvertisePage() {
           continue;
         }
 
-        const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
-        const fileName = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
+        const controller = new AbortController();
+        let didTimeout = false;
         const timeoutMs = 60000;
-        const uploadPromise = supabase.storage
-          .from('properties')
-          .upload(fileName, file, { upsert: false, contentType });
+        const timeoutId = setTimeout(() => {
+          didTimeout = true;
+          controller.abort();
+        }, timeoutMs);
 
-        let timeoutId: ReturnType<typeof setTimeout> | null = null;
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          timeoutId = setTimeout(() => reject(new Error('UPLOAD_TIMEOUT')), timeoutMs);
-        });
+        cancelPhotoUploadRef.current = () => controller.abort();
 
-        const cancelPromise = new Promise<never>((_, reject) => {
-          cancelPhotoUploadRef.current = () => reject(new Error('UPLOAD_CANCELED'));
-        });
+        try {
+          const uploadFormData = new FormData();
+          uploadFormData.append('file', file);
+          uploadFormData.append('contentType', contentType);
 
-        const { error: uploadError } = await Promise.race([uploadPromise, timeoutPromise, cancelPromise]);
-        if (timeoutId) clearTimeout(timeoutId);
-        cancelPhotoUploadRef.current = null;
+          const res = await fetch('/api/storage/property-photo', {
+            method: 'POST',
+            body: uploadFormData,
+            signal: controller.signal,
+          });
 
-        if (uploadError) {
-          console.error('Supabase upload error:', uploadError);
-          throw uploadError;
+          const payload = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            const err = new Error(payload?.error || `UPLOAD_FAILED_${res.status}`);
+            (err as any).statusCode = payload?.statusCode || res.status;
+            throw err;
+          }
+
+          if (payload?.publicUrl) {
+            newPhotos.push(payload.publicUrl);
+          } else {
+            throw new Error('UPLOAD_FAILED_NO_URL');
+          }
+        } catch (err: any) {
+          if (err?.name === 'AbortError') {
+            if (didTimeout) throw new Error('UPLOAD_TIMEOUT');
+            if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
+            throw new Error('UPLOAD_ABORTED');
+          }
+          throw err;
+        } finally {
+          clearTimeout(timeoutId);
+          cancelPhotoUploadRef.current = null;
         }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('properties')
-          .getPublicUrl(fileName);
-
-        newPhotos.push(publicUrl);
       }
 
       setFormData(prev => ({
@@ -380,6 +392,8 @@ export default function AdvertisePage() {
         setUploadPhotosError('Upload cancelado.');
       } else if (error.message === 'UPLOAD_TIMEOUT') {
         setUploadPhotosError('Upload demorou demais e foi interrompido. Tente novamente.');
+      } else if (error.message === 'UPLOAD_ABORTED') {
+        setUploadPhotosError('Upload interrompido. Tente novamente.');
       } else if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
       } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {

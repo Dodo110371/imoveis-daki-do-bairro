@@ -73,3 +73,43 @@ export function guessMimeTypeFromFileName(fileName: string): string | undefined 
       return undefined;
   }
 }
+
+function encodeStoragePath(path: string): string {
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+}
+
+export async function uploadToSupabaseStorageViaFetch(params: {
+  supabaseUrl: string;
+  anonKey: string;
+  accessToken: string;
+  bucket: string;
+  path: string;
+  file: Blob;
+  contentType: string;
+  upsert?: boolean;
+  signal?: AbortSignal;
+}): Promise<void> {
+  const url = `${params.supabaseUrl}/storage/v1/object/${encodeURIComponent(params.bucket)}/${encodeStoragePath(params.path)}`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      apikey: params.anonKey,
+      authorization: `Bearer ${params.accessToken}`,
+      "content-type": params.contentType,
+      "x-upsert": params.upsert ? "true" : "false",
+    },
+    body: params.file,
+    signal: params.signal,
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    const err = new Error(text || `UPLOAD_FAILED_${res.status}`);
+    (err as any).statusCode = res.status;
+    throw err;
+  }
+}
