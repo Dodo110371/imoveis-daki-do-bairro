@@ -6,6 +6,25 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('properties', 'properties', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
+UPDATE storage.buckets
+SET
+  public = true,
+  file_size_limit = 104857600,
+  allowed_mime_types = ARRAY[
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+    'image/webp',
+    'image/avif',
+    'image/heic',
+    'image/heif',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+    'application/pdf'
+  ]
+WHERE id = 'properties';
+
 -- 2. Enable RLS on storage.objects (good practice)
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 

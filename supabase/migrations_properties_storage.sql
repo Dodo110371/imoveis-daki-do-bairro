@@ -4,6 +4,25 @@ insert into storage.buckets (id, name, public)
 values ('properties', 'properties', true)
 on conflict (id) do nothing;
 
+update storage.buckets
+set
+  public = true,
+  file_size_limit = 104857600,
+  allowed_mime_types = array[
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+    'image/webp',
+    'image/avif',
+    'image/heic',
+    'image/heif',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+    'application/pdf'
+  ]
+where id = 'properties';
+
 -- Enable RLS
 alter table storage.objects enable row level security;
 

@@ -36,3 +36,40 @@ export function formatCurrency(value: number): string {
     currency: 'BRL',
   });
 }
+
+export function guessMimeTypeFromFileName(fileName: string): string | undefined {
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  if (!ext) return undefined;
+
+  switch (ext) {
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "png":
+      return "image/png";
+    case "gif":
+      return "image/gif";
+    case "webp":
+      return "image/webp";
+    case "avif":
+      return "image/avif";
+    case "heic":
+      return "image/heic";
+    case "heif":
+      return "image/heif";
+    case "svg":
+      return "image/svg+xml";
+    case "mp4":
+      return "video/mp4";
+    case "webm":
+      return "video/webm";
+    case "mov":
+      return "video/quicktime";
+    case "m4v":
+      return "video/x-m4v";
+    case "pdf":
+      return "application/pdf";
+    default:
+      return undefined;
+  }
+}

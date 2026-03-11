@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -32,10 +32,9 @@ import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
-import { useEffect } from 'react';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { createClient } from '@/lib/supabase/client';
-import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
+import { formatCurrencyInput, guessMimeTypeFromFileName, parseCurrency } from '@/lib/utils';
 
 // Step definitions
 const STEPS = [
@@ -175,6 +174,9 @@ export default function AdvertisePage() {
   const [isLoadingAdvertiserCep, setIsLoadingAdvertiserCep] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [uploadPhotosError, setUploadPhotosError] = useState<string | null>(null);
+  const cancelPhotoUploadRef = useRef<(() => void) | null>(null);
+  const cancelPhotoUploadRequestedRef = useRef(false);
   const [videoInputType, setVideoInputType] = useState<'link' | 'upload'>('link');
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
   const isAdmin = user?.role === 'admin';
@@ -298,33 +300,60 @@ export default function AdvertisePage() {
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0 || !user) return;
+    if (!e.target.files || e.target.files.length === 0) return;
 
-    setIsUploadingImages(true);
     const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert(userMessages.auth.mustBeLoggedInToAdvertise);
+      if (e.target) e.target.value = '';
+      return;
+    }
+
+    setUploadPhotosError(null);
+    cancelPhotoUploadRequestedRef.current = false;
+    setIsUploadingImages(true);
     const files = Array.from(e.target.files);
     const newPhotos: string[] = [];
 
     try {
+      const userId = session.user.id;
       for (const file of files) {
+        if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
         if (file.size > 5 * 1024 * 1024) {
           alert(`O arquivo ${file.name} é muito grande. O limite é de 5MB por foto.`);
           continue;
         }
-        if (!file.type.startsWith('image/')) {
+        const contentType = file.type || guessMimeTypeFromFileName(file.name);
+        if (!contentType) {
+          alert(`Não foi possível identificar o tipo do arquivo ${file.name}.`);
+          continue;
+        }
+        if (!contentType.startsWith('image/')) {
           alert(`O arquivo ${file.name} não é uma imagem válida.`);
           continue;
         }
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
+        const fileName = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        const { error: uploadError } = await supabase.storage
+        const timeoutMs = 60000;
+        const uploadPromise = supabase.storage
           .from('properties')
-          .upload(fileName, file, {
-            upsert: false,
-            contentType: file.type
-          });
+          .upload(fileName, file, { upsert: false, contentType });
+
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => reject(new Error('UPLOAD_TIMEOUT')), timeoutMs);
+        });
+
+        const cancelPromise = new Promise<never>((_, reject) => {
+          cancelPhotoUploadRef.current = () => reject(new Error('UPLOAD_CANCELED'));
+        });
+
+        const { error: uploadError } = await Promise.race([uploadPromise, timeoutPromise, cancelPromise]);
+        if (timeoutId) clearTimeout(timeoutId);
+        cancelPhotoUploadRef.current = null;
 
         if (uploadError) {
           console.error('Supabase upload error:', uploadError);
@@ -347,15 +376,23 @@ export default function AdvertisePage() {
       console.error('Error uploading photos:', error);
 
       // More specific error handling
-      if (error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      if (error.message === 'UPLOAD_CANCELED') {
+        setUploadPhotosError('Upload cancelado.');
+      } else if (error.message === 'UPLOAD_TIMEOUT') {
+        setUploadPhotosError('Upload demorou demais e foi interrompido. Tente novamente.');
+      } else if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
-      } else if (error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 5MB por foto.');
+      } else if (error.statusCode === 415 || error.statusCode === '415' || error.message?.toLowerCase?.().includes('mime')) {
+        alert('Formato de imagem não suportado. Tente enviar JPEG ou PNG.');
       } else {
-        alert(userMessages.advertise.uploadError || 'Erro ao fazer upload da imagem. Tente novamente.');
+        alert(`${userMessages.advertise.uploadError || 'Erro ao fazer upload da imagem.'}\nDetalhes: ${error.message || 'Erro desconhecido'}`);
       }
     } finally {
       setIsUploadingImages(false);
+      cancelPhotoUploadRef.current = null;
+      cancelPhotoUploadRequestedRef.current = false;
       // Reset input
       if (e.target) e.target.value = '';
     }
@@ -369,10 +406,17 @@ export default function AdvertisePage() {
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0 || !user) return;
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert(userMessages.auth.mustBeLoggedInToAdvertise);
+      if (e.target) e.target.value = '';
+      return;
+    }
 
     setIsUploadingVideo(true);
-    const supabase = createClient();
     const file = e.target.files[0];
 
     try {
@@ -380,19 +424,24 @@ export default function AdvertisePage() {
         alert(`O arquivo ${file.name} é muito grande. O limite é de 100MB.`);
         return;
       }
-      if (!file.type.startsWith('video/')) {
+      const contentType = file.type || guessMimeTypeFromFileName(file.name);
+      if (!contentType) {
+        alert(`Não foi possível identificar o tipo do arquivo ${file.name}.`);
+        return;
+      }
+      if (!contentType.startsWith('video/')) {
         alert(`O arquivo ${file.name} não é um vídeo válido.`);
         return;
       }
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}-video.${fileExt}`;
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
+      const fileName = `${session.user.id}/${Date.now()}-video.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('properties')
         .upload(fileName, file, {
           upsert: false,
-          contentType: file.type
+          contentType
         });
 
       if (uploadError) {
@@ -410,9 +459,9 @@ export default function AdvertisePage() {
 
     } catch (error: any) {
       console.error('Error uploading video:', error);
-      if (error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de vídeo.');
-      } else if (error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 100MB.');
       } else {
         alert('Erro ao fazer upload do vídeo. Tente novamente.');
@@ -1164,6 +1213,22 @@ export default function AdvertisePage() {
                 <p className="text-slate-500 mt-2">Boas fotos aumentam muito suas chances. A primeira foto será a capa do anúncio.</p>
               </div>
 
+              {isUploadingImages && (
+                <div className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      cancelPhotoUploadRequestedRef.current = true;
+                      cancelPhotoUploadRef.current?.();
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancelar upload
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {/* Upload Button */}
                 <label className={`aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors ${isUploadingImages ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -1210,6 +1275,12 @@ export default function AdvertisePage() {
                   </div>
                 ))}
               </div>
+
+              {uploadPhotosError && (
+                <div className="text-center p-4 bg-rose-50 rounded-lg border border-rose-200 text-rose-800 text-sm">
+                  {uploadPhotosError}
+                </div>
+              )}
 
               {formData.photos.length === 0 && (
                 <div className="text-center p-8 bg-slate-50 rounded-lg border border-slate-200 text-slate-500">

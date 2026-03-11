@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { CheckCircle2, ArrowRight, Home, Sparkles, Copy, X, Loader2, Upload, FileText } from 'lucide-react';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { guessMimeTypeFromFileName } from '@/lib/utils';
 
 function SucessoContent() {
   const searchParams = useSearchParams();
@@ -51,9 +52,14 @@ function SucessoContent() {
       // Upload receipt
       const fileExt = receiptFile.name.split('.').pop();
       const fileName = `${propertyId}/receipt-${Date.now()}.${fileExt}`;
+      const contentType = receiptFile.type || guessMimeTypeFromFileName(receiptFile.name);
+      if (!contentType) {
+        alert('Não foi possível identificar o tipo do comprovante.');
+        return;
+      }
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('properties')
-        .upload(fileName, receiptFile);
+        .upload(fileName, receiptFile, { upsert: false, contentType });
 
       if (uploadError) throw uploadError;
 

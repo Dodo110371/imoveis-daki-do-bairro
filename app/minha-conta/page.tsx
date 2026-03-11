@@ -12,7 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
 import { createClient } from '@/lib/supabase/client';
 import { HeaderCta } from '@/components/HeaderCta';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, guessMimeTypeFromFileName } from '@/lib/utils';
 
 function MinhaContaContent() {
   const [isLogin, setIsLogin] = useState(true);
@@ -205,18 +205,36 @@ function MinhaContaContent() {
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0 || !user) return;
 
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert('Você precisa estar logado para enviar a foto.');
+      e.target.value = '';
+      return;
+    }
+
     const file = e.target.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      alert('O arquivo é muito grande. O limite é de 5MB.');
+      e.target.value = '';
+      return;
+    }
+    const contentType = file.type || guessMimeTypeFromFileName(file.name);
+    if (!contentType || !contentType.startsWith('image/')) {
+      alert('Arquivo selecionado não é uma imagem válida.');
+      e.target.value = '';
+      return;
+    }
     const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+    const fileName = `${session.user.id}-${Math.random()}.${fileExt}`;
     const filePath = `${fileName}`;
 
     setIsUploading(true);
-    const supabase = createClient();
 
     try {
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file);
+        .upload(filePath, file, { upsert: false, contentType });
 
       if (uploadError) throw uploadError;
 
@@ -230,6 +248,7 @@ function MinhaContaContent() {
       alert(userMessages.auth.avatarUploadError);
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
   };
 

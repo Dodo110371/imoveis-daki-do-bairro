@@ -3,7 +3,19 @@
 UPDATE storage.buckets
 SET 
   file_size_limit = 104857600,
-  allowed_mime_types = ARRAY['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'video/mp4', 'video/webm', 'video/quicktime']
+  allowed_mime_types = ARRAY[
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+    'image/webp',
+    'image/avif',
+    'image/heic',
+    'image/heif',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+    'application/pdf'
+  ]
 WHERE id = 'properties';
 
 -- Garantir que policies permitam upload de vídeos (se houver restrição por mime-type nas policies, o que não parece ser o caso no script anterior)
