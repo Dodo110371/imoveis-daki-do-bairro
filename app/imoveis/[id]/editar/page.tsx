@@ -26,7 +26,7 @@ import Image from 'next/image';
 import { CITY_NEIGHBORHOODS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
-import { formatCurrencyInput, guessMimeTypeFromFileName, parseCurrency } from '@/lib/utils';
+import { formatCurrencyInput, guessMimeTypeFromFileName, parseCurrency, uploadToSupabaseStorageViaFetch } from '@/lib/utils';
 
 // Step definitions - Removing "Planos" step for editing
 const STEPS = [
@@ -445,6 +445,9 @@ export default function EditPropertyPage() {
 
           const res = await fetch('/api/storage/property-photo', {
             method: 'POST',
+            headers: {
+              authorization: `Bearer ${session.access_token}`,
+            },
             body: uploadFormData,
             signal: controller.signal,
           });
@@ -549,16 +552,16 @@ export default function EditPropertyPage() {
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
       const fileName = `${session.user.id}/${Date.now()}-video.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('properties')
-        .upload(fileName, file, {
-          upsert: false,
-          contentType
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
+      await uploadToSupabaseStorageViaFetch({
+        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        accessToken: session.access_token,
+        bucket: 'properties',
+        path: fileName,
+        file,
+        contentType,
+        upsert: false,
+      });
 
       const { data: { publicUrl } } = supabase.storage
         .from('properties')

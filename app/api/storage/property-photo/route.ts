@@ -3,7 +3,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { guessMimeTypeFromFileName } from "@/lib/utils";
 
-export async function GET() {
+function extractBearerToken(request: Request): string | null {
+  const header = request.headers.get("authorization") || request.headers.get("Authorization");
+  if (!header) return null;
+  const value = header.trim();
+  if (!value.toLowerCase().startsWith("bearer ")) return null;
+  return value.slice(7).trim() || null;
+}
+
+export async function GET(request: Request) {
   if (process.env.NODE_ENV === "development") {
     return NextResponse.json({
       serviceRoleConfigured: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
@@ -16,7 +24,24 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const token = extractBearerToken(request);
+    if (!token || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   return NextResponse.json({
@@ -30,12 +55,32 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json({ error: "Server misconfigured" }, { status: 500 });
+  }
+
+  const supabaseAdmin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+
+  let resolvedUserId = user?.id || null;
+  if (!resolvedUserId) {
+    const token = extractBearerToken(request);
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    resolvedUserId = data.user.id;
   }
 
   const formData = await request.formData();
@@ -69,18 +114,7 @@ export async function POST(request: Request) {
       { status: 415 }
     );
   }
-  const path = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
-
-  const supabaseAdmin = createAdminClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  );
+  const path = `${resolvedUserId}/${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
 
   const { error: uploadError } = await supabaseAdmin.storage
     .from("properties")
