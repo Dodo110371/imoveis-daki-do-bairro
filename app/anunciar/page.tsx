@@ -595,62 +595,76 @@ export default function AdvertisePage() {
         setIsSubmitting(false);
         return;
       }
+      const controller = new AbortController();
+      let didTimeout = false;
+      const timeoutMs = 60000;
+      const timeoutId = setTimeout(() => {
+        didTimeout = true;
+        controller.abort();
+      }, timeoutMs);
 
-      const supabase = createClient();
+      try {
+        const res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            description: formData.description,
+            purpose: formData.purpose,
+            category: formData.type,
+            price: formData.price,
+            condoPrice: formData.condoPrice,
+            iptuPrice: formData.iptuPrice,
+            cep: formData.cep,
+            street: formData.street,
+            number: formData.number,
+            complement: formData.complement,
+            neighborhood: formData.neighborhood,
+            city: formData.city,
+            state: formData.state,
+            bedrooms: formData.bedrooms,
+            bathrooms: formData.bathrooms,
+            parking: formData.parking,
+            area: formData.area,
+            features: formData.features,
+            photos: formData.photos,
+            videoUrl: formData.videoUrl,
+            contactName: formData.name,
+            contactEmail: formData.email,
+            contactPhone: formData.phone,
+            contactWhatsapp: formData.whatsapp,
+          }),
+          signal: controller.signal,
+        });
 
-      const price = parseCurrency(formData.price);
-      const area = parseFloat(formData.area.replace(',', '.')) || 0;
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const err = new Error(payload?.error || `CREATE_PROPERTY_FAILED_${res.status}`) as Error & { statusCode?: number | string };
+          err.statusCode = payload?.statusCode || res.status;
+          throw err;
+        }
 
-      const { data, error } = await supabase.from('properties').insert({
-        title: formData.title,
-        description: formData.description,
-        price: price,
-        condo_price: parseCurrency(formData.condoPrice),
-        iptu_price: parseCurrency(formData.iptuPrice),
-        location: `${formData.street}, ${formData.number} - ${formData.neighborhood}, ${formData.city}`,
-        cep: formData.cep,
-        street: formData.street,
-        number: formData.number,
-        complement: formData.complement,
-        neighborhood: formData.neighborhood,
-        city: formData.city,
-        state: formData.state || 'MA', // Default to MA if not present in form
-        bedrooms: formData.bedrooms,
-        bathrooms: formData.bathrooms,
-        parking: formData.parking,
-        area: area,
-        type: formData.purpose === 'venda' ? 'Venda' : 'Aluguel',
-        category: formData.type,
-        features: formData.features,
-        images: formData.photos,
-        owner_id: user.id,
-        featured: false,
-        contact_name: formData.name,
-        contact_email: formData.email,
-        contact_phone: formData.phone,
-        contact_whatsapp: formData.whatsapp,
-        status: 'pending', // Always pending validation per new requirement
-        video_url: formData.videoUrl
-      }).select().single();
-
-      if (error) {
-        console.error('Error creating property:', error);
-        alert(`${userMessages.advertise.createAdError}\nDetalhes: ${error.message}`);
-        setIsSubmitting(false);
+        const createdId = payload?.id as string | undefined;
+        router.push(createdId ? `/sucesso?id=${createdId}` : '/sucesso');
+      } catch (error: unknown) {
+        if (getErrorName(error) === 'AbortError') {
+          alert(didTimeout ? 'O envio demorou demais e foi interrompido. Tente novamente.' : 'Envio interrompido. Tente novamente.');
+          return;
+        }
+        const message = getErrorMessage(error);
+        alert(`${userMessages.advertise.createAdError}\nDetalhes: ${message || 'Erro desconhecido'}`);
         return;
+      } finally {
+        clearTimeout(timeoutId);
       }
-
-      // Redirect to success page which handles the upsell
-      if (data?.id) {
-        router.push(`/sucesso?id=${data.id}`);
-      } else {
-        router.push('/sucesso');
-      }
-      setIsSubmitting(false);
 
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(userMessages.advertise.unexpectedError);
+      return;
+    } finally {
       setIsSubmitting(false);
     }
   };
