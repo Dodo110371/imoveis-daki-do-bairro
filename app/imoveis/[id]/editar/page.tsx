@@ -385,20 +385,22 @@ export default function EditPropertyPage() {
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+    const input = e.currentTarget;
+    const files = input.files ? Array.from(input.files) : [];
+    if (files.length === 0) return;
+
+    setUploadPhotosError(null);
+    cancelPhotoUploadRequestedRef.current = false;
+    setIsUploadingImages(true);
 
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       alert('Você precisa estar logado para enviar fotos.');
-      e.target.value = '';
+      input.value = '';
+      setIsUploadingImages(false);
       return;
     }
-
-    setUploadPhotosError(null);
-    cancelPhotoUploadRequestedRef.current = false;
-    setIsUploadingImages(true);
-    const files = Array.from(e.target.files);
     const newPhotos: string[] = [];
     let skippedCount = 0;
 
@@ -556,7 +558,7 @@ export default function EditPropertyPage() {
       setIsUploadingImages(false);
       cancelPhotoUploadRef.current = null;
       cancelPhotoUploadRequestedRef.current = false;
-      e.target.value = '';
+      input.value = '';
     }
   };
 
@@ -568,18 +570,19 @@ export default function EditPropertyPage() {
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    if (!file) return;
 
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       alert('Você precisa estar logado para enviar vídeo.');
-      if (e.target) e.target.value = '';
+      input.value = '';
       return;
     }
 
     setIsUploadingVideo(true);
-    const file = e.target.files[0];
 
     try {
       if (file.size > 100 * 1024 * 1024) {
@@ -632,7 +635,7 @@ export default function EditPropertyPage() {
       }
     } finally {
       setIsUploadingVideo(false);
-      if (e.target) e.target.value = '';
+      input.value = '';
     }
   };
 
@@ -1163,13 +1166,14 @@ export default function EditPropertyPage() {
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {/* Upload Button */}
-                <label className={`aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors ${isUploadingImages ? 'opacity-50 pointer-events-none' : ''}`}>
+                <label className={`aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors ${isUploadingImages ? 'opacity-50' : ''}`}>
                   <input
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
                     onChange={handlePhotoUpload}
                     className="sr-only"
+                    disabled={isUploadingImages}
                   />
                   {isUploadingImages ? (
                     <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
