@@ -49,9 +49,13 @@ function CadastroContent() {
       }
       
       router.push(redirectUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorLike =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? { message: String((error as { message?: unknown }).message) }
+          : null;
       console.error('Registration error:', error);
-      setErrorMsg(userMessages.auth.registerError(error) || 'Erro ao criar conta. Tente novamente.');
+      setErrorMsg(userMessages.auth.registerError(errorLike) || 'Erro ao criar conta. Tente novamente.');
       setIsSubmitting(false);
     }
   };
@@ -60,7 +64,7 @@ function CadastroContent() {
     try {
       const { error } = await signInWithGoogle(redirectUrl);
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google auth error:', error);
       alert(userMessages.auth.googleError);
     }

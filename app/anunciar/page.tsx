@@ -191,8 +191,35 @@ export default function AdvertisePage() {
   // Form State
   const [formData, setFormData] = useState<AdvertiseFormData>(INITIAL_FORM_DATA);
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = <K extends keyof AdvertiseFormData>(field: K, value: AdvertiseFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof Error) return error.message;
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return String((error as { message?: unknown }).message || '');
+    }
+    return '';
+  };
+
+  const getErrorName = (error: unknown): string => {
+    if (error instanceof Error) return error.name;
+    if (typeof error === 'object' && error !== null && 'name' in error) {
+      return String((error as { name?: unknown }).name || '');
+    }
+    return '';
+  };
+
+  const getErrorStatusCode = (error: unknown): number | undefined => {
+    if (typeof error !== 'object' || error === null || !('statusCode' in error)) return undefined;
+    const raw = (error as { statusCode?: unknown }).statusCode;
+    if (typeof raw === 'number') return raw;
+    if (typeof raw === 'string') {
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : undefined;
+    }
+    return undefined;
   };
 
   const handleTypeSelection = async (type: AdvertiseFormData['advertiserType']) => {
@@ -315,21 +342,25 @@ export default function AdvertisePage() {
     setIsUploadingImages(true);
     const files = Array.from(e.target.files);
     const newPhotos: string[] = [];
+    let skippedCount = 0;
 
     try {
       for (const file of files) {
         if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
         if (file.size > 5 * 1024 * 1024) {
           alert(`O arquivo ${file.name} é muito grande. O limite é de 5MB por foto.`);
+          skippedCount += 1;
           continue;
         }
         const contentType = file.type || guessMimeTypeFromFileName(file.name);
         if (!contentType) {
           alert(`Não foi possível identificar o tipo do arquivo ${file.name}.`);
+          skippedCount += 1;
           continue;
         }
         if (!contentType.startsWith('image/')) {
           alert(`O arquivo ${file.name} não é uma imagem válida.`);
+          skippedCount += 1;
           continue;
         }
         const fileExt = (file.name.split('.').pop() || '').toLowerCase();
@@ -341,6 +372,7 @@ export default function AdvertisePage() {
           fileExt === 'heif'
         ) {
           alert('Formato HEIC/HEIF não é suportado no site. Envie JPG/PNG (no iPhone: Ajustes > Câmera > Formatos > Mais compatível).');
+          skippedCount += 1;
           continue;
         }
 
@@ -355,7 +387,11 @@ export default function AdvertisePage() {
         cancelPhotoUploadRef.current = () => controller.abort();
 
         try {
-          const directPath = `${session.user.id}/${Date.now()}-${crypto.randomUUID()}.${fileExt || 'bin'}`;
+          const uuid =
+            typeof crypto !== 'undefined' && 'randomUUID' in crypto
+              ? crypto.randomUUID()
+              : `${Math.random().toString(16).slice(2)}${Math.random().toString(16).slice(2)}`;
+          const directPath = `${session.user.id}/${Date.now()}-${uuid}.${fileExt || 'bin'}`;
 
           try {
             await uploadToSupabaseStorageViaFetch({
@@ -379,7 +415,7 @@ export default function AdvertisePage() {
             } else {
               throw new Error('UPLOAD_FAILED_NO_URL');
             }
-          } catch (directError: any) {
+          } catch (directError: unknown) {
             const uploadFormData = new FormData();
             uploadFormData.append('file', file);
             uploadFormData.append('contentType', contentType);
@@ -395,8 +431,10 @@ export default function AdvertisePage() {
 
             const payload = await res.json().catch(() => ({}));
             if (!res.ok) {
-              const err = new Error(payload?.error || directError?.message || `UPLOAD_FAILED_${res.status}`);
-              (err as any).statusCode = payload?.statusCode || directError?.statusCode || res.status;
+              const err = new Error(payload?.error || getErrorMessage(directError) || `UPLOAD_FAILED_${res.status}`) as Error & {
+                statusCode?: number | string;
+              };
+              err.statusCode = payload?.statusCode || getErrorStatusCode(directError) || res.status;
               throw err;
             }
 
@@ -406,8 +444,8 @@ export default function AdvertisePage() {
               throw new Error('UPLOAD_FAILED_NO_URL');
             }
           }
-        } catch (err: any) {
-          if (err?.name === 'AbortError') {
+        } catch (err: unknown) {
+          if (getErrorName(err) === 'AbortError') {
             if (didTimeout) throw new Error('UPLOAD_TIMEOUT');
             if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
             throw new Error('UPLOAD_ABORTED');
@@ -419,29 +457,40 @@ export default function AdvertisePage() {
         }
       }
 
+      if (newPhotos.length === 0) {
+        setUploadPhotosError(
+          skippedCount > 0
+            ? 'Nenhuma foto foi enviada. Verifique tamanho (até 5MB) e formato (JPG/PNG/WebP).'
+            : 'Nenhuma foto foi enviada.'
+        );
+        return;
+      }
+
       setFormData(prev => ({
         ...prev,
         photos: [...prev.photos, ...newPhotos]
       }));
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading photos:', error);
+      const message = getErrorMessage(error);
+      const statusCode = getErrorStatusCode(error);
 
       // More specific error handling
-      if (error.message === 'UPLOAD_CANCELED') {
+      if (message === 'UPLOAD_CANCELED') {
         setUploadPhotosError('Upload cancelado.');
-      } else if (error.message === 'UPLOAD_TIMEOUT') {
+      } else if (message === 'UPLOAD_TIMEOUT') {
         setUploadPhotosError('Upload demorou demais e foi interrompido. Tente novamente.');
-      } else if (error.message === 'UPLOAD_ABORTED') {
+      } else if (message === 'UPLOAD_ABORTED') {
         setUploadPhotosError('Upload interrompido. Tente novamente.');
-      } else if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      } else if (statusCode === 403 || message.includes('policy') || message.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
-      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (statusCode === 413 || message.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 5MB por foto.');
-      } else if (error.statusCode === 415 || error.statusCode === '415' || error.message?.toLowerCase?.().includes('mime')) {
+      } else if (statusCode === 415 || message.toLowerCase().includes('mime')) {
         alert('Formato de imagem não suportado. Envie JPG/PNG (se for iPhone, evite HEIC/HEIF).');
       } else {
-        alert(`${userMessages.advertise.uploadError || 'Erro ao fazer upload da imagem.'}\nDetalhes: ${error.message || 'Erro desconhecido'}`);
+        alert(`${userMessages.advertise.uploadError || 'Erro ao fazer upload da imagem.'}\nDetalhes: ${message || 'Erro desconhecido'}`);
       }
     } finally {
       setIsUploadingImages(false);
@@ -511,11 +560,13 @@ export default function AdvertisePage() {
         videoUrl: publicUrl
       }));
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading video:', error);
-      if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      const message = getErrorMessage(error);
+      const statusCode = getErrorStatusCode(error);
+      if (statusCode === 403 || message.includes('policy') || message.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de vídeo.');
-      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (statusCode === 413 || message.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 100MB.');
       } else {
         alert('Erro ao fazer upload do vídeo. Tente novamente.');
@@ -1289,9 +1340,9 @@ export default function AdvertisePage() {
                   <input
                     type="file"
                     multiple
-                    accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                    accept="image/*"
                     onChange={handlePhotoUpload}
-                    className="hidden"
+                    className="sr-only"
                   />
                   {isUploadingImages ? (
                     <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />

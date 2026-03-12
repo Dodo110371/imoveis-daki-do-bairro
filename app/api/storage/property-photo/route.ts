@@ -121,7 +121,7 @@ export async function POST(request: Request) {
     .upload(path, file, { upsert: false, contentType });
 
   if (uploadError) {
-    const rawStatusCode = (uploadError as any).statusCode as unknown;
+    const rawStatusCode = (uploadError as { statusCode?: unknown }).statusCode;
     const statusCode =
       typeof rawStatusCode === "number"
         ? rawStatusCode

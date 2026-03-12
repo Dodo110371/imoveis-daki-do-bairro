@@ -86,8 +86,9 @@ export async function deleteUser(userId: string) {
 
     revalidatePath('/admin/usuarios')
     return { success: true }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Erro desconhecido'
     console.error('Error deleting user:', error)
-    return { success: false, error: error.message }
+    return { success: false, error: message }
   }
 }

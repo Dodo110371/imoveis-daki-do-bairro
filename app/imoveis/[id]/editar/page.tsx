@@ -400,21 +400,25 @@ export default function EditPropertyPage() {
     setIsUploadingImages(true);
     const files = Array.from(e.target.files);
     const newPhotos: string[] = [];
+    let skippedCount = 0;
 
     try {
       for (const file of files) {
         if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
         if (file.size > 5 * 1024 * 1024) {
           alert(`Arquivo ${file.name} é muito grande (máx 5MB).`);
+          skippedCount += 1;
           continue;
         }
         const contentType = file.type || guessMimeTypeFromFileName(file.name);
         if (!contentType) {
           alert(`Não foi possível identificar o tipo do arquivo ${file.name}.`);
+          skippedCount += 1;
           continue;
         }
         if (!contentType.startsWith('image/')) {
           alert(`Arquivo ${file.name} não é uma imagem.`);
+          skippedCount += 1;
           continue;
         }
         const fileExt = (file.name.split('.').pop() || '').toLowerCase();
@@ -439,7 +443,11 @@ export default function EditPropertyPage() {
         cancelPhotoUploadRef.current = () => controller.abort();
 
         try {
-          const directPath = `${session.user.id}/${Date.now()}-${crypto.randomUUID()}.${fileExt || 'bin'}`;
+          const uuid =
+            typeof crypto !== 'undefined' && 'randomUUID' in crypto
+              ? crypto.randomUUID()
+              : `${Math.random().toString(16).slice(2)}${Math.random().toString(16).slice(2)}`;
+          const directPath = `${session.user.id}/${Date.now()}-${uuid}.${fileExt || 'bin'}`;
 
           try {
             await uploadToSupabaseStorageViaFetch({
@@ -509,6 +517,15 @@ export default function EditPropertyPage() {
           clearTimeout(timeoutId);
           cancelPhotoUploadRef.current = null;
         }
+      }
+
+      if (newPhotos.length === 0) {
+        setUploadPhotosError(
+          skippedCount > 0
+            ? 'Nenhuma foto foi enviada. Verifique tamanho (até 5MB) e formato (JPG/PNG/WebP).'
+            : 'Nenhuma foto foi enviada.'
+        );
+        return;
       }
 
       setFormData(prev => ({
@@ -1150,9 +1167,9 @@ export default function EditPropertyPage() {
                   <input
                     type="file"
                     multiple
-                    accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                    accept="image/*"
                     onChange={handlePhotoUpload}
-                    className="hidden"
+                    className="sr-only"
                   />
                   {isUploadingImages ? (
                     <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />

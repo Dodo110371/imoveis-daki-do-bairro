@@ -63,9 +63,13 @@ export default function CadastroCorretorPage() {
       alert('Cadastro de corretor realizado com sucesso!');
       router.push('/anunciar');
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? String((error as { message?: unknown }).message || 'Erro desconhecido')
+          : 'Erro desconhecido';
       console.error('Error registering realtor:', error);
-      alert(`${userMessages.advertise.unexpectedError}\nDetalhes: ${error?.message || 'Erro desconhecido'}`);
+      alert(`${userMessages.advertise.unexpectedError}\nDetalhes: ${message}`);
     } finally {
       setIsSubmitting(false);
     }

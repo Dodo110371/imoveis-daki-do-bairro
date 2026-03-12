@@ -13,15 +13,10 @@ export async function updatePromotionStatus(propertyId: string, status: 'active'
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'admin') throw new Error("Unauthorized");
 
-  const updates: any = {
-    promotion_status: status
+  const updates: { promotion_status: 'active' | 'rejected'; featured: boolean } = {
+    promotion_status: status,
+    featured: status === 'active',
   };
-
-  if (status === 'active') {
-    updates.featured = true;
-  } else {
-    updates.featured = false;
-  }
 
   const { error } = await supabase
     .from('properties')

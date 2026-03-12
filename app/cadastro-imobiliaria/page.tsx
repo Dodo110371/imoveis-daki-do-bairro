@@ -263,7 +263,7 @@ export default function CadastroImobiliariaPage() {
                       </li>
                       <li className="flex items-center gap-3 text-slate-700">
                         <div className="bg-red-100 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-red-600" /></div>
-                        <span className="font-medium">Tag exclusiva "Na Mira" nos cards</span>
+                        <span className="font-medium">Tag exclusiva &quot;Na Mira&quot; nos cards</span>
                       </li>
                     </ul>
                   </div>

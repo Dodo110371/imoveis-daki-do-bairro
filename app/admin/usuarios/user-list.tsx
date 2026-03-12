@@ -6,7 +6,14 @@ import { Trash2, Shield, User as UserIcon, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale' // Importação direta do locale pt-BR
 
-export function UserList({ initialUsers }: { initialUsers: any[] }) {
+type AdminUserRow = {
+  id: string
+  full_name: string | null
+  role: string | null
+  created_at: string | null
+}
+
+export function UserList({ initialUsers }: { initialUsers: AdminUserRow[] }) {
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
   const handleDelete = async (userId: string) => {
