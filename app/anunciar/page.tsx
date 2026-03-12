@@ -336,11 +336,41 @@ export default function AdvertisePage() {
     setIsUploadingImages(true);
 
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    type MinimalSession = { access_token: string; user: { id: string } };
+    let session: MinimalSession | null = null;
+    try {
+      const sessionResult = await Promise.race<{ data: { session: MinimalSession | null } }>([
+        supabase.auth.getSession(),
+        new Promise((_, reject) => {
+          const timeoutId = setTimeout(() => reject(new Error('SESSION_TIMEOUT')), 15000);
+          cancelPhotoUploadRef.current = () => {
+            clearTimeout(timeoutId);
+            cancelPhotoUploadRequestedRef.current = true;
+            reject(new Error('UPLOAD_CANCELED'));
+          };
+        }),
+      ]);
+      session = sessionResult.data.session;
+    } catch (error: unknown) {
+      const message = getErrorMessage(error);
+      if (message === 'UPLOAD_CANCELED') {
+        setUploadPhotosError('Upload cancelado.');
+      } else if (message === 'SESSION_TIMEOUT') {
+        setUploadPhotosError('Não foi possível validar sua sessão. Faça login novamente e tente de novo.');
+      } else {
+        setUploadPhotosError('Não foi possível validar sua sessão. Faça login novamente e tente de novo.');
+      }
+      input.value = '';
+      setIsUploadingImages(false);
+      cancelPhotoUploadRef.current = null;
+      cancelPhotoUploadRequestedRef.current = false;
+      return;
+    }
     if (!session) {
       alert(userMessages.auth.mustBeLoggedInToAdvertise);
       input.value = '';
       setIsUploadingImages(false);
+      cancelPhotoUploadRef.current = null;
       return;
     }
     const newPhotos: string[] = [];
