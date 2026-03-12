@@ -54,18 +54,20 @@ export default function FavoritesPage() {
         .in('id', favorites);
 
       if (data) {
-        const mapped = (data as PropertyRow[]).map((p) => ({
-          id: p.id,
-          title: p.title,
-          price: p.type === 'Aluguel' ? `${formatCurrency(p.price)}/mês` : formatCurrency(p.price),
-          location: p.location,
-          bedrooms: p.bedrooms,
-          bathrooms: p.bathrooms,
-          area: p.area,
-          imageUrl: p.images?.[0] || null,
-          images: p.images || [],
-          type: p.type === 'Aluguel' ? 'Aluguel' : 'Venda',
-        }));
+        const mapped: FavoritePropertyCardProps[] = (data as PropertyRow[]).map(
+          (p): FavoritePropertyCardProps => ({
+            id: p.id,
+            title: p.title,
+            price: p.type === 'Aluguel' ? `${formatCurrency(p.price)}/mês` : formatCurrency(p.price),
+            location: p.location,
+            bedrooms: p.bedrooms,
+            bathrooms: p.bathrooms,
+            area: p.area,
+            imageUrl: p.images?.[0] || null,
+            images: p.images || [],
+            type: p.type === 'Aluguel' ? 'Aluguel' : 'Venda',
+          })
+        );
         setProperties(mapped);
       } else if (error) {
         console.error('Error fetching favorites:', error);

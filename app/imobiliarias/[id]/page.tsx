@@ -20,6 +20,20 @@ type PropertyRow = {
   images?: string[] | null;
 };
 
+type AgencyPropertyCardProps = {
+  id: string;
+  title: string;
+  price: string;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  imageUrl: string | null;
+  images: string[];
+  type: 'Venda' | 'Aluguel';
+  agencyPartner: boolean;
+};
+
 interface AgencyPageProps {
   params: Promise<{
     id: string;
@@ -59,7 +73,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
   };
 
   // Helper to map DB to Card Props
-  const mapProperty = (p: PropertyRow) => ({
+  const mapProperty = (p: PropertyRow): AgencyPropertyCardProps => ({
     id: p.id,
     title: p.title,
     price: p.type === 'Aluguel'
@@ -72,10 +86,10 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     imageUrl: p.images?.[0] || null,
     images: p.images || [],
     type: p.type === 'Aluguel' ? 'Aluguel' : 'Venda',
-    agencyPartner: agency.isPartner,
+    agencyPartner: Boolean(agency.isPartner),
   });
 
-  const agencyProperties = ((propertiesData ?? []) as PropertyRow[]).map(mapProperty);
+  const agencyProperties: AgencyPropertyCardProps[] = ((propertiesData ?? []) as PropertyRow[]).map(mapProperty);
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
