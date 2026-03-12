@@ -110,7 +110,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   // Filter only active properties
-  query = query.eq('status', 'active').order('featured', { ascending: false });
+  query = query
+    .in('status', ['active', 'pending'])
+    .order('featured', { ascending: false })
+    .order('created_at', { ascending: false });
 
   if (city) {
     const cityName = cityData?.name;

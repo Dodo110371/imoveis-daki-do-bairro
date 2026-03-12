@@ -27,7 +27,8 @@ export default async function HomePage() {
   const { data: newData } = await supabase
     .from('properties')
     .select('*')
-    .eq('status', 'active')
+    .in('status', ['active', 'pending'])
+    .neq('featured', true)
     .order('created_at', { ascending: false })
     .limit(3);
 
