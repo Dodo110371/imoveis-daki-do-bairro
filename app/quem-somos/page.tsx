@@ -50,7 +50,7 @@ export default function QuemSomosPage() {
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">Contato Direto</h3>
             <p className="text-slate-600">
-              O interessado entra em contato diretamente com o anunciante através do botão "Entrar em contato".
+              O interessado entra em contato diretamente com o anunciante através do botão &quot;Entrar em contato&quot;.
             </p>
           </div>
         </div>

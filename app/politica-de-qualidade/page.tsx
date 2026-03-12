@@ -29,7 +29,7 @@ export default function QualityPolicyPage() {
               Todos os anúncios devem seguir padrões mínimos de qualidade para serem aceitos e mantidos na plataforma:
             </p>
             <ul className="list-disc pl-6 mb-6 space-y-2">
-              <li><strong>Fotos:</strong> As imagens devem ser reais, claras, com boa iluminação e resolução. Não são permitidas imagens genéricas, de internet, com marcas d'água intrusivas ou que não correspondam ao imóvel anunciado.</li>
+              <li><strong>Fotos:</strong> As imagens devem ser reais, claras, com boa iluminação e resolução. Não são permitidas imagens genéricas, de internet, com marcas d&apos;água intrusivas ou que não correspondam ao imóvel anunciado.</li>
               <li><strong>Descrição:</strong> O texto deve ser detalhado, claro e fiel à realidade do imóvel. Erros excessivos de português, uso exagerado de caixa alta (CAPS LOCK) ou informações confusas devem ser evitados.</li>
               <li><strong>Preço:</strong> O valor informado deve ser o valor real de venda ou locação. Anúncios com valores simbólicos (ex: R$ 1,00) ou enganosos serão removidos.</li>
               <li><strong>Localização:</strong> O endereço e a localização no mapa devem ser precisos.</li>
