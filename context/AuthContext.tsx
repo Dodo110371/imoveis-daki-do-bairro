@@ -26,7 +26,11 @@ interface AuthContextType {
   login: (email: string, password?: string) => Promise<{ error: AuthError }>;
   signInWithGoogle: (redirectUrl?: string) => Promise<{ error: AuthError }>;
   logout: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<{ data?: any; error: AuthError }>;
+  register: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<{ data?: { user?: unknown; session?: unknown } | null; error: AuthError }>;
   updateProfile: (data: Partial<User>) => Promise<{ error: AuthError }>;
   deleteAccount: () => Promise<{ error: AuthError }>;
   resetPasswordForEmail: (email: string) => Promise<{ error: AuthError }>;
@@ -173,7 +177,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // For robustness, we just set the user state with metadata first
         // If we really need the profile from DB, we should handle the race condition
         // where trigger might not have run yet.
-        
+
         // Let's try to fetch, but handle null safely.
         const { data: profile } = await supabase
           .from('profiles')

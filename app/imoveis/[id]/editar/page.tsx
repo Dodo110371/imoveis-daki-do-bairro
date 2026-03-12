@@ -204,9 +204,9 @@ export default function EditPropertyPage() {
         let number = property.number || '';
         let neighborhood = property.neighborhood || '';
         let city = property.city || '';
-        let state = property.state || 'MA';
-        let complement = property.complement || '';
-        let cep = property.cep || '';
+        const state = property.state || 'MA';
+        const complement = property.complement || '';
+        const cep = property.cep || '';
 
         // Fallback to location parsing if new fields are empty but location exists
         if ((!street || !city) && property.location) {
@@ -289,8 +289,35 @@ export default function EditPropertyPage() {
     }
   }, [isAuthenticated, isAuthLoading, user, params.id, router]);
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = <K extends keyof typeof formData>(
+    field: K,
+    value: (typeof formData)[K]
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const getErrorName = (err: unknown) => {
+    if (!err || typeof err !== 'object') return undefined;
+    if (!('name' in err)) return undefined;
+    const name = (err as { name?: unknown }).name;
+    return typeof name === 'string' ? name : undefined;
+  };
+
+  const getErrorMessage = (err: unknown) => {
+    if (err instanceof Error) return err.message;
+    return typeof err === 'string' ? err : 'Erro desconhecido';
+  };
+
+  const getErrorStatusCode = (err: unknown): number | undefined => {
+    if (!err || typeof err !== 'object') return undefined;
+    if (!('statusCode' in err)) return undefined;
+    const raw = (err as { statusCode?: unknown }).statusCode;
+    if (typeof raw === 'number') return raw;
+    if (typeof raw === 'string') {
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : undefined;
+    }
+    return undefined;
   };
 
   const fetchAddressByCep = async (cep: string) => {
@@ -424,8 +451,12 @@ export default function EditPropertyPage() {
 
           const payload = await res.json().catch(() => ({}));
           if (!res.ok) {
-            const err = new Error(payload?.error || `UPLOAD_FAILED_${res.status}`);
-            (err as any).statusCode = payload?.statusCode || res.status;
+            const err: Error & { statusCode?: number } = new Error(
+              (payload as { error?: string } | undefined)?.error || `UPLOAD_FAILED_${res.status}`
+            );
+            const statusCode =
+              (payload as { statusCode?: number | string } | undefined)?.statusCode ?? res.status;
+            err.statusCode = typeof statusCode === 'number' ? statusCode : Number(statusCode);
             throw err;
           }
 
@@ -434,8 +465,8 @@ export default function EditPropertyPage() {
           } else {
             throw new Error('UPLOAD_FAILED_NO_URL');
           }
-        } catch (err: any) {
-          if (err?.name === 'AbortError') {
+        } catch (err: unknown) {
+          if (getErrorName(err) === 'AbortError') {
             if (didTimeout) throw new Error('UPLOAD_TIMEOUT');
             if (cancelPhotoUploadRequestedRef.current) throw new Error('UPLOAD_CANCELED');
             throw new Error('UPLOAD_ABORTED');
@@ -452,22 +483,24 @@ export default function EditPropertyPage() {
         photos: [...prev.photos, ...newPhotos]
       }));
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading photos:', error);
-      if (error.message === 'UPLOAD_CANCELED') {
+      const message = getErrorMessage(error);
+      const statusCode = getErrorStatusCode(error);
+      if (message === 'UPLOAD_CANCELED') {
         setUploadPhotosError('Upload cancelado.');
-      } else if (error.message === 'UPLOAD_TIMEOUT') {
+      } else if (message === 'UPLOAD_TIMEOUT') {
         setUploadPhotosError('Upload demorou demais e foi interrompido. Tente novamente.');
-      } else if (error.message === 'UPLOAD_ABORTED') {
+      } else if (message === 'UPLOAD_ABORTED') {
         setUploadPhotosError('Upload interrompido. Tente novamente.');
-      } else if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      } else if (statusCode === 403 || message.includes('policy') || message.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de fotos. Verifique se você está logado corretamente.');
-      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (statusCode === 413 || message.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 5MB por foto.');
-      } else if (error.statusCode === 415 || error.statusCode === '415' || error.message?.toLowerCase?.().includes('mime')) {
+      } else if (statusCode === 415 || message.toLowerCase().includes('mime')) {
         alert('Formato de imagem não suportado. Envie JPG/PNG (se for iPhone, evite HEIC/HEIF).');
       } else {
-        alert(`Erro ao fazer upload das imagens.\nDetalhes: ${error.message || 'Erro desconhecido'}`);
+        alert(`Erro ao fazer upload das imagens.\nDetalhes: ${message}`);
       }
     } finally {
       setIsUploadingImages(false);
@@ -536,11 +569,13 @@ export default function EditPropertyPage() {
         videoUrl: publicUrl
       }));
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading video:', error);
-      if (error.statusCode === 403 || error.statusCode === '403' || error.message?.includes('policy') || error.message?.includes('permission')) {
+      const message = getErrorMessage(error);
+      const statusCode = getErrorStatusCode(error);
+      if (statusCode === 403 || message.includes('policy') || message.includes('permission')) {
         alert('Erro de permissão: Você não tem autorização para fazer upload de vídeo.');
-      } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
+      } else if (statusCode === 413 || message.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 100MB.');
       } else {
         alert('Erro ao fazer upload do vídeo. Tente novamente.');

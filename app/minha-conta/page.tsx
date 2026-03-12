@@ -43,12 +43,29 @@ function MinhaContaContent() {
   });
 
   const [isRealtor, setIsRealtor] = useState(false);
-  const [myProperties, setMyProperties] = useState<any[]>([]);
+  const [myProperties, setMyProperties] = useState<
+    Array<{
+      id: string;
+      title: string;
+      price: number;
+      type: string;
+      location: string;
+      images?: string[] | null;
+      status?: string;
+    }>
+  >([]);
   const { login, register, signInWithGoogle, isLoading, user, isAuthenticated, logout, updateProfile, deleteAccount } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const toErrorLike = (error: unknown): { message?: string } | null => {
+    if (!error || typeof error !== 'object') return null;
+    if (!('message' in error)) return null;
+    const message = (error as { message?: unknown }).message;
+    return typeof message === 'string' ? { message } : null;
+  };
 
   const fetchAddressByCep = async (cep: string) => {
     try {
@@ -173,9 +190,10 @@ function MinhaContaContent() {
         }
       }
       router.push(redirectUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Authentication error:', error);
-      setErrorMsg(isLogin ? (userMessages.auth.loginError(error) || 'Erro ao entrar. Verifique suas credenciais.') : (userMessages.auth.registerError(error) || 'Erro ao criar conta. Tente novamente.'));
+      const errorLike = toErrorLike(error);
+      setErrorMsg(isLogin ? (userMessages.auth.loginError(errorLike) || 'Erro ao entrar. Verifique suas credenciais.') : (userMessages.auth.registerError(errorLike) || 'Erro ao criar conta. Tente novamente.'));
     }
   };
 
@@ -183,7 +201,7 @@ function MinhaContaContent() {
     try {
       const { error } = await signInWithGoogle();
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google auth error:', error);
       alert(userMessages.auth.googleError);
     }
@@ -196,7 +214,7 @@ function MinhaContaContent() {
       if (error) throw error;
       setIsEditing(false);
       alert(userMessages.auth.profileUpdateSuccess);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating profile:', error);
       alert(userMessages.auth.profileUpdateError);
     }
@@ -243,7 +261,7 @@ function MinhaContaContent() {
         .getPublicUrl(filePath);
 
       await updateProfile({ avatar_url: publicUrl });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading avatar:', error);
       alert(userMessages.auth.avatarUploadError);
     } finally {
@@ -257,7 +275,7 @@ function MinhaContaContent() {
       const { error } = await deleteAccount();
       if (error) throw error;
       alert(userMessages.auth.deleteAccountSuccess);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting account:', error);
       alert(userMessages.auth.deleteAccountError);
     }

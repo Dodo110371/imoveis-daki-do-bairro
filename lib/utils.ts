@@ -7,15 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatCurrencyInput(value: string | number): string {
   if (!value) return '';
-  
+
   // Remove non-digits
   const numericValue = value.toString().replace(/\D/g, '');
-  
+
   if (!numericValue) return '';
-  
+
   // Convert to number and divide by 100
   const floatValue = parseFloat(numericValue) / 100;
-  
+
   // Format number part only (e.g. 1.234,56)
   return floatValue.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
@@ -108,8 +108,10 @@ export async function uploadToSupabaseStorageViaFetch(params: {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    const err = new Error(text || `UPLOAD_FAILED_${res.status}`);
-    (err as any).statusCode = res.status;
+    const err: Error & { statusCode?: number } = new Error(
+      text || `UPLOAD_FAILED_${res.status}`
+    );
+    err.statusCode = res.status;
     throw err;
   }
 }

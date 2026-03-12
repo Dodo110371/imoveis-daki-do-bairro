@@ -8,9 +8,34 @@ import Link from 'next/link';
 import { Heart, Home } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
+type PropertyRow = {
+  id: string;
+  title: string;
+  price: number;
+  type: string;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  images?: string[] | null;
+};
+
+type FavoritePropertyCardProps = {
+  id: string;
+  title: string;
+  price: string;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  imageUrl: string | null;
+  images: string[];
+  type: 'Venda' | 'Aluguel';
+};
+
 export default function FavoritesPage() {
   const { favorites, isLoading: isContextLoading } = useFavorites();
-  const [properties, setProperties] = useState<any[]>([]);
+  const [properties, setProperties] = useState<FavoritePropertyCardProps[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,17 +54,17 @@ export default function FavoritesPage() {
         .in('id', favorites);
 
       if (data) {
-        const mapped = data.map(p => ({
-            id: p.id,
-            title: p.title,
-            price: p.type === 'Aluguel' ? `${formatCurrency(p.price)}/mês` : formatCurrency(p.price),
-            location: p.location,
-            bedrooms: p.bedrooms,
-            bathrooms: p.bathrooms,
-            area: p.area,
-            imageUrl: p.images?.[0] || null,
-            images: p.images || [],
-            type: p.type,
+        const mapped = (data as PropertyRow[]).map((p) => ({
+          id: p.id,
+          title: p.title,
+          price: p.type === 'Aluguel' ? `${formatCurrency(p.price)}/mês` : formatCurrency(p.price),
+          location: p.location,
+          bedrooms: p.bedrooms,
+          bathrooms: p.bathrooms,
+          area: p.area,
+          imageUrl: p.images?.[0] || null,
+          images: p.images || [],
+          type: p.type === 'Aluguel' ? 'Aluguel' : 'Venda',
         }));
         setProperties(mapped);
       } else if (error) {
@@ -54,11 +79,11 @@ export default function FavoritesPage() {
   }, [favorites, isContextLoading]);
 
   if (isContextLoading || (loading && favorites.length > 0)) {
-     return (
-        <div className="min-h-screen bg-slate-50 py-12 flex justify-center items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-     );
+    return (
+      <div className="min-h-screen bg-slate-50 py-12 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   return (
@@ -83,28 +108,28 @@ export default function FavoritesPage() {
         ) : (
           <div className="text-center py-16 bg-white rounded-xl border border-slate-100 shadow-sm max-w-2xl mx-auto">
             <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-10 h-10 text-slate-300" />
+              <Heart className="w-10 h-10 text-slate-300" />
             </div>
             <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                Você ainda não tem favoritos
+              Você ainda não tem favoritos
             </h2>
             <p className="text-slate-500 mb-8 max-w-md mx-auto">
               Explore nossos imóveis e clique no ícone de coração para salvar os que você mais gostar.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
+              <Link
                 href="/comprar"
                 className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-                >
+              >
                 <Home className="w-4 h-4 mr-2" />
                 Ver Imóveis à Venda
-                </Link>
-                <Link
+              </Link>
+              <Link
                 href="/alugar"
                 className="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors font-semibold"
-                >
+              >
                 Ver Imóveis para Alugar
-                </Link>
+              </Link>
             </div>
           </div>
         )}

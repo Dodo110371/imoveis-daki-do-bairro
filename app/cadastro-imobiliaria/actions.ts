@@ -17,7 +17,19 @@ export async function registerAgency(formData: FormData) {
   const phone = formData.get('phone') as string;
   const address = formData.get('address') as string;
   const description = formData.get('description') as string;
-  const plan = formData.get('plan') as string;
+  const rawPlan = (formData.get('plan') as string) || '';
+  const plan =
+    rawPlan === 'plan-5'
+      ? 'bronze'
+      : rawPlan === 'plan-10'
+        ? 'silver'
+        : rawPlan === 'plan-15' || rawPlan === 'plan-20'
+          ? 'gold'
+          : rawPlan;
+
+  if (!['free', 'bronze', 'silver', 'gold'].includes(plan)) {
+    return { error: 'Plano inválido. Selecione um plano novamente.' };
+  }
 
   // Insert into agencies table
   // Note: This assumes the table has 'owner_id' and 'status' columns.
@@ -38,11 +50,11 @@ export async function registerAgency(formData: FormData) {
 
   if (error) {
     console.error('Error registering agency:', error);
-    return { error: 'Erro ao cadastrar imobiliária. Tente novamente.' };
+    return { error: error.message || 'Erro ao cadastrar imobiliária. Tente novamente.' };
   }
 
   // Optionally, update user role to 'agency_owner' if needed, but 'user' is fine for now.
-  
+
   revalidatePath('/imobiliarias');
   return { success: true };
 }

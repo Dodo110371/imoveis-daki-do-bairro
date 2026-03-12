@@ -57,7 +57,7 @@ function SucessoContent() {
         alert('Não foi possível identificar o tipo do comprovante.');
         return;
       }
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('properties')
         .upload(fileName, receiptFile, { upsert: false, contentType });
 
@@ -79,9 +79,10 @@ function SucessoContent() {
 
       setRequestSent(true);
       setPromotionStatus('pending');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error requesting highlight:', error);
-      alert('Erro ao solicitar destaque: ' + (error.message || 'Erro desconhecido'));
+      const message = error instanceof Error ? error.message : 'Erro desconhecido';
+      alert('Erro ao solicitar destaque: ' + message);
     } finally {
       setIsSubmitting(false);
     }
@@ -163,7 +164,7 @@ function SucessoContent() {
                       )
                     ) : (
                       <span className="text-sm text-amber-600 font-medium">
-                        Disponível em "Meus Imóveis"
+                        Disponível em &quot;Meus Imóveis&quot;
                       </span>
                     )}
                   </div>

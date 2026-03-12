@@ -374,7 +374,7 @@ function PaymentContent() {
                   {/* Star mockup with CSS or SVG would be better, using text for now */}
                   <span className="text-yellow-500 text-sm">★★★★★</span>
                 </div>
-                <p className="text-sm text-slate-700 italic">"Vendi meu imóvel em 2 semanas usando o plano trimestral. Vale muito a pena!"</p>
+                <p className="text-sm text-slate-700 italic">&quot;Vendi meu imóvel em 2 semanas usando o plano trimestral. Vale muito a pena!&quot;</p>
                 <p className="text-xs font-bold text-slate-900 mt-2">- Roberto S., São Luís</p>
               </div>
             </div>

@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
       if (error) throw error;
       setIsSuccess(true);
       alert(userMessages.password.resetRequestSuccess);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending reset email:', error);
       alert(userMessages.password.resetRequestError);
     } finally {

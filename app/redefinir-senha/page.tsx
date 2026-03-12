@@ -28,7 +28,7 @@ function RedefinirSenhaContent() {
       setTimeout(() => {
         router.push('/minha-conta');
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating password:', error);
       alert(userMessages.password.updateError);
     } finally {

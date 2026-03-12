@@ -8,6 +8,18 @@ import { ContactEventLink } from "@/components/ContactEventLink";
 import { AgencyPartnerBadge } from "@/components/AgencyPartnerBadge";
 import { formatCurrency } from "@/lib/utils";
 
+type PropertyRow = {
+  id: string;
+  title: string;
+  price: number;
+  type: string;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  images?: string[] | null;
+};
+
 interface AgencyPageProps {
   params: Promise<{
     id: string;
@@ -47,11 +59,11 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
   };
 
   // Helper to map DB to Card Props
-  const mapProperty = (p: any) => ({
+  const mapProperty = (p: PropertyRow) => ({
     id: p.id,
     title: p.title,
-    price: p.type === 'Aluguel' 
-      ? `${formatCurrency(p.price)}/mês` 
+    price: p.type === 'Aluguel'
+      ? `${formatCurrency(p.price)}/mês`
       : formatCurrency(p.price),
     location: p.location,
     bedrooms: p.bedrooms,
@@ -59,11 +71,11 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
     area: p.area,
     imageUrl: p.images?.[0] || null,
     images: p.images || [],
-    type: p.type,
+    type: p.type === 'Aluguel' ? 'Aluguel' : 'Venda',
     agencyPartner: agency.isPartner,
   });
 
-  const agencyProperties = propertiesData?.map(mapProperty) || [];
+  const agencyProperties = ((propertiesData ?? []) as PropertyRow[]).map(mapProperty);
 
   return (
     <main className="min-h-screen bg-slate-50 pb-16">
