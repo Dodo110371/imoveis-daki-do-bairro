@@ -335,44 +335,6 @@ export default function AdvertisePage() {
     cancelPhotoUploadRequestedRef.current = false;
     setIsUploadingImages(true);
 
-    const supabase = createClient();
-    type MinimalSession = { access_token: string; user: { id: string } };
-    let session: MinimalSession | null = null;
-    try {
-      const sessionResult = await Promise.race<{ data: { session: MinimalSession | null } }>([
-        supabase.auth.getSession(),
-        new Promise((_, reject) => {
-          const timeoutId = setTimeout(() => reject(new Error('SESSION_TIMEOUT')), 15000);
-          cancelPhotoUploadRef.current = () => {
-            clearTimeout(timeoutId);
-            cancelPhotoUploadRequestedRef.current = true;
-            reject(new Error('UPLOAD_CANCELED'));
-          };
-        }),
-      ]);
-      session = sessionResult.data.session;
-    } catch (error: unknown) {
-      const message = getErrorMessage(error);
-      if (message === 'UPLOAD_CANCELED') {
-        setUploadPhotosError('Upload cancelado.');
-      } else if (message === 'SESSION_TIMEOUT') {
-        setUploadPhotosError('Não foi possível validar sua sessão. Faça login novamente e tente de novo.');
-      } else {
-        setUploadPhotosError('Não foi possível validar sua sessão. Faça login novamente e tente de novo.');
-      }
-      input.value = '';
-      setIsUploadingImages(false);
-      cancelPhotoUploadRef.current = null;
-      cancelPhotoUploadRequestedRef.current = false;
-      return;
-    }
-    if (!session) {
-      alert(userMessages.auth.mustBeLoggedInToAdvertise);
-      input.value = '';
-      setIsUploadingImages(false);
-      cancelPhotoUploadRef.current = null;
-      return;
-    }
     const newPhotos: string[] = [];
     let skippedCount = 0;
 
@@ -419,62 +381,29 @@ export default function AdvertisePage() {
         cancelPhotoUploadRef.current = () => controller.abort();
 
         try {
-          const uuid =
-            typeof crypto !== 'undefined' && 'randomUUID' in crypto
-              ? crypto.randomUUID()
-              : `${Math.random().toString(16).slice(2)}${Math.random().toString(16).slice(2)}`;
-          const directPath = `${session.user.id}/${Date.now()}-${uuid}.${fileExt || 'bin'}`;
+          const uploadFormData = new FormData();
+          uploadFormData.append('file', file);
+          uploadFormData.append('contentType', contentType);
 
-          try {
-            await uploadToSupabaseStorageViaFetch({
-              supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-              anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-              accessToken: session.access_token,
-              bucket: 'properties',
-              path: directPath,
-              file,
-              contentType,
-              upsert: false,
-              signal: controller.signal,
-            });
+          const res = await fetch('/api/storage/property-photo', {
+            method: 'POST',
+            body: uploadFormData,
+            signal: controller.signal,
+          });
 
-            const { data: { publicUrl } } = supabase.storage
-              .from('properties')
-              .getPublicUrl(directPath);
+          const payload = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            const err = new Error(payload?.error || `UPLOAD_FAILED_${res.status}`) as Error & {
+              statusCode?: number | string;
+            };
+            err.statusCode = payload?.statusCode || res.status;
+            throw err;
+          }
 
-            if (publicUrl) {
-              newPhotos.push(publicUrl);
-            } else {
-              throw new Error('UPLOAD_FAILED_NO_URL');
-            }
-          } catch (directError: unknown) {
-            const uploadFormData = new FormData();
-            uploadFormData.append('file', file);
-            uploadFormData.append('contentType', contentType);
-
-            const res = await fetch('/api/storage/property-photo', {
-              method: 'POST',
-              headers: {
-                authorization: `Bearer ${session.access_token}`,
-              },
-              body: uploadFormData,
-              signal: controller.signal,
-            });
-
-            const payload = await res.json().catch(() => ({}));
-            if (!res.ok) {
-              const err = new Error(payload?.error || getErrorMessage(directError) || `UPLOAD_FAILED_${res.status}`) as Error & {
-                statusCode?: number | string;
-              };
-              err.statusCode = payload?.statusCode || getErrorStatusCode(directError) || res.status;
-              throw err;
-            }
-
-            if (payload?.publicUrl) {
-              newPhotos.push(payload.publicUrl);
-            } else {
-              throw new Error('UPLOAD_FAILED_NO_URL');
-            }
+          if (payload?.publicUrl) {
+            newPhotos.push(payload.publicUrl);
+          } else {
+            throw new Error('UPLOAD_FAILED_NO_URL');
           }
         } catch (err: unknown) {
           if (getErrorName(err) === 'AbortError') {
