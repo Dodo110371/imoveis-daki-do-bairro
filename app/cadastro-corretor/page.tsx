@@ -33,22 +33,27 @@ export default function CadastroCorretorPage() {
 
     try {
       // Check if already registered
-      const { data: existing } = await supabase
+      const { data: existing, error: existingError } = await supabase
         .from('realtors')
         .select('id')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (existingError) {
+        throw existingError;
+      }
 
       if (existing) {
         alert('Você já possui cadastro como corretor!');
         router.push('/corretores/' + user.id);
+        router.refresh();
         return;
       }
 
       const { error } = await supabase.from('realtors').insert({
         id: user.id,
         creci: formData.creci,
-        whatsapp: formData.whatsapp.replace(/\D/g, ''), // Remove non-digits
+        whatsapp: formData.whatsapp.replace(/\D/g, ''),
         bio: formData.bio,
         regions: formData.regions.split(',').map(r => r.trim()).filter(r => r)
       });
@@ -57,9 +62,10 @@ export default function CadastroCorretorPage() {
 
       alert('Cadastro de corretor realizado com sucesso!');
       router.push('/anunciar');
+      router.refresh();
     } catch (error: any) {
       console.error('Error registering realtor:', error);
-      alert(userMessages.advertise.unexpectedError);
+      alert(`${userMessages.advertise.unexpectedError}\nDetalhes: ${error?.message || 'Erro desconhecido'}`);
     } finally {
       setIsSubmitting(false);
     }

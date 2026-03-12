@@ -390,6 +390,17 @@ export default function EditPropertyPage() {
           alert(`Arquivo ${file.name} não é uma imagem.`);
           continue;
         }
+        const fileExt = (file.name.split('.').pop() || '').toLowerCase();
+        const normalizedContentType = contentType.toLowerCase();
+        if (
+          normalizedContentType === 'image/heic' ||
+          normalizedContentType === 'image/heif' ||
+          fileExt === 'heic' ||
+          fileExt === 'heif'
+        ) {
+          alert('Formato HEIC/HEIF não é suportado no site. Envie JPG/PNG (no iPhone: Ajustes > Câmera > Formatos > Mais compatível).');
+          continue;
+        }
         const controller = new AbortController();
         let didTimeout = false;
         const timeoutMs = 60000;
@@ -454,7 +465,7 @@ export default function EditPropertyPage() {
       } else if (error.statusCode === 413 || error.statusCode === '413' || error.message?.includes('too large')) {
         alert('O arquivo é muito grande. O limite é de 5MB por foto.');
       } else if (error.statusCode === 415 || error.statusCode === '415' || error.message?.toLowerCase?.().includes('mime')) {
-        alert('Formato de imagem não suportado. Tente enviar JPEG ou PNG.');
+        alert('Formato de imagem não suportado. Envie JPG/PNG (se for iPhone, evite HEIC/HEIF).');
       } else {
         alert(`Erro ao fazer upload das imagens.\nDetalhes: ${error.message || 'Erro desconhecido'}`);
       }
@@ -1071,7 +1082,7 @@ export default function EditPropertyPage() {
                   <input
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
                     onChange={handlePhotoUpload}
                     className="hidden"
                   />

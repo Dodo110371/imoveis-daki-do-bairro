@@ -56,6 +56,19 @@ export async function POST(request: Request) {
   }
 
   const fileExt = (file.name.split(".").pop() || "bin").toLowerCase();
+  const normalizedContentType = contentType.toLowerCase();
+  const isHeic =
+    normalizedContentType === "image/heic" ||
+    normalizedContentType === "image/heif" ||
+    fileExt === "heic" ||
+    fileExt === "heif";
+
+  if (isHeic) {
+    return NextResponse.json(
+      { error: "HEIC/HEIF images are not supported. Use JPEG or PNG." },
+      { status: 415 }
+    );
+  }
   const path = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
 
   const supabaseAdmin = createAdminClient(
