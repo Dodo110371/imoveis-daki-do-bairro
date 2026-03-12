@@ -355,30 +355,56 @@ export default function AdvertisePage() {
         cancelPhotoUploadRef.current = () => controller.abort();
 
         try {
-          const uploadFormData = new FormData();
-          uploadFormData.append('file', file);
-          uploadFormData.append('contentType', contentType);
+          const directPath = `${session.user.id}/${Date.now()}-${crypto.randomUUID()}.${fileExt || 'bin'}`;
 
-          const res = await fetch('/api/storage/property-photo', {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${session.access_token}`,
-            },
-            body: uploadFormData,
-            signal: controller.signal,
-          });
+          try {
+            await uploadToSupabaseStorageViaFetch({
+              supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+              anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+              accessToken: session.access_token,
+              bucket: 'properties',
+              path: directPath,
+              file,
+              contentType,
+              upsert: false,
+              signal: controller.signal,
+            });
 
-          const payload = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            const err = new Error(payload?.error || `UPLOAD_FAILED_${res.status}`);
-            (err as any).statusCode = payload?.statusCode || res.status;
-            throw err;
-          }
+            const { data: { publicUrl } } = supabase.storage
+              .from('properties')
+              .getPublicUrl(directPath);
 
-          if (payload?.publicUrl) {
-            newPhotos.push(payload.publicUrl);
-          } else {
-            throw new Error('UPLOAD_FAILED_NO_URL');
+            if (publicUrl) {
+              newPhotos.push(publicUrl);
+            } else {
+              throw new Error('UPLOAD_FAILED_NO_URL');
+            }
+          } catch (directError: any) {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+            uploadFormData.append('contentType', contentType);
+
+            const res = await fetch('/api/storage/property-photo', {
+              method: 'POST',
+              headers: {
+                authorization: `Bearer ${session.access_token}`,
+              },
+              body: uploadFormData,
+              signal: controller.signal,
+            });
+
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) {
+              const err = new Error(payload?.error || directError?.message || `UPLOAD_FAILED_${res.status}`);
+              (err as any).statusCode = payload?.statusCode || directError?.statusCode || res.status;
+              throw err;
+            }
+
+            if (payload?.publicUrl) {
+              newPhotos.push(payload.publicUrl);
+            } else {
+              throw new Error('UPLOAD_FAILED_NO_URL');
+            }
           }
         } catch (err: any) {
           if (err?.name === 'AbortError') {
