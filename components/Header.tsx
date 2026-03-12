@@ -18,13 +18,18 @@ export function Header() {
         setIsMenuOpen(false);
     };
 
+    const handleLogoClick = () => {
+        setIsMenuOpen(false);
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    };
+
     return (
         <>
             <header className="print:hidden sticky top-0 z-40 w-full border-b border-white/10 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 shadow-lg text-white">
                 <div className="container mx-auto flex h-20 items-center justify-between px-4">
                     {/* Logo Section - Left */}
                     <div className="flex-1 flex justify-start">
-                        <Link href="/" className="flex items-center space-x-2">
+                        <Link href="/" className="flex items-center space-x-2" onClick={handleLogoClick}>
                             <div className="flex items-center gap-3 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm border border-white/5 hover:bg-white/20 transition-colors">
                                 <div className="relative h-10 w-10 md:h-12 md:w-12 shrink-0">
                                     <Image
