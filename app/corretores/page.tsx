@@ -102,7 +102,7 @@ export default async function CorretoresPage() {
                       src={realtor.photo}
                       alt={realtor.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover object-[50%_20%] group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <User className="w-16 h-16 text-slate-300" />
