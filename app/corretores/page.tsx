@@ -17,7 +17,7 @@ type RealtorRow = {
   bio?: string | null;
   regions?: string[] | null;
   whatsapp?: string | null;
-  profiles?: RealtorProfile[] | null;
+  profiles?: RealtorProfile | RealtorProfile[] | null;
 };
 
 type RealtorCard = {
@@ -50,7 +50,7 @@ export default async function CorretoresPage() {
     `);
 
   const realtors: RealtorCard[] = (realtorsData || []).map((r: RealtorRow) => {
-    const profile = r.profiles?.[0];
+    const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
 
     return {
       id: r.id,
