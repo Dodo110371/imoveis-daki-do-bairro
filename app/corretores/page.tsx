@@ -95,14 +95,14 @@ export default async function CorretoresPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {realtors.map((realtor) => (
               <div key={realtor.id} className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group">
-                <div className="relative h-48 bg-slate-100 flex items-center justify-center">
+                <div className="relative h-56 bg-slate-100 flex items-center justify-center">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
                   {realtor.photo ? (
                     <Image
                       src={realtor.photo}
                       alt={realtor.name}
                       fill
-                      className="object-cover object-[50%_20%] group-hover:scale-105 transition-transform duration-500"
+                      className="object-contain object-center transition-opacity duration-300"
                     />
                   ) : (
                     <User className="w-16 h-16 text-slate-300" />
