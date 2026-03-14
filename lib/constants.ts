@@ -40,7 +40,7 @@ export const CITY_NEIGHBORHOODS = {
     "Parque Shalom", "Parque Timbira", "Parque Universitário", "Pedrinhas", "Piancó", "Pirapora",
     "Planalto Turu", "Planalto Vinhais", "Ponta d'Areia", "Ponta do Farol", "Praia Grande",
     "Quebra Pote", "Quintas do Calhau", "Recanto dos Vinhais", "Redenção", "Renascença",
-    "Residencial Pinheiros", "Retiro Natal", "Rio Grande", "Sá Viana", "Sacavém", "Santa Bárbara",
+    "Residencial Canaã", "Residencial Pinheiros", "Retiro Natal", "Rio Grande", "Sá Viana", "Sacavém", "Santa Bárbara",
     "Santa Clara", "Santa Cruz", "Santa Efigênia", "Santa Helena", "Santa Rosa", "Santo Antônio",
     "São Bernardo", "São Cristóvão", "São Francisco", "São Joaquim", "São Marcos", "São Raimundo",
     "Sítio Leal", "Solar dos Lusitanos", "Tajaçuaba", "Tibiri", "Tirirical", "Turu", "Vera Cruz",
