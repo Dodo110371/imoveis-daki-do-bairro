@@ -249,9 +249,24 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             {/* Description */}
             <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
               <h2 className="mb-4 text-xl font-bold text-slate-900">Sobre o Imóvel</h2>
-              <p className="text-slate-600 leading-relaxed">
-                {property.description}
-              </p>
+              <div className="text-slate-600 leading-relaxed">
+                {String(property.description || '')
+                  .split(/\n\s*\n/g)
+                  .filter((p) => p.trim().length > 0)
+                  .map((paragraph, idx) => {
+                    const lines = paragraph.split('\n');
+                    return (
+                      <p key={idx} className="mb-4 last:mb-0">
+                        {lines.map((line, lineIdx) => (
+                          <span key={lineIdx}>
+                            {line}
+                            {lineIdx < lines.length - 1 ? <br /> : null}
+                          </span>
+                        ))}
+                      </p>
+                    );
+                  })}
+              </div>
             </div>
 
             {/* Features List */}

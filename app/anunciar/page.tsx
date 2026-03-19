@@ -1300,11 +1300,11 @@ export default function AdvertisePage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Descrição Detalhada</label>
                 <textarea
-                  rows={5}
+                  rows={10}
                   placeholder="Descreva os pontos fortes do imóvel, acabamentos, localização, etc."
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 resize-none"
+                  className="w-full min-h-[220px] p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 resize-y leading-relaxed"
                 />
               </div>
             </div>
