@@ -29,7 +29,7 @@ import {
   Key
 } from 'lucide-react';
 import Image from 'next/image';
-import { CITY_NEIGHBORHOODS } from '@/lib/constants';
+import { CITY_NEIGHBORHOODS, NEIGHBORHOOD_CEPS } from '@/lib/constants';
 import { useAuth } from '@/context/AuthContext';
 import { userMessages } from '@/lib/user-messages';
 import { PageViewTracker } from '@/components/PageViewTracker';
@@ -748,6 +748,10 @@ export default function AdvertisePage() {
 
   const neighborhoods = formData.city ? CITY_NEIGHBORHOODS[formData.city as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
   const advertiserNeighborhoods = formData.advertiserCity ? CITY_NEIGHBORHOODS[formData.advertiserCity as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
+  const getNeighborhoodLabel = (cityKey: string, neighborhood: string) => {
+    const cep = NEIGHBORHOOD_CEPS[cityKey]?.[neighborhood];
+    return cep ? `${neighborhood} (${cep})` : neighborhood;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden relative">
@@ -1053,13 +1057,33 @@ export default function AdvertisePage() {
                   <label className="text-sm font-medium text-slate-700">Bairro</label>
                   <select
                     value={formData.neighborhood}
-                    onChange={(e) => handleInputChange('neighborhood', e.target.value)}
+                    onChange={async (e) => {
+                      const nextNeighborhood = e.target.value;
+                      handleInputChange('neighborhood', nextNeighborhood);
+                      if (!formData.city || !nextNeighborhood) return;
+                      const mappedCep = NEIGHBORHOOD_CEPS[formData.city]?.[nextNeighborhood];
+                      if (!mappedCep) return;
+                      handleInputChange('cep', mappedCep);
+                      const cepDigits = mappedCep.replace(/\D/g, '');
+                      if (cepDigits.length !== 8) return;
+                      setIsLoadingCep(true);
+                      const address = await fetchAddressByCep(cepDigits);
+                      setIsLoadingCep(false);
+                      if (!address) return;
+                      setFormData(prev => ({
+                        ...prev,
+                        street: address.street || prev.street,
+                        city: address.city || prev.city,
+                        neighborhood: nextNeighborhood || prev.neighborhood,
+                        complement: address.complement || prev.complement,
+                      }));
+                    }}
                     disabled={!formData.city}
                     className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-slate-100 disabled:text-slate-400"
                   >
                     <option value="">Selecione...</option>
                     {neighborhoods.map((n) => (
-                      <option key={n} value={n}>{n}</option>
+                      <option key={n} value={n}>{getNeighborhoodLabel(formData.city, n)}</option>
                     ))}
                   </select>
                 </div>
@@ -1660,13 +1684,33 @@ export default function AdvertisePage() {
                           <label className="text-sm font-medium text-slate-700">Bairro</label>
                           <select
                             value={formData.advertiserNeighborhood}
-                            onChange={(e) => handleInputChange('advertiserNeighborhood', e.target.value)}
+                            onChange={async (e) => {
+                              const nextNeighborhood = e.target.value;
+                              handleInputChange('advertiserNeighborhood', nextNeighborhood);
+                              if (!formData.advertiserCity || !nextNeighborhood) return;
+                              const mappedCep = NEIGHBORHOOD_CEPS[formData.advertiserCity]?.[nextNeighborhood];
+                              if (!mappedCep) return;
+                              handleInputChange('advertiserCep', mappedCep);
+                              const cepDigits = mappedCep.replace(/\D/g, '');
+                              if (cepDigits.length !== 8) return;
+                              setIsLoadingAdvertiserCep(true);
+                              const address = await fetchAddressByCep(cepDigits);
+                              setIsLoadingAdvertiserCep(false);
+                              if (!address) return;
+                              setFormData(prev => ({
+                                ...prev,
+                                advertiserStreet: address.street || prev.advertiserStreet,
+                                advertiserCity: address.city || prev.advertiserCity,
+                                advertiserNeighborhood: nextNeighborhood || prev.advertiserNeighborhood,
+                                advertiserComplement: address.complement || prev.advertiserComplement,
+                              }));
+                            }}
                             disabled={!formData.advertiserCity}
                             className="w-full p-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-slate-100 disabled:text-slate-400"
                           >
                             <option value="">Selecione...</option>
                             {advertiserNeighborhoods.map((n) => (
-                              <option key={n} value={n}>{n}</option>
+                              <option key={n} value={n}>{getNeighborhoodLabel(formData.advertiserCity, n)}</option>
                             ))}
                           </select>
                         </div>

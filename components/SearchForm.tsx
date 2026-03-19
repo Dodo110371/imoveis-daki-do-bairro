@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search, MapPin, Home, Navigation, Map, Building2, SlidersHorizontal, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { CITY_NEIGHBORHOODS } from '@/lib/constants';
+import { CITY_NEIGHBORHOODS, NEIGHBORHOOD_CEPS } from '@/lib/constants';
 import { formatCurrencyInput, parseCurrency } from '@/lib/utils';
 
 export function SearchForm() {
@@ -22,6 +22,10 @@ export function SearchForm() {
   const [minArea, setMinArea] = useState("");
 
   const neighborhoods = selectedCity ? CITY_NEIGHBORHOODS[selectedCity as keyof typeof CITY_NEIGHBORHOODS] || [] : [];
+  const getNeighborhoodLabel = (cityKey: string, neighborhood: string) => {
+    const cep = NEIGHBORHOOD_CEPS[cityKey]?.[neighborhood];
+    return cep ? `${neighborhood} (${cep})` : neighborhood;
+  };
 
   const getSearchParams = () => {
     const params = new URLSearchParams();
@@ -90,7 +94,7 @@ export function SearchForm() {
               <option value="">{selectedCity ? "Selecione o bairro" : "Selecione o bairro"}</option>
               {neighborhoods.map((neighborhood) => (
                 <option key={neighborhood} value={neighborhood}>
-                  {neighborhood}
+                  {getNeighborhoodLabel(selectedCity, neighborhood)}
                 </option>
               ))}
             </select>

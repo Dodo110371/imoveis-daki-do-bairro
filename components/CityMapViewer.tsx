@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MapPin, Building2 } from 'lucide-react';
 import Link from 'next/link';
+import { NEIGHBORHOOD_CEPS } from '@/lib/constants';
 
 interface CityMapViewerProps {
   initialMapUrl: string;
@@ -13,6 +14,17 @@ interface CityMapViewerProps {
 export function CityMapViewer({ initialMapUrl, neighborhoods, cityName }: CityMapViewerProps) {
   const [mapUrl, setMapUrl] = useState(initialMapUrl);
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
+  const cityKey = (() => {
+    const name = cityName.toLowerCase();
+    if (name.includes('luís') || name.includes('luis')) return 'sao-luis';
+    if (name.includes('paço') || name.includes('paco')) return 'paco-do-lumiar';
+    if (name.includes('ribamar')) return 'sao-jose-de-ribamar';
+    return '';
+  })();
+  const getNeighborhoodLabel = (neighborhood: string) => {
+    const cep = cityKey ? NEIGHBORHOOD_CEPS[cityKey]?.[neighborhood] : undefined;
+    return cep ? `${neighborhood} (${cep})` : neighborhood;
+  };
 
   const handleNeighborhoodClick = (neighborhood: string, e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation since it's a Link
@@ -35,7 +47,7 @@ export function CityMapViewer({ initialMapUrl, neighborhoods, cityName }: CityMa
         <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-100">
           <h2 className="text-2xl font-bold text-slate-900 mb-6 px-4 flex items-center gap-2">
             <MapPin className="w-6 h-6 text-blue-600" />
-            {activeNeighborhood ? `Localização: ${activeNeighborhood}` : 'Localização'}
+            {activeNeighborhood ? `Localização: ${getNeighborhoodLabel(activeNeighborhood)}` : 'Localização'}
           </h2>
           <div className="w-full h-[400px] rounded-2xl overflow-hidden bg-slate-200 relative" id="city-map-frame">
             <iframe
@@ -80,7 +92,7 @@ export function CityMapViewer({ initialMapUrl, neighborhoods, cityName }: CityMa
               <span className={`font-semibold transition-colors mb-1 ${
                 activeNeighborhood === neighborhood ? 'text-blue-700' : 'text-slate-900 group-hover:text-blue-600'
               }`}>
-                {neighborhood}
+                {getNeighborhoodLabel(neighborhood)}
               </span>
             </Link>
           ))}

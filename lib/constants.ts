@@ -39,7 +39,7 @@ export const CITY_NEIGHBORHOODS = {
     "Parque Atenas", "Parque Atlântico", "Parque Aurora", "Parque dos Nobres", "Parque Pindorama",
     "Parque Shalom", "Parque Timbira", "Parque Universitário", "Pedrinhas", "Piancó", "Pirapora",
     "Planalto Turu", "Planalto Vinhais", "Ponta d'Areia", "Ponta do Farol", "Praia Grande",
-    "Quebra Pote", "Quintas do Calhau", "Recanto dos Vinhais", "Redenção", "Renascença",
+    "Quebra Pote", "Quintas do Calhau", "Recanto dos Signos", "Recanto dos Vinhais", "Redenção", "Renascença",
     "Residencial Canaã", "Residencial Pinheiros", "Retiro Natal", "Rio Grande", "Sá Viana", "Sacavém", "Santa Bárbara",
     "Santa Clara", "Santa Cruz", "Santa Efigênia", "Santa Helena", "Santa Rosa", "Santo Antônio",
     "São Bernardo", "São Cristóvão", "São Francisco", "São Joaquim", "São Marcos", "São Raimundo",
@@ -49,4 +49,11 @@ export const CITY_NEIGHBORHOODS = {
     "Vila Maranhão", "Vila Mauro Fecury", "Vila Nova", "Vila Palmeira", "Vila Passos", "Vila Riod",
     "Vinhais", "Vinhais Velho", "Zona Rural"
   ]
+};
+
+export const NEIGHBORHOOD_CEPS: Record<string, Record<string, string>> = {
+  "sao-luis": {
+    "Recanto dos Signos": "65058-405",
+    "Residencial Canaã": "65049-373"
+  }
 };
