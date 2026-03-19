@@ -32,6 +32,23 @@ export default async function HomePage() {
     .order('created_at', { ascending: false })
     .limit(3);
 
+  const newIds = (newData || []).map((p: { id: string }) => p.id).filter(Boolean);
+  const buildInFilter = (ids: string[]) => `(${ids.map((id) => `"${id}"`).join(',')})`;
+
+  let otherQuery = supabase
+    .from('properties')
+    .select('*')
+    .in('status', ['active', 'pending'])
+    .neq('featured', true)
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (newIds.length > 0) {
+    otherQuery = otherQuery.not('id', 'in', buildInFilter(newIds));
+  }
+
+  const { data: otherData } = await otherQuery;
+
   type DbProperty = {
     id: string;
     title: string;
@@ -72,7 +89,7 @@ export default async function HomePage() {
 
   // Fetch partner status for agencies referenced by Home properties (to display badge on cards)
   const homeAgencyIds = Array.from(new Set(
-    [...(featuredData || []), ...(newData || [])]
+    [...(featuredData || []), ...(newData || []), ...(otherData || [])]
       .map(p => p.agency_id)
       .filter(id => !!id)
   ));
@@ -91,7 +108,7 @@ export default async function HomePage() {
 
   // Fetch partner status for realtors referenced by Home properties
   const homeRealtorIds = Array.from(new Set(
-    [...(featuredData || []), ...(newData || [])]
+    [...(featuredData || []), ...(newData || []), ...(otherData || [])]
       .map(p => p.owner_id)
       .filter(id => !!id)
   ));
@@ -120,6 +137,11 @@ export default async function HomePage() {
     realtorPartner: getRealtorPartner(p.owner_id),
   }));
   const newProperties = (newData || []).map((p: DbProperty) => ({
+    ...mapProperty(p),
+    agencyPartner: getAgencyPartner(p.agency_id),
+    realtorPartner: getRealtorPartner(p.owner_id),
+  }));
+  const otherProperties = (otherData || []).map((p: DbProperty) => ({
     ...mapProperty(p),
     agencyPartner: getAgencyPartner(p.agency_id),
     realtorPartner: getRealtorPartner(p.owner_id),
@@ -282,6 +304,48 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-br from-slate-100 to-slate-50 p-3 rounded-2xl shadow-sm border border-slate-200">
+              <Home className="h-6 w-6 text-slate-700" />
+            </div>
+            <h2 className="text-3xl font-bold text-slate-900">Demais Imóveis</h2>
+          </div>
+          <Link href="/imoveis?scope=others" className="text-blue-600 font-semibold hover:underline flex items-center gap-1">
+            Ver mais &gt;
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {otherProperties.map((prop) => (
+            <div key={prop.id} className="space-y-2">
+              <PropertyCard {...prop} />
+              {(prop.contactWhatsapp || prop.contactPhone) ? (
+                <ContactEventLink
+                  href={`https://wa.me/55${(prop.contactWhatsapp || prop.contactPhone || '').replace(/\D/g, '')}?text=Olá, vi o imóvel ${prop.title} e gostaria de mais informações.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                  propertyId={prop.id}
+                  channel="whatsapp"
+                >
+                  Contato pelo WhatsApp
+                </ContactEventLink>
+              ) : prop.contactEmail ? (
+                <ContactEventLink
+                  href={`mailto:${prop.contactEmail}`}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  propertyId={prop.id}
+                  channel="email"
+                >
+                  Contato por Email
+                </ContactEventLink>
+              ) : null}
+            </div>
+          ))}
         </div>
       </section>
 

@@ -14,6 +14,7 @@ interface ImoveisSearchParams {
   street?: string;
   type?: string;
   view?: string;
+  scope?: string;
   minPrice?: string;
   maxPrice?: string;
   bedrooms?: string;
@@ -57,10 +58,11 @@ type RealtorRow = {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const { city, neighborhood, street, type, view, minPrice, maxPrice, bedrooms, bathrooms, minArea } = params;
+  const { city, neighborhood, street, type, view, scope, minPrice, maxPrice, bedrooms, bathrooms, minArea } = params;
   const supabase = await createClient();
 
   const isMapView = view === 'map';
+  const isOthersScope = scope === 'others';
   const cityData = city ? CITIES.find(c => c.slug === city) : CITIES.find(c => c.slug === 'sao-luis');
   const mapEmbedUrl = cityData?.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127504.60965359738!2d-44.302844549999995!3d-2.5387426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f685d0549c4fb9%3A0x7e59754329244093!2zU8OjbyBMdcOtcyAtIE1B!5e0!3m2!1spt-BR!2sbr!4v1707000000000!5m2!1spt-BR!2sbr";
 
@@ -69,6 +71,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (neighborhood) toggleParams.set('neighborhood', neighborhood);
   if (street) toggleParams.set('street', street);
   if (type) toggleParams.set('type', type);
+  if (scope) toggleParams.set('scope', scope);
   if (minPrice) toggleParams.set('minPrice', minPrice);
   if (maxPrice) toggleParams.set('maxPrice', maxPrice);
   if (bedrooms) toggleParams.set('bedrooms', bedrooms);
@@ -76,6 +79,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (minArea) toggleParams.set('minArea', minArea);
 
   let query = supabase.from('properties').select('*');
+  const buildInFilter = (ids: string[]) => `(${ids.map((id) => `"${id}"`).join(',')})`;
+
+  if (isOthersScope) {
+    query = query.neq('featured', true);
+    const { data: homeNewData } = await supabase
+      .from('properties')
+      .select('id')
+      .in('status', ['active', 'pending'])
+      .neq('featured', true)
+      .order('created_at', { ascending: false })
+      .limit(3);
+    const homeNewIds = (homeNewData || []).map((p: { id: string }) => p.id).filter(Boolean);
+    if (homeNewIds.length > 0) {
+      query = query.not('id', 'in', buildInFilter(homeNewIds));
+    }
+  }
 
   // Apply filters
   if (minPrice) {
@@ -210,7 +229,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     };
   });
 
-  const hasFilters = city || neighborhood || street || type || minPrice || maxPrice || bedrooms || bathrooms || minArea;
+  const hasFilters = city || neighborhood || street || type || scope || minPrice || maxPrice || bedrooms || bathrooms || minArea;
 
   return (
     <div className="min-h-screen bg-slate-50 pb-16">
