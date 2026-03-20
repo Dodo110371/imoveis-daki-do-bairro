@@ -42,13 +42,8 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <Script src="/trusted-security-policy.js" strategy="beforeInteractive" />
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-85TDL3R8WZ" strategy="afterInteractive" />
-        <Script id="ga-gtag" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-85TDL3R8WZ');`}
-        </Script>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-85TDL3R8WZ" strategy="beforeInteractive" />
+        <Script src="/ga-init.js" strategy="beforeInteractive" />
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" type="image/png" href="/favicon-32x32.png?v=2" sizes="32x32" />
         <link rel="icon" type="image/png" href="/favicon-16x16.png?v=2" sizes="16x16" />
