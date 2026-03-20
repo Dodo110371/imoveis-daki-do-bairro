@@ -28,6 +28,13 @@ export function ContactEventLink({
     try {
       e.preventDefault();
       if (hasAnalyticsConsent()) {
+        if (channel === 'whatsapp' && propertyId) {
+          const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+          gtag?.('event', 'lead_whatsapp', {
+            event_category: 'lead',
+            event_label: propertyId,
+          });
+        }
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         const path = typeof window !== 'undefined' ? window.location.pathname : undefined;

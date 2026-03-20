@@ -9,6 +9,7 @@ import { CompareButton } from './CompareButton';
 import { cn, formatCurrency } from '@/lib/utils';
 import { AgencyPartnerBadge } from './AgencyPartnerBadge';
 import { PartnerBadge } from './PartnerBadge';
+import { hasAnalyticsConsent } from '@/context/CookieConsentContext';
 
 interface PropertyCardProps {
   id: string;
@@ -96,9 +97,18 @@ export function PropertyCard({
     }
   };
 
+  const trackPropertyClick = () => {
+    if (!hasAnalyticsConsent()) return;
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.('event', 'click_imovel', {
+      event_category: 'imovel',
+      event_label: id,
+    });
+  };
+
   return (
     <div className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg relative">
-      <Link href={`/imoveis/${id}`} className="block">
+      <Link href={`/imoveis/${id}`} className="block" onClick={trackPropertyClick}>
         <div
           className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center touch-pan-y"
           onTouchStart={onTouchStart}
