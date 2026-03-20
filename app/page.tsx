@@ -313,7 +313,7 @@ export default async function HomePage() {
             <div className="bg-gradient-to-br from-slate-100 to-slate-50 p-3 rounded-2xl shadow-sm border border-slate-200">
               <Home className="h-6 w-6 text-slate-700" />
             </div>
-            <h2 className="text-3xl font-bold text-slate-900">Demais Imóveis</h2>
+            <h2 className="text-3xl font-bold text-slate-900">+ Imóveis...</h2>
           </div>
           <Link href="/imoveis?scope=others" className="text-blue-600 font-semibold hover:underline flex items-center gap-1">
             Ver mais &gt;
