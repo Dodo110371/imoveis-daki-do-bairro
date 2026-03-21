@@ -1,7 +1,7 @@
 'use client';
-import { createClient } from '@/lib/supabase/client';
 import React from 'react';
-import { hasAnalyticsConsent } from '@/context/CookieConsentContext';
+import { hasAnalyticsConsent, hasMarketingConsent } from '@/context/CookieConsentContext';
+import { trackAnalyticsEvent } from '@/lib/analytics/track';
 
 type Channel = 'whatsapp' | 'email' | 'phone';
 
@@ -24,36 +24,58 @@ export function ContactEventLink({
   target,
   rel,
 }: Props) {
+  const proceed = () => {
+    if (target === '_blank') {
+      window.open(href, '_blank');
+    } else {
+      window.location.href = href;
+    }
+  };
+
   const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     try {
       e.preventDefault();
-      if (hasAnalyticsConsent()) {
-        if (channel === 'whatsapp' && propertyId) {
-          const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
-          gtag?.('event', 'lead_whatsapp', {
-            event_category: 'lead',
-            event_label: propertyId,
+      const isWhatsapp = channel === 'whatsapp';
+      const whatsappDigits = isWhatsapp ? href.replace(/\D/g, '') : null;
+
+      if (hasMarketingConsent()) {
+        trackAnalyticsEvent({ eventType: 'lead_contact', propertyId });
+        if (isWhatsapp && propertyId) {
+          trackAnalyticsEvent({
+            eventType: 'lead_whatsapp',
+            propertyId,
+            contactChannel: 'whatsapp',
+            contactValue: whatsappDigits,
           });
         }
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        const path = typeof window !== 'undefined' ? window.location.pathname : undefined;
-        await supabase.from('analytics_events').insert({
-          event_type: 'lead_contact',
-          user_id: user?.id || null,
-          property_id: propertyId,
-          path,
-        });
+      }
+
+      if (hasAnalyticsConsent() && isWhatsapp && propertyId) {
+        const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+        if (gtag) {
+          let proceeded = false;
+          const proceedOnce = () => {
+            if (proceeded) return;
+            proceeded = true;
+            proceed();
+          };
+
+          gtag('event', 'lead_whatsapp', {
+            event_category: 'lead',
+            event_label: propertyId,
+            event_callback: proceedOnce,
+            event_timeout: 750,
+          });
+
+          window.setTimeout(proceedOnce, 900);
+          return;
+        }
       }
     } catch {
       // ignore analytics failures
     } finally {
       // Proceed to destination
-      if (target === '_blank') {
-        window.open(href, '_blank');
-      } else {
-        window.location.href = href;
-      }
+      proceed();
     }
   };
 

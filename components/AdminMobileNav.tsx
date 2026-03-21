@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, LayoutDashboard, Building2, BarChart3, Users, Home, Wrench } from "lucide-react";
+import { Menu, X, LayoutDashboard, Building2, BarChart3, Users, Home, Wrench, MousePointerClick } from "lucide-react";
 
 type Counts = {
   pendingProperties?: number;
@@ -63,6 +63,10 @@ export function AdminMobileNav({ counts }: { counts?: Counts }) {
                 {counts?.recentLeads ? (
                   <span className={`${badge} bg-blue-600 text-white`}>{counts.recentLeads}</span>
                 ) : null}
+              </Link>
+              <Link href="/admin/cliques" className={`${base} ${pathname === "/admin/cliques" ? active : inactive}`} onClick={() => setOpen(false)}>
+                <MousePointerClick className="h-5 w-5 mr-2" />
+                Cliques e Contatos
               </Link>
               <Link href="/admin/usuarios" className={`${base} ${pathname === "/admin/usuarios" ? active : inactive}`} onClick={() => setOpen(false)}>
                 <Users className="h-5 w-5 mr-2" />

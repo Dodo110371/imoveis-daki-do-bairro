@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Building2, BarChart3, Users, Home, Wrench, Sparkles } from "lucide-react";
+import { LayoutDashboard, Building2, BarChart3, Users, Home, Wrench, Sparkles, MousePointerClick } from "lucide-react";
 
 type Counts = {
   pendingProperties?: number;
@@ -43,6 +43,10 @@ export function AdminSidebarNav({ counts }: { counts?: Counts }) {
         {counts?.recentLeads ? (
           <span className={`${badge} bg-blue-600 text-white`}>{counts.recentLeads}</span>
         ) : null}
+      </Link>
+      <Link href="/admin/cliques" className={`${base} ${pathname === "/admin/cliques" ? active : inactive}`}>
+        <MousePointerClick className="w-5 h-5" />
+        Cliques e Contatos
       </Link>
       <Link href="/admin/usuarios" className={`${base} ${pathname === "/admin/usuarios" ? active : inactive}`}>
         <Users className="w-5 h-5" />

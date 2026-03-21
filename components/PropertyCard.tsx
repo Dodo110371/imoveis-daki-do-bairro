@@ -2,14 +2,15 @@
 
 import { useState, MouseEvent, TouchEvent } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Bed, Bath, Move, MapPin, ChevronLeft, ChevronRight, Home, Sparkles } from 'lucide-react';
 import { FavoriteButton } from './FavoriteButton';
 import { CompareButton } from './CompareButton';
 import { cn, formatCurrency } from '@/lib/utils';
 import { AgencyPartnerBadge } from './AgencyPartnerBadge';
 import { PartnerBadge } from './PartnerBadge';
-import { hasAnalyticsConsent } from '@/context/CookieConsentContext';
+import { hasAnalyticsConsent, hasMarketingConsent } from '@/context/CookieConsentContext';
+import { trackAnalyticsEvent } from '@/lib/analytics/track';
 
 interface PropertyCardProps {
   id: string;
@@ -42,6 +43,7 @@ export function PropertyCard({
   agencyPartner = false,
   realtorPartner = false,
 }: PropertyCardProps) {
+  const router = useRouter();
   const formattedPrice = typeof price === 'number' ? formatCurrency(price) : price;
 
   // Use images array if provided and not empty, otherwise fallback to [imageUrl]
@@ -106,9 +108,53 @@ export function PropertyCard({
     });
   };
 
+  const handleCardClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+      if (hasMarketingConsent()) {
+        trackAnalyticsEvent({ eventType: "click_imovel", propertyId: id });
+      }
+      trackPropertyClick();
+      return;
+    }
+
+    e.preventDefault();
+
+    if (hasMarketingConsent()) {
+      trackAnalyticsEvent({ eventType: "click_imovel", propertyId: id });
+    }
+
+    if (!hasAnalyticsConsent()) {
+      router.push(`/imoveis/${id}`);
+      return;
+    }
+
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+    if (!gtag) {
+      router.push(`/imoveis/${id}`);
+      return;
+    }
+
+    let navigated = false;
+    const navigate = () => {
+      if (navigated) return;
+      navigated = true;
+      router.push(`/imoveis/${id}`);
+    };
+
+    gtag('event', 'click_imovel', {
+      event_category: 'imovel',
+      event_label: id,
+      event_callback: navigate,
+      event_timeout: 750,
+    });
+
+    window.setTimeout(navigate, 900);
+  };
+
   return (
     <div className="group block overflow-hidden rounded-lg border bg-white transition-all hover:shadow-lg relative">
-      <Link href={`/imoveis/${id}`} className="block" onClick={trackPropertyClick}>
+      <a href={`/imoveis/${id}`} className="block" onClick={handleCardClick}>
         <div
           className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center touch-pan-y"
           onTouchStart={onTouchStart}
@@ -226,7 +272,7 @@ export function PropertyCard({
           </div>
           <div className="mt-4 text-xl font-bold text-slate-900">{formattedPrice}</div>
         </div>
-      </Link>
+      </a>
     </div>
   );
 }
