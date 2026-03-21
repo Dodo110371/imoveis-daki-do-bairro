@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { MousePointerClick, MessageCircle } from "lucide-react";
+import { DeleteAnalyticsEventButton } from "@/components/DeleteAnalyticsEventButton";
 
 type SearchParams = Promise<{ days?: string }>;
 
@@ -221,7 +222,60 @@ export default async function AdminCliquesPage({ searchParams }: { searchParams:
           </table>
         </div>
       </section>
+
+      <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Registros Recentes</h2>
+            <p className="text-sm text-slate-600">Exclusão individual de cliques e contatos</p>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="text-left text-slate-500">
+                <th className="py-2 pr-4">Tipo</th>
+                <th className="py-2 pr-4">Imóvel</th>
+                <th className="py-2 pr-4">WhatsApp</th>
+                <th className="py-2 pr-4">Data</th>
+                <th className="py-2 pr-4">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {events.map((ev) => {
+                const p = ev.property_id ? propertiesMap.get(ev.property_id) : undefined;
+                const title = ev.property_id ? (p?.title || ev.property_id) : "-";
+                return (
+                  <tr key={ev.id} className="text-slate-800">
+                    <td className="py-3 pr-4 font-semibold">{ev.event_type}</td>
+                    <td className="py-3 pr-4">
+                      {ev.property_id ? (
+                        <Link className="text-blue-700 hover:underline" href={`/imoveis/${ev.property_id}`}>
+                          {title}
+                        </Link>
+                      ) : (
+                        <span className="text-slate-500">-</span>
+                      )}
+                      {ev.property_id ? <div className="text-xs text-slate-500">{ev.property_id}</div> : null}
+                    </td>
+                    <td className="py-3 pr-4">{formatPhone(ev.contact_value)}</td>
+                    <td className="py-3 pr-4 text-xs text-slate-600">{new Date(ev.created_at).toLocaleString("pt-BR")}</td>
+                    <td className="py-3 pr-4">
+                      <DeleteAnalyticsEventButton eventId={ev.id} />
+                    </td>
+                  </tr>
+                );
+              })}
+              {events.length === 0 ? (
+                <tr>
+                  <td className="py-6 text-slate-500" colSpan={5}>Nenhum registro no período.</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }
-
