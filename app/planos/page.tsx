@@ -102,7 +102,7 @@ export default function PlanosPage() {
                   <DollarSign className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="font-bold text-2xl text-slate-900">Venda</h3>
-                <div className="mt-4 text-4xl font-bold text-blue-700">2%</div>
+                <div className="mt-4 text-4xl font-bold text-blue-700">1%</div>
                 <p className="text-sm text-slate-600 mt-2 font-medium">do valor do imóvel</p>
                 <div className="mt-2 inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">
                   PAGUE SÓ SE VENDER

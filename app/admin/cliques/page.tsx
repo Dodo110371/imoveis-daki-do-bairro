@@ -43,7 +43,9 @@ export default async function AdminCliquesPage({ searchParams }: { searchParams:
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (profile?.role !== "admin") return null;
 
-  const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
+  const sinceDate = new Date();
+  sinceDate.setDate(sinceDate.getDate() - safeDays);
+  const since = sinceDate.toISOString();
 
   const { data: eventRows, error: eventError } = await supabase
     .from("analytics_events")

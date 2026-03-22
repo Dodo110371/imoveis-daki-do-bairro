@@ -1786,7 +1786,7 @@ export default function AdvertisePage() {
                           <h3 className="text-xl font-bold text-slate-900">Taxa de Publicidade (Venda)</h3>
                         </div>
                         <p className="text-slate-700 leading-relaxed text-lg">
-                          Pagamento de <strong className="text-blue-700">2% do valor do imóvel</strong>,
+                          Pagamento de <strong className="text-blue-700">1% do valor do imóvel</strong>,
                           após sua efetiva venda, pela publicação e divulgação na plataforma e mídias sociais.
                         </p>
                       </div>
